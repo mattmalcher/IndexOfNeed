@@ -1,0 +1,71 @@
+---
+title: "Tall To Wide for LocalArea Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("~/Dropbox/Current Work/BRC IMD/Data/LocalHealth")
+```
+
+Data downloaded from the localhealth.org.uk website comes in the tall tidy data format (a column dictating the variable, with others dictating the value and confidence interval.)
+For the purpose of using it in a database style with joins in QGIS it is more convenient to have it in a wide format
+
+This script will do this.
+
+The first step is to read the data all into R
+```{r Read in CSV's}
+
+T1data=read.csv('Theme1_2017.csv', header=TRUE)
+T2data=read.csv('Theme2_2017.csv', header=TRUE)
+T3data=read.csv('Theme3_2017.csv', header=TRUE)
+T4data=read.csv('Theme4_2017.csv', header=TRUE)
+```
+
+Next we load up dplyr to manipuate these data tables
+```{r}
+library(dplyr)
+library(tidyr)
+```
+
+We want to trim the tables down a bit, they include 
+```{r}
+
+T1data <- T1data %>%
+  mutate(id_Name=paste(as.character(ThemeID),Name)) %>%
+  select(id_Name, AreaCode, Value) 
+
+T2data <- T2data %>%
+  mutate(id_Name=paste(as.character(ThemeID),Name)) %>%
+  select(id_Name, AreaCode, Value) 
+
+T3data <- T3data%>%
+  mutate(id_Name=paste(as.character(ThemeID),Name)) %>%
+  select(id_Name, AreaCode, Value) 
+
+T4data <- T4data%>%
+  mutate(id_Name=paste(as.character(ThemeID),Name)) %>%
+  select(id_Name, AreaCode, Value) 
+
+```
+
+
+At this point its probably a good idea to group all the data into one table to avoid unneceary repetition. - Note that the ThemeID column is kept
+```{r Combine into a single table}
+T_data <- rbind(T1data, T2data, T3data, T4data)
+
+```
+
+
+Next, we want to reorganise this from a tall format to a wide format. This can be done using the tidyr function spread.
+```{r}
+Wide_T_data <- T_data %>%
+  spread(id_Name,Value)
+```
+
+Now that we have our wide data we want to write it back out to a CSV for use in Q
+```{r}
+filename='WideLocalHealthData.csv'
+write.csv(Wide_T_data,filename, append=FALSE)
+```
+

@@ -1,0 +1,13 @@
+# No Google Docs
+*.gdoc
+*.gsheet
+
+# No Data Files
+*.csv
+
+# No OS files
+*.DS_Store
+
+# No API Key files
+*apikey*
+

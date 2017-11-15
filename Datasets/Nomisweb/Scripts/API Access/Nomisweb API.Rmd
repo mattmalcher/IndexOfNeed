@@ -1,0 +1,121 @@
+---
+title: "Nomisweb API Access"
+author: "Matthew Malcher"
+date: "14/11/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Required Libraries
+
+```{r pressure, echo=FALSE}
+library(jsonlite)
+library(RCurl)
+library(dplyr)
+```
+
+
+## TODO
+Investigate using SDMX libraries for grabbing Nomisweb data?
+
+## Access Nomisweb
+
+https://www.nomisweb.co.uk/api/v01/help
+https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html
+
+
+Step 1 - Get a list of the available datasets, obtaining
+* ID for use with the API
+* A Description
+* A Name
+```{r}
+nomisDatasets <- fromJSON("https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.json")
+
+datasets<-nomisDatasets$structure$keyfamilies$keyfamily %>% select(id,description,name)
+
+rm(nomisDatasets)
+```
+
+A call to https://www.nomisweb.co.uk/api/v01/dataset/<datasetid>/geography.def.sdmx.json will render a list of top level areas for which the dataset is available.
+
+This will hopefully include: 
+* 2092957697	United Kingdom
+
+A further call to https://www.nomisweb.co.uk/api/v01/dataset/<datasetid>/geography/2092957697.def.json will then render a list of the geography types which are available within the UK top level area.
+
+We are interested in TYPE464 - local authorities: district / unitary (prior to April 2015) within United Kingdom.
+
+So, what we want to do is iterate over the data frame, adding a new columns which check:
+* 1 - if the dataset is available for the UK 
+* 2 - if the dataset is available in Type464 output areas
+
+```{r}
+# Define a function which queries the nomisweb api for a given dataset - asking 
+
+# What top level areas are available?	/api/v01/dataset/NM_1_1/geography.def.sdmx.json
+
+checkuk <- function(dset){
+  
+  countrieslist <- fromJSON(
+      paste0("https://www.nomisweb.co.uk/api/v01/dataset/",
+             dset,
+             "/geography.def.sdmx.json"))$structure$codelists$codelist$code[[1]]
+  
+  # boolean check of the first item in the top levels region list against the UK region code
+  UK<-(countrieslist$value[1]==2092957697)
+  print(paste(dset, UK, sep=' '))
+  return(UK)    
+}
+
+```
+
+Check which datasets are in the UK
+```{r}
+dsetinUK<-lapply(datasets$id, checkuk)
+```
+
+Once we have this vector telling us if it is in the UK or not we can add this to our datasets dataframe
+```{r}
+dsetinUK<-data_frame(dsetinUK)
+datasets2 <- cbind(datasets, dsetinUK)
+```
+
+
+Now that we know which datasets are available for the UK we want to see which Area types are available for each UK dataset.
+```{r}
+
+getGeogTable <- function(dset){
+  
+  Arealist <- fromJSON(
+      paste0("https://www.nomisweb.co.uk/api/v01/dataset/",
+             dset,
+             "/geography/2092957697.def.sdmx.json"))
+      
+  return(Arealist)    
+}
+
+```
+
+We can then use our getGeogTable function to get a table of the geographies available for a particular variable 
+```{r}
+geogTable<-getGeogTable("NM_1_1")$structure$codelists$codelist$code[[1]]
+
+# Check if Type 464 - Pre 2015 Local Areas is in our geogTable
+if("2092957697TYPE464" %in% unlist(geogTable$value)){
+  # If it is, we want to download the dataset
+  print("yeah")
+}
+```
+
+If the dataset is available for the UK at type464 level then we probably want to download it.
+```{r}
+getNomisData <- function(dset){
+  
+  
+}
+
+```
+
