@@ -7,8 +7,7 @@
 
 # No OS files
 *.DS_Store
-*Icon
-
+*Icon*
 
 # No API Key files
 *apikey*

@@ -5,39 +5,87 @@ date: "14/11/2017"
 output: html_document
 ---
 
+# Setup
+
+##Introduction
+This markdown document contains multiple code snippets for interacting with the Nomisweb API using R. The idea is that these examples are set up so that they can readily be repurposed.
+
+## Load Dependencies
+Set up knitr:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-## Load Required Libraries
-
-```{r pressure, echo=FALSE}
-library(jsonlite)
+Load the libraries we will be using:
+```{r load_libs_1, echo=FALSE}
 library(RCurl)
 library(dplyr)
+library(jsonlite)
 ```
 
 
-## TODO
-Investigate using SDMX libraries for grabbing Nomisweb data?
-
-## Access Nomisweb
-
+## Documentation and References
+The documentation for the nomisweb api can be found at: 
 https://www.nomisweb.co.uk/api/v01/help
+
+Examples of how to use the jsonlite package can be found at:
 https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html
 
+Links for information on SDMX: 
+https://sdmx.org
+https://sdmx.org/wp-content/uploads/SDMX_2-1_User_Guide_draft_0-1.pdf
+https://sdmx.org/?page_id=4500 - tools for working with sdmx
 
+
+## TODO
+
+### Investigate using jsonstat 
+Nomisweb offers data downloads in multiple formats:
+
+* HTML
+* XLSX
+* csv 
+* xml
+* JSON (a proprietary flavour)
+* JSONstat (a standard https://json-stat.org/)
+
+csv is perhaps the most obvious and easy to understand way to extract data and as such the scripts will target this first. However JSON stat is used by multiple other statistics bodies. As such it might be interesting to understand how it works. 
+
+There is an R library for parsing jsonstat:
+```{r load_libs_2, echo=FALSE}
+library(rjstat)
+```
+
+
+# Use 1 - Get List of Available Datasets
 Step 1 - Get a list of the available datasets, obtaining
 * ID for use with the API
 * A Description
 * A Name
+
+This api request gets you a 'large list' which contains information about all the datasets on nomisweb as a JSON.
+
+To understand what this contains you can look at the HTML version at: https://www.nomisweb.co.uk/api/v01/dataset/def.htm
+
+* Structure
+** "header"         
+** "keyfamilies"    
+** "xmlns"          
+** "common"         
+** "structure"      
+** "xsi"            
+** "schemalocation"
+
 ```{r}
 nomisDatasets <- fromJSON("https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.json")
 
+```
+
+```{r}
 datasets<-nomisDatasets$structure$keyfamilies$keyfamily %>% select(id,description,name)
 
 rm(nomisDatasets)
 ```
+
 
 A call to https://www.nomisweb.co.uk/api/v01/dataset/<datasetid>/geography.def.sdmx.json will render a list of top level areas for which the dataset is available.
 
@@ -110,6 +158,7 @@ if("2092957697TYPE464" %in% unlist(geogTable$value)){
 }
 ```
 
+# Use 2 - Download a Dataset
 If the dataset is available for the UK at type464 level then we probably want to download it.
 ```{r}
 getNomisData <- function(dset){

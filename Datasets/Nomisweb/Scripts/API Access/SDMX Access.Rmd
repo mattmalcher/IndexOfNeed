@@ -1,0 +1,185 @@
+---
+title: "SDMX"
+author: "Matthew Malcher"
+date: "17/11/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+```
+
+# 
+There is an R library for working with SDMX
+```{r }
+library(rsdmx)
+providers <- getSDMXServiceProviders();
+as.data.frame(providers)
+```
+
+Would you look at that; NOMIS is there as a predefined data source! This looks like it might make things a bit easier, but I cant figure out how to take advantage of it.
+
+Nevertheless you can write queries using the URL
+
+With the following commands we can get a data frame with details of all the datasets available on NOMIS
+```{r}
+clUrl <- "https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.xml"
+clobj <- readSDMX(clUrl)
+cldf <- as.data.frame(clobj)
+```
+
+
+For a particular data item, see further info
+https://www.nomisweb.co.uk/api/v01/dataset/NM_1_1.def.htm
+https://www.nomisweb.co.uk/api/v01/dataset/NM_1_1/def.sdmx.xml
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+format<-'def.sdmx.xml'
+
+file<-paste(ap,dataset,format,sep='/')
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+
+
+Get a Table of available geographies for a dataset:
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+query<-'geography'
+format<-'.def.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,query,sep='/'),format)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+Get a Table of available output areas for a dataset
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+query<-'geography'
+geography<-'2092957697'
+format<-'.def.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,query,geography,sep='/'),format)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+https://www.nomisweb.co.uk/forum/posts.aspx?tID=555&fID=2
+
+Get List of output areas for a given geography type
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+query<-'geography'
+geography<-'2092957697TYPE464'
+format<-'.def.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,query,geography,sep='/'),format)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+Get a Table of available sex information for a dataset
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+query<-'sex'
+format<-'.def.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,query,sep='/'),format)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+Get the measures available for a given geography - these are denominators - i.e. out of the number of claimints, the number of people living there etc.
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+query<-'measures'
+geography<-'2092957697TYPE464'
+format<-'.def.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,query,geography,sep='/'),format)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+Get available 'items' for a specified dataset (i.e. the variables)
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+query<-'item'
+
+format<-'.def.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,query,sep='/'),format)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+/api/v01/dataset/NM_1_1.generic.sdmx.xml?geography=2038432081&sex=5&item=1&measures=20100&time=latest
+
+Get available 'items' for a specified dataset (i.e. the variables)
+```{r}
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+dataset<-'NM_1_1'
+
+geography='2092957697TYPE464'
+sex='5,6,7'
+item='1'
+measures='20100'
+time='latest'
+
+query<-paste0('?geography=',geography,'&sex=',sex,'&item=',item,'&measures=',measures,'&time=latest')
+
+format<-'.generic.sdmx.xml'
+
+file<-paste0(paste(ap,dataset,sep='/'),format,query)
+
+sdmx <- readSDMX(file)
+
+df <- as.data.frame(sdmx)
+
+df
+```
+
+```{r}
+
+df %>%
+  filter(SEX=='7') 
+```
+
