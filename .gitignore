@@ -11,3 +11,7 @@
 
 # No API Key files
 *apikey*
+
+#Windows Nuisance Files
+desktop.ini
+~$*
