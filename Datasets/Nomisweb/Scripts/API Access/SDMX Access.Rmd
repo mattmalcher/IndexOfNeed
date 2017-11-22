@@ -9,14 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#  Load Libraries
-There is an R library for working with SDMX. NOMIS is included as a predefined data source! This looks like it might make things a bit easier, but I cant figure out how to take advantage of it. Fortunately you can also buld your own URL's and feed them to the `readSDMX` command provided by the library.
-```{r }
-library(rsdmx)
-providers <- getSDMXServiceProviders();
-as.data.frame(providers) %>% filter(agencyId=='NOMIS')
-```
-
+# Load data handling libraries
 At this point I will also load a few other useful libraries:
 ```{r}
 library(dplyr)
@@ -24,10 +17,22 @@ library(tidyr)
 ```
 
 
+#  Load rsdmx
+There is an R library for working with SDMX. NOMIS is included as a predefined data source! This looks like it might make things a bit easier, but I cant figure out how to take advantage of it. Fortunately you can also buld your own URL's and feed them to the `readSDMX` command provided by the library.
+```{r }
+library(RCurl)
+curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
+curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
+library(rsdmx)
+providers <- getSDMXServiceProviders();
+as.data.frame(providers) %>% filter(agencyId=='NOMIS')
+```
+
+
 There are some common bits of info used 
 ```{r}
 # Define API access point
-ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset' #Note - https can cause issues on windows (cURL issue?) but using http causes issues with the api functionality
 qformat <-'def.sdmx.xml'
 
 ```
@@ -40,6 +45,7 @@ With the following commands we can get a data frame with details of all the data
 ```{r}
 queryUrl <- paste(ap,qformat,sep='/')
 queryUrl
+
 NomisDatasets <- as.data.frame(readSDMX(queryUrl))
 ```
 
@@ -64,7 +70,7 @@ AvailableRegions <- as.data.frame(readSDMX(queryUrl))
 AvailableRegions
 ```
 
-Get a Table of available output areas for a dataset
+Get a Table of available output areas for a dataset within a region identified by its id
 ```{r}
 dataset<-'NM_1_1'
 qtype<-'geography'
@@ -77,7 +83,7 @@ AvailableGeographies
 
 https://www.nomisweb.co.uk/forum/posts.aspx?tID=555&fID=2
 
-Get List of output areas for a given geography type
+Get List of output areas for a given geography type and
 ```{r}
 dataset<-'NM_1_1'
 qtype<-'geography'
