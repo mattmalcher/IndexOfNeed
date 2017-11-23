@@ -13,19 +13,26 @@ knitr::opts_chunk$set(echo = TRUE)
 At this point I will also load a few other useful libraries:
 ```{r}
 library(dplyr)
-library(tidyr)
+# library(tidyr)
 ```
 
 
 #  Load rsdmx
 There is an R library for working with SDMX. NOMIS is included as a predefined data source! This looks like it might make things a bit easier, but I cant figure out how to take advantage of it. Fortunately you can also buld your own URL's and feed them to the `readSDMX` command provided by the library.
 ```{r }
-library(RCurl)
-curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
-curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
 library(rsdmx)
 providers <- getSDMXServiceProviders();
 as.data.frame(providers) %>% filter(agencyId=='NOMIS')
+```
+
+```{r Rcurl with settings for https on windows}
+library(RCurl)
+curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
+curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
+```
+
+```{r Rcurl with no modified settings}
+library(RCurl)
 ```
 
 
@@ -33,7 +40,7 @@ There are some common bits of info used
 ```{r}
 # Define API access point
 ap<-'https://www.nomisweb.co.uk/api/v01/dataset' #Note - https can cause issues on windows (cURL issue?) but using http causes issues with the api functionality
-qformat <-'def.sdmx.xml'
+qformat <-'.def.sdmx.xml'
 
 ```
 
@@ -53,7 +60,7 @@ NomisDatasets <- as.data.frame(readSDMX(queryUrl))
 For a particular data item, see further info
 ```{r}
 dataset<-'NM_1_1'
-queryUrl<-paste(ap,dataset,qformat,sep='/')
+queryUrl<-paste0(paste(ap,dataset,sep='/'),qformat)
 SingleDataset <- as.data.frame(readSDMX(queryUrl))
 SingleDataset
 ```
@@ -63,7 +70,7 @@ SingleDataset
 Get a Table of available regions for a dataset:
 ```{r}
 dataset<-'NM_1_1'
-qtype<-'geography.'
+qtype<-'geography'
 queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),qformat)
 queryUrl
 AvailableRegions <- as.data.frame(readSDMX(queryUrl))
@@ -74,7 +81,7 @@ Get a Table of available output areas for a dataset within a region identified b
 ```{r}
 dataset<-'NM_1_1'
 qtype<-'geography'
-geography<-'2092957697.'
+geography<-'2092957697'
 queryUrl<-paste0(paste(ap,dataset,qtype,geography,sep='/'),qformat)
 queryUrl
 AvailableGeographies <- as.data.frame(readSDMX(queryUrl))
@@ -90,7 +97,7 @@ qtype<-'geography'
 geography<-'2092957697'
 OAtype<-'TYPE464'
 
-queryUrl<-paste0(paste(ap,dataset,qtype,geography,OAtype,sep='/'),qformat)
+queryUrl<-paste0(paste(ap,dataset,qtype,geography,sep='/'),OAtype,qformat)
 
 OutputAreas <- as.data.frame(readSDMX(queryUrl))
 OutputAreas
@@ -114,7 +121,7 @@ dataset<-'NM_1_1'
 qtype<-'measures'
 geography<-'2092957697'
 OAtype<-'TYPE464'
-queryUrl<-paste0(paste(ap,dataset,qtype,geography,OAtype,sep='/'),qformat)
+queryUrl<-paste0(paste(ap,dataset,qtype,geography,sep='/'),OAtype,qformat)
 queryUrl
 Measures <- as.data.frame(readSDMX(queryUrl))
 Measures
