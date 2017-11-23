@@ -25,113 +25,129 @@ providers <- getSDMXServiceProviders();
 as.data.frame(providers) %>% filter(agencyId=='NOMIS')
 ```
 
+The script seems to have some issues when run on Windows 10 - I susepect this is to do with http/https and ssl RC4 being depracated. The following is an attempt to mess around with the RCurl settings to ignore certificate errors. I dont know if it works 
 ```{r Rcurl with settings for https on windows}
 library(RCurl)
 curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
 curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
 ```
 
-```{r Rcurl with no modified settings}
-library(RCurl)
-```
 
-
-There are some common bits of info used 
+There are some common bits of info used in all requests 
 ```{r}
 # Define API access point
-ap<-'https://www.nomisweb.co.uk/api/v01/dataset' #Note - https can cause issues on windows (cURL issue?) but using http causes issues with the api functionality
-qformat <-'.def.sdmx.xml'
+ap<-'https://www.nomisweb.co.uk/api/v01/dataset' 
+
+# Define the format of the data returned. The rsdmx package allows SMDX in XML format to be read into data frames.
+qformat <-'def.sdmx.xml'
 
 ```
-
-
 
 Now, lets get started with the nomisweb API!
 
 With the following commands we can get a data frame with details of all the datasets available on NOMIS
 ```{r}
-queryUrl <- paste(ap,qformat,sep='/')
-queryUrl
+get_all_dataset<-function(ap,qformat){
+    queryUrl <- paste(ap,qformat,sep='/')
+    all_data <- as.data.frame(readSDMX(queryUrl))
+    return(all_data)
+  }
 
-NomisDatasets <- as.data.frame(readSDMX(queryUrl))
+NomisDatasets <- get_all_dataset(ap,qformat)
 ```
 
 
-For a particular data item, see further info
+Alternatively, if we know which dataset we want then we can request just that
 ```{r}
-dataset<-'NM_1_1'
-queryUrl<-paste0(paste(ap,dataset,sep='/'),qformat)
-SingleDataset <- as.data.frame(readSDMX(queryUrl))
-SingleDataset
-```
 
+info_on_dataset <- function(ap,qformat,dataset){
+  queryUrl<-paste0(paste(ap,dataset,sep='/'),'.',qformat)
+  # print('Querying: ',queryUrl)
+  SingleDataset <- as.data.frame(readSDMX(queryUrl))
+  return(SingleDataset)
+}
+
+info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
+info_NM_1_2 <- info_on_dataset(ap,qformat,'NM_1_2')
+
+```
 
 
 Get a Table of available regions for a dataset:
 ```{r}
-dataset<-'NM_1_1'
-qtype<-'geography'
-queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),qformat)
-queryUrl
-AvailableRegions <- as.data.frame(readSDMX(queryUrl))
-AvailableRegions
+
+available_regions <- function(ap,qformat,dataset){
+  qtype<-'geography'
+  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
+  regionlist <- as.data.frame(readSDMX(queryUrl))
+  return(regionlist)
+}
+
+regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
+
 ```
 
 Get a Table of available output areas for a dataset within a region identified by its id
 ```{r}
-dataset<-'NM_1_1'
-qtype<-'geography'
-geography<-'2092957697'
-queryUrl<-paste0(paste(ap,dataset,qtype,geography,sep='/'),qformat)
-queryUrl
-AvailableGeographies <- as.data.frame(readSDMX(queryUrl))
-AvailableGeographies
+available_OAs <- function(ap,qformat,dataset,regioncode){
+  qtype<-'geography'
+  queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),'.',qformat)
+  availableOAlist <- as.data.frame(readSDMX(queryUrl))
+  return(availableOAlist)
+}
+
+OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
 ```
 
 https://www.nomisweb.co.uk/forum/posts.aspx?tID=555&fID=2
 
-Get List of output areas for a given geography type and
+Get List of output areas for a given dataset, region and output area type
 ```{r}
-dataset<-'NM_1_1'
-qtype<-'geography'
-geography<-'2092957697'
-OAtype<-'TYPE464'
 
-queryUrl<-paste0(paste(ap,dataset,qtype,geography,sep='/'),OAtype,qformat)
+list_OAs <- function(ap,qformat,dataset,regioncode,OAtype){
+  qtype<-'geography'
+  queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),OAtype,'.',qformat)
+  OAlist <- as.data.frame(readSDMX(queryUrl))
+  return(OAlist)
+}
 
-OutputAreas <- as.data.frame(readSDMX(queryUrl))
-OutputAreas
+OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
 
 ```
 
 Get a Table of available sex information for a dataset
 ```{r}
+get_genders <-function(ap,qformat,dataset){
+  qtype<-'sex'
+  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
+  genders <- as.data.frame(readSDMX(queryUrl))
+  return(genders)
+}
 
 dataset<-'NM_1_1'
-qtype<-'sex'
-queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),qformat)
-queryUrl
-AvailableSexes <- as.data.frame(readSDMX(queryUrl))
-AvailableSexes
+genders_NM_1_1 <- get_genders()
+
 ```
 
 Get the measures available for a given geography - these are denominators - i.e. out of the number of claimints, the number of people living there etc.
 ```{r}
-dataset<-'NM_1_1'
-qtype<-'measures'
-geography<-'2092957697'
-OAtype<-'TYPE464'
-queryUrl<-paste0(paste(ap,dataset,qtype,geography,sep='/'),OAtype,qformat)
-queryUrl
-Measures <- as.data.frame(readSDMX(queryUrl))
-Measures
+get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
+  
+  qtype<-'measures'
+  queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),OAtype,'.',qformat)
+  measures <- as.data.frame(readSDMX(queryUrl))
+  return(measures)
+}
+
+
+measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
 ```
 
 Get available 'items' for a specified dataset (i.e. the variables)
 ```{r}
 dataset<-'NM_1_1'
 qtype<-'item'
-queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),qformat)
+queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
 queryUrl
 AvailableItems <- as.data.frame(readSDMX(queryUrl))
 AvailableItems
