@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 At this point I will also load a few other useful libraries:
 ```{r}
 library(dplyr)
+library(xlsx)
 ```
 
 #  Load rsdmx
@@ -51,8 +52,10 @@ get_all_dataset<-function(ap,qformat){
     queryUrl <- paste(ap,qformat,sep='/')
     all_data <- as.data.frame(readSDMX(queryUrl))
     return(all_data)
-  }
+}
 
+# EXAMPLE:
+# info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
 info_on_dataset <- function(ap,qformat,dataset){
   queryUrl<-paste0(paste(ap,dataset,sep='/'),'.',qformat)
   # print('Querying: ',queryUrl)
@@ -60,6 +63,8 @@ info_on_dataset <- function(ap,qformat,dataset){
   return(SingleDataset)
  }
 
+# EXAMPLE:
+# regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
 available_regions <- function(ap,qformat,dataset){
   qtype<-'geography'
   queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
@@ -67,6 +72,8 @@ available_regions <- function(ap,qformat,dataset){
   return(regionlist)
 }
 
+# EXAMPLE:
+# genders_NM_1_1 <- get_genders(ap,qformat,'NM_1_1')
 get_genders <-function(ap,qformat,dataset){
   qtype<-'sex'
   queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
@@ -74,6 +81,8 @@ get_genders <-function(ap,qformat,dataset){
   return(genders)
 }
 
+# EXAMPLE:
+# OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
 available_OAs <- function(ap,qformat,dataset,regioncode){
   qtype<-'geography'
   queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),'.',qformat)
@@ -81,6 +90,8 @@ available_OAs <- function(ap,qformat,dataset,regioncode){
   return(availableOAlist)
 }
 
+# EXAMPLE:
+# OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
 list_OAs <- function(ap,qformat,dataset,regioncode,OAtype){
   qtype<-'geography'
   queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),OAtype,'.',qformat)
@@ -89,6 +100,8 @@ list_OAs <- function(ap,qformat,dataset,regioncode,OAtype){
   return(OAlist)
 }
 
+# EXAMPLE:
+# items_NM_1_1 <- get_items(ap,'NM_1_1',qformat)
 get_items <- function(ap,dataset,qformat){
   
   qtype<-'item'
@@ -97,16 +110,19 @@ get_items <- function(ap,dataset,qformat){
   return(AvailableItems)
 }
 
+# EXAMPLE:
+# times_NM_1_1 <- get_times(ap,'NM_1_1',qformat)
 get_times <- function(ap,dataset,qformat){
-  
   qtype<-'time'
   queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
   AvailableTimes <- as.data.frame(readSDMX(queryUrl))
   return(AvailableTimes)
 }
 
+
+# EXAMPLE:
+# measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
 get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
-  
   qtype<-'measures'
   queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),OAtype,'.',qformat)
   print(queryUrl)
@@ -114,6 +130,20 @@ get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
   return(measures)
 }
 
+```
+
+# Define Function for pulling data using the Nomis API
+
+```{r}
+
+# EXAMPLE:
+# data_NM_1_1 <- get_data(dataset = 'NM_1_1', 
+#                         geography='2092957697TYPE464', 
+#                         sex=3,
+#                         item='1', 
+#                         measures='20100,20201,20202,20203',
+#                         dformat,
+#                         time=1)
 
 get_data <- function(dataset, geography, sex, item, measures, dformat , time){
   
@@ -135,6 +165,7 @@ get_data <- function(dataset, geography, sex, item, measures, dformat , time){
   
   queryUrl<-paste0(paste(ap,dataset,sep='/'),'.',dformat,query)
   print(queryUrl)
+  
   df <- as.data.frame(readSDMX(queryUrl))
   
   return(df)
@@ -143,81 +174,24 @@ get_data <- function(dataset, geography, sex, item, measures, dformat , time){
 
 Now, lets get started with the nomisweb API!
 
-With the following commands we can get a data frame with details of all the datasets available on NOMIS
+Get information on all the datasets
 ```{r}
-NomisDatasets <- get_all_dataset(ap,qformat)
+NomisDatasets <- get_all_dataset(ap,qformat) %>% select(id, Name.en, Description.en)
 ```
 
 
-Alternatively, if we know which dataset we want then we can request just that
-```{r}
-info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
-info_NM_1_2 <- info_on_dataset(ap,qformat,'NM_1_2')
+Lets iterate over the datasets and see when the last time each one was updated is
 
+Lets write the datasets out to an excel file and decide which ones we think are interesting.
+```{r}
+# Write the weights and total weight to one worksheet
+write.xlsx2(NomisDatasets, 'NomisDatasets.xlsx', sheetName="Datasets", 
+  col.names=TRUE, row.names=FALSE, append=FALSE, showNA=TRUE)
 ```
 
-
-Get a Table of available regions for a dataset:
-```{r}
-regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
-```
-
-Get a Table of available output areas for a dataset within a region identified by its id
-```{r}
-OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
-```
-
-https://www.nomisweb.co.uk/forum/posts.aspx?tID=555&fID=2
-
-Get List of output areas for a given dataset, region and output area type
-```{r}
-OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
-
-```
-
-Get a Table of available sex information for a dataset
-```{r}
-dataset<-'NM_1_1'
-genders_NM_1_1 <- get_genders(ap,qformat,dataset)
-
-```
-
-Get the measures available for a given geography - these are denominators - i.e. out of the number of claimints, the number of people living there etc.
-```{r}
-measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
-```
-
-Get available 'items' for a specified dataset (i.e. the variables)
-```{r}
-dataset<-'NM_1_1'
-items_NM_1_1 <- get_items(ap,dataset,qformat)
-```
-
-Get available 'times' for a specified dataset 
-```{r}
-dataset<-'NM_1_1'
-times_NM_1_1 <- get_times(ap,dataset,qformat)
-
-```
-
-
-Get available data for a specified dataset
-```{r}
-dataset<-'NM_1_1'
-geography='2092957697TYPE464'
-geography='2092957697'
-sex=3
-item='1'
-time=1
-measures='20100,20201,20202,20203'
-measures='20100'
-
-data_NM_1_1 <- get_data(dataset, geography, sex, item, measures, dformat, time)
-
-```
 
 We can join our Geography names from the output of list_OAs to our data obtained with get_data
 ```{r}
-left_join(filter(df, SEX=='7'), OAlist_NM_1_1, by = "GEOGRAPHY")
+left_join(data_NM_1_1, OAlist_NM_1_1, by = "GEOGRAPHY")
 ```
 

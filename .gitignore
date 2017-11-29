@@ -15,3 +15,5 @@
 #Windows Nuisance Files
 desktop.ini
 *~$*
+Datasets/Nomisweb/Scripts/R/.RData
+Datasets/Nomisweb/Scripts/R/.Rhistory

@@ -1,7 +1,7 @@
 ---
 title: "SDMX"
 author: "Matthew Malcher"
-date: "17/11/2017"
+date: "29/11/2017"
 output: html_document
 ---
 
@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 At this point I will also load a few other useful libraries:
 ```{r}
 library(dplyr)
+library(jsonlite)
 # library(tidyr)
 ```
 
@@ -28,8 +29,8 @@ as.data.frame(providers) %>% filter(agencyId=='NOMIS')
 The script seems to have some issues when run on Windows 10 - I susepect this is to do with http/https and ssl RC4 being depracated. The following is an attempt to mess around with the RCurl settings to ignore certificate errors. I dont know if it works 
 ```{r Rcurl with settings for https on windows}
 library(RCurl)
-curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
-curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
+# curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
+# curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
 ```
 
 
@@ -42,10 +43,12 @@ ap<-'https://www.nomisweb.co.uk/api/v01/dataset'
 qformat <-'def.sdmx.xml'
 
 ```
-
 Now, lets get started with the nomisweb API!
 
-With the following commands we can get a data frame with details of all the datasets available on NOMIS
+# Dataset Discovery
+
+## Get info on all datasets available
+With the following commands we can get a data frame with details of all the datasets available on NOMIS. This is quite a long list and takes some time to retrieve.
 ```{r}
 get_all_dataset<-function(ap,qformat){
     queryUrl <- paste(ap,qformat,sep='/')
@@ -56,7 +59,7 @@ get_all_dataset<-function(ap,qformat){
 NomisDatasets <- get_all_dataset(ap,qformat)
 ```
 
-
+## Get info on a particular dataset
 Alternatively, if we know which dataset we want then we can request just that
 ```{r}
 
@@ -73,6 +76,37 @@ info_NM_1_2 <- info_on_dataset(ap,qformat,'NM_1_2')
 ```
 
 
+## List Content Types 
+The datasets can be broken down by contenttype. This is analogous to the categories presented at: https://www.nomisweb.co.uk/query/select/getdatasetbytheme
+
+```{r}
+get_content_types <- function(){
+  # Get a JSON containing all contenttype id's which fall under the AnnotationTitle 'contenttype/sources' 
+  # (which, as far as I can tell is all of them)
+  # Note - this is not part of standard SDMX so json is used here.
+  json_data <- fromJSON(txt="https://www.nomisweb.co.uk/api/v01/contenttype/sources.json")
+  return(json_data$contenttype$item)
+}
+
+ContentType <- get_content_types()
+select(ContentType, id, name)
+```
+
+## List Datasets by Content Type
+Get a list of datasets by content type - analgous to working through
+```{r}
+get_datasets_by_contenttype <- function(contenttype){
+  queryUrl <- paste0('https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.xml?search=contenttype-sources-',contenttype)
+  as.data.frame(readSDMX(queryUrl))
+}
+
+jsa_datasets <- get_datasets_by_contenttype('jsa')
+jsa_datasets
+```
+
+# Dataset Interrogation
+
+## Region Selection
 Get a Table of available regions for a dataset:
 ```{r}
 
@@ -87,6 +121,7 @@ regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
 
 ```
 
+## Get Available Output Area Types
 Get a Table of available output areas for a dataset within a region identified by its id
 ```{r}
 available_OAs <- function(ap,qformat,dataset,regioncode){
@@ -101,6 +136,7 @@ OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
 
 https://www.nomisweb.co.uk/forum/posts.aspx?tID=555&fID=2
 
+## List of Output Areas
 Get List of output areas for a given dataset, region and output area type
 ```{r}
 
@@ -116,6 +152,7 @@ OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
 
 ```
 
+## List Genders
 Get a Table of available sex information for a dataset
 ```{r}
 get_genders <-function(ap,qformat,dataset){
@@ -125,11 +162,11 @@ get_genders <-function(ap,qformat,dataset){
   return(genders)
 }
 
-dataset<-'NM_1_1'
-genders_NM_1_1 <- get_genders(ap,qformat,dataset)
+genders_NM_1_1 <- get_genders(ap,'NM_1_1',dataset)
 
 ```
 
+## List Measures
 Get the measures available for a given geography - these are denominators - i.e. out of the number of claimints, the number of people living there etc.
 ```{r}
 get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
@@ -144,9 +181,9 @@ get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
 measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
 ```
 
+## List Items
 Get available 'items' for a specified dataset (i.e. the variables)
 ```{r}
-
 get_items <- function(ap,dataset,qformat){
   
   qtype<-'item'
@@ -155,24 +192,25 @@ get_items <- function(ap,dataset,qformat){
   return(AvailableItems)
 }
 
-dataset<-'NM_1_1'
-items_NM_1_1 <- get_items(ap,dataset,qformat)
+items_NM_1_1 <- get_items(ap,'NM_1_1',qformat)
 ```
 
+## List Times
 Get available 'times' for a specified dataset 
 ```{r}
-dataset<-'NM_1_1'
-qtype<-'item'
-queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
-queryUrl
-AvailableItems <- as.data.frame(readSDMX(queryUrl))
-AvailableItems
+get_times <- function(ap,dataset,qformat){
+  qtype<-'time'
+  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
+  AvailableTimes <- as.data.frame(readSDMX(queryUrl))
+  return(AvailableTimes)
+}
 
+times_NM_1_1 <- get_times(ap,'NM_1_1',qformat)
 ```
 
 
-/api/v01/dataset/NM_1_1.generic.sdmx.xml?geography=2038432081&sex=5&item=1&measures=20100&time=latest
-
+# Getting Data
+Once you have all the information and have decided on your geography, gender, measure, item and time then you can retrieve the data.
 Get available 'items' for a specified dataset (i.e. the variables)
 ```{r}
 dformat<- 'compact.sdmx.xml' # For some reason if I use generic.sdmx.xml I get back partial XML files?
