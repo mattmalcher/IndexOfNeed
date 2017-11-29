@@ -14,9 +14,8 @@ At this point I will also load a few other useful libraries:
 ```{r}
 library(dplyr)
 library(jsonlite)
-# library(tidyr)
+library(xlsx)
 ```
-
 
 #  Load rsdmx
 There is an R library for working with SDMX. NOMIS is included as a predefined data source! This looks like it might make things a bit easier, but I cant figure out how to take advantage of it. Fortunately you can also buld your own URL's and feed them to the `readSDMX` command provided by the library.
@@ -26,21 +25,26 @@ providers <- getSDMXServiceProviders();
 as.data.frame(providers) %>% filter(agencyId=='NOMIS')
 ```
 
-The script seems to have some issues when run on Windows 10 - I susepect this is to do with http/https and ssl RC4 being depracated. The following is an attempt to mess around with the RCurl settings to ignore certificate errors. I dont know if it works 
+The script seems to have some issues when run on Windows 10 - I susepect this is to do with http/https and ssl RC4 being depracated. The following is an attempt to mess around with the RCurl settings to ignore certificate errors. I dont know if it works. 
 ```{r Rcurl with settings for https on windows}
-library(RCurl)
+# library(RCurl)
 # curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
 # curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
 ```
 
 
-There are some common bits of info used in all requests 
+There are some common bits of info used in all requests: 
 ```{r}
 # Define API access point
 ap<-'https://www.nomisweb.co.uk/api/v01/dataset' 
 
-# Define the format of the data returned. The rsdmx package allows SMDX in XML format to be read into data frames.
+# Define the format of the data returned for data discovery and interrogation queries. 
+# The rsdmx package allows SMDX in XML format to be read into data frames.
 qformat <-'def.sdmx.xml'
+
+# Define the format of the data returned for data requests 
+dformat<- 'compact.sdmx.xml' # For some reason if I use generic.sdmx.xml I get back partial XML files?
+# using compact sdmx gives a URI error but seems to return the correct data
 
 ```
 Now, lets get started with the nomisweb API!
@@ -48,7 +52,7 @@ Now, lets get started with the nomisweb API!
 # Dataset Discovery
 
 ## Get info on all datasets available
-With the following commands we can get a data frame with details of all the datasets available on NOMIS. This is quite a long list and takes some time to retrieve.
+With the following commands we can get a data frame with details of all the datasets available on NOMIS:
 ```{r}
 get_all_dataset<-function(ap,qformat){
     queryUrl <- paste(ap,qformat,sep='/')
@@ -56,11 +60,12 @@ get_all_dataset<-function(ap,qformat){
     return(all_data)
   }
 
-NomisDatasets <- get_all_dataset(ap,qformat)
+# NomisDatasets <- get_all_dataset(ap,qformat)
 ```
+This is quite a long list and takes some time to retrieve.
 
 ## Get info on a particular dataset
-Alternatively, if we know which dataset we want then we can request just that
+Alternatively, if we know which dataset we want then we can request just that:
 ```{r}
 
 info_on_dataset <- function(ap,qformat,dataset){
@@ -70,15 +75,13 @@ info_on_dataset <- function(ap,qformat,dataset){
   return(SingleDataset)
 }
 
-info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
-info_NM_1_2 <- info_on_dataset(ap,qformat,'NM_1_2')
+# info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
 
 ```
 
 
 ## List Content Types 
-The datasets can be broken down by contenttype. This is analogous to the categories presented at: https://www.nomisweb.co.uk/query/select/getdatasetbytheme
-
+The datasets can be broken down by contenttype:
 ```{r}
 get_content_types <- function(){
   # Get a JSON containing all contenttype id's which fall under the AnnotationTitle 'contenttype/sources' 
@@ -88,21 +91,24 @@ get_content_types <- function(){
   return(json_data$contenttype$item)
 }
 
-ContentType <- get_content_types()
-select(ContentType, id, name)
+# ContentType <- get_content_types()
+# select(ContentType, id, name)
 ```
 
 ## List Datasets by Content Type
-Get a list of datasets by content type - analgous to working through
+Get a list of datasets of a particular content type:
 ```{r}
 get_datasets_by_contenttype <- function(contenttype){
   queryUrl <- paste0('https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.xml?search=contenttype-sources-',contenttype)
   as.data.frame(readSDMX(queryUrl))
 }
 
-jsa_datasets <- get_datasets_by_contenttype('jsa')
-jsa_datasets
+# jsa_datasets <- get_datasets_by_contenttype('jsa')
+# jsa_datasets
 ```
+
+This is analogous to the categories presented at: https://www.nomisweb.co.uk/query/select/getdatasetbytheme
+
 
 # Dataset Interrogation
 
@@ -117,7 +123,7 @@ available_regions <- function(ap,qformat,dataset){
   return(regionlist)
 }
 
-regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
+# regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
 
 ```
 
@@ -131,7 +137,7 @@ available_OAs <- function(ap,qformat,dataset,regioncode){
   return(availableOAlist)
 }
 
-OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
+# OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
 ```
 
 https://www.nomisweb.co.uk/forum/posts.aspx?tID=555&fID=2
@@ -148,21 +154,21 @@ list_OAs <- function(ap,qformat,dataset,regioncode,OAtype){
   return(OAlist)
 }
 
-OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
+# OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
 
 ```
 
 ## List Genders
 Get a Table of available sex information for a dataset
 ```{r}
-get_genders <-function(ap,qformat,dataset){
+get_genders <-function(ap,dataset,qformat){
   qtype<-'sex'
   queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
   genders <- as.data.frame(readSDMX(queryUrl))
   return(genders)
 }
 
-genders_NM_1_1 <- get_genders(ap,'NM_1_1',dataset)
+# genders_NM_1_1 <- get_genders(ap,'NM_1_1', qformat)
 
 ```
 
@@ -178,7 +184,7 @@ get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
   return(measures)
 }
 
-measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
+# measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
 ```
 
 ## List Items
@@ -192,7 +198,7 @@ get_items <- function(ap,dataset,qformat){
   return(AvailableItems)
 }
 
-items_NM_1_1 <- get_items(ap,'NM_1_1',qformat)
+# items_NM_1_1 <- get_items(ap,'NM_1_1',qformat)
 ```
 
 ## List Times
@@ -205,17 +211,13 @@ get_times <- function(ap,dataset,qformat){
   return(AvailableTimes)
 }
 
-times_NM_1_1 <- get_times(ap,'NM_1_1',qformat)
+# times_NM_1_1 <- get_times(ap,'NM_1_1',qformat)
 ```
-
 
 # Getting Data
 Once you have all the information and have decided on your geography, gender, measure, item and time then you can retrieve the data.
 Get available 'items' for a specified dataset (i.e. the variables)
 ```{r}
-dformat<- 'compact.sdmx.xml' # For some reason if I use generic.sdmx.xml I get back partial XML files?
-# using compact sdmx gives a URI error but seems to return the correct data
-
 get_data <- function(dataset, geography, sex, item, measures, dformat , time){
   
   timeopts=c(
@@ -242,20 +244,25 @@ get_data <- function(dataset, geography, sex, item, measures, dformat , time){
   return(df)
 }
 
-dataset<-'NM_1_1'
-geography='2092957697TYPE464'
-geography='2092957697'
-sex=3
-item='1'
-time=1
-measures='20100,20201,20202,20203'
 
-data_NM_1_1 <- get_data(dataset, geography, sex, item, measures, dformat, time)
+# data_NM_1_1 <- get_data('NM_1_1',
+#                         '2092957697TYPE464', 
+#                         3, 
+#                         '1', 
+#                         '20100,20201,20202,20203', 
+#                         dformat, 
+#                         1)
 
 ```
 
 We can join our Geography names from the output of list_OAs to our data obtained with get_data
 ```{r}
-left_join(filter(df, SEX=='7'), OAlist_NM_1_1, by = "GEOGRAPHY")
+# left_join(filter(df, SEX=='7'), OAlist_NM_1_1, by = "GEOGRAPHY")
 ```
 
+Write out to Excel
+```{r}
+# Write the weights and total weight to one worksheet
+# write.xlsx2(NomisDatasets, 'NomisDatasets.xlsx', sheetName="Datasets", 
+#   col.names=TRUE, row.names=FALSE, append=FALSE, showNA=TRUE)
+```

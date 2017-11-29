@@ -23,12 +23,7 @@ https://www.nomisweb.co.uk/api/v01/contenttype/sources/id/cc.xml  #- Claimant Co
 # Gets the contenttype in a json for a given dataset using the Overview endpoint. This is not standard sdmx.
 https://www.nomisweb.co.uk/api/v01/dataset/nm_1_1.overview.json?select=contenttypes
 
-# Get a JSON containing all contenttype id's which fall under the AnnotationTitle 'contenttype/sources'
-```{r}
-contenttypejs<-"https://www.nomisweb.co.uk/api/v01/contenttype/sources.json"
 
-json_data <- fromJSON(file=contenttypejs)
-```
 
 
 

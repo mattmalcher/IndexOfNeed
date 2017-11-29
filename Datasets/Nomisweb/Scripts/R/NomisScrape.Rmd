@@ -1,7 +1,7 @@
 ---
-title: "SDMX"
+title: "NomisScrape"
 author: "Matthew Malcher"
-date: "17/11/2017"
+date: "29/11/2017"
 output: html_document
 ---
 
@@ -9,189 +9,102 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Load data handling libraries
-At this point I will also load a few other useful libraries:
-```{r}
-library(dplyr)
-library(xlsx)
-```
+# Prerequisites.
+This file requires that `SDMX Access.Rmd` be run first to define all the functions and load all the relevant libraries for accessing data via the Nomis API.
 
-#  Load rsdmx
-There is an R library for working with SDMX. NOMIS is included as a predefined data source! This looks like it might make things a bit easier, but I cant figure out how to take advantage of it. Fortunately you can also buld your own URL's and feed them to the `readSDMX` command provided by the library.
-```{r RSDMX}
-library(rsdmx)
-as.data.frame(getSDMXServiceProviders()) %>% filter(agencyId=='NOMIS')
-```
+# Get JSA Data
+## Find JSA variables
 
-The script seems to have some issues when run on Windows 10 - I susepect this is to do with http/https and ssl RC4 being depracated. The following is an attempt to mess around with the RCurl settings to ignore certificate errors. I dont know if it works 
-```{r Rcurl with settings for https on windows}
-library(RCurl)
-# curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
-# curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
-```
-
-There are some common bits of info used in all requests 
-```{r Set API ap and Formats}
-# Define API access point
-ap<-'https://www.nomisweb.co.uk/api/v01/dataset' 
-
-# Define the format of the data returned when interogating Nomis. The rsdmx package allows SMDX in XML format to be read into data frames.
-qformat <-'def.sdmx.xml'
-
-# Define the format of the data returned when downloading Files. The rsdmx package allows SMDX in XML format to be read into data frames.
-dformat<- 'compact.sdmx.xml' # For some reason if I use generic.sdmx.xml I get back partial XML files?
-# using compact sdmx gives a URI error but seems to return the correct data
-
-```
-
-
-# Define Functions for Interacting with Nomis API
-
-```{r Define Functions}
-get_all_dataset<-function(ap,qformat){
-    queryUrl <- paste(ap,qformat,sep='/')
-    all_data <- as.data.frame(readSDMX(queryUrl))
-    return(all_data)
-}
-
-# EXAMPLE:
-# info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
-info_on_dataset <- function(ap,qformat,dataset){
-  queryUrl<-paste0(paste(ap,dataset,sep='/'),'.',qformat)
-  # print('Querying: ',queryUrl)
-  SingleDataset <- as.data.frame(readSDMX(queryUrl))
-  return(SingleDataset)
- }
-
-# EXAMPLE:
-# regions_NM_1_1<-available_regions(ap,qformat,'NM_1_1')
-available_regions <- function(ap,qformat,dataset){
-  qtype<-'geography'
-  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
-  regionlist <- as.data.frame(readSDMX(queryUrl))
-  return(regionlist)
-}
-
-# EXAMPLE:
-# genders_NM_1_1 <- get_genders(ap,qformat,'NM_1_1')
-get_genders <-function(ap,qformat,dataset){
-  qtype<-'sex'
-  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
-  genders <- as.data.frame(readSDMX(queryUrl))
-  return(genders)
-}
-
-# EXAMPLE:
-# OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697')
-available_OAs <- function(ap,qformat,dataset,regioncode){
-  qtype<-'geography'
-  queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),'.',qformat)
-  availableOAlist <- as.data.frame(readSDMX(queryUrl))
-  return(availableOAlist)
-}
-
-# EXAMPLE:
-# OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
-list_OAs <- function(ap,qformat,dataset,regioncode,OAtype){
-  qtype<-'geography'
-  queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),OAtype,'.',qformat)
-  OAlist <- as.data.frame(readSDMX(queryUrl))
-  OAlist<-rename(OAlist, GEOGRAPHY=id) # Rename the id column to GEOGRAPHY to match output of 
-  return(OAlist)
-}
-
-# EXAMPLE:
-# items_NM_1_1 <- get_items(ap,'NM_1_1',qformat)
-get_items <- function(ap,dataset,qformat){
-  
-  qtype<-'item'
-  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
-  AvailableItems <- as.data.frame(readSDMX(queryUrl))
-  return(AvailableItems)
-}
-
-# EXAMPLE:
-# times_NM_1_1 <- get_times(ap,'NM_1_1',qformat)
-get_times <- function(ap,dataset,qformat){
-  qtype<-'time'
-  queryUrl<-paste0(paste(ap,dataset,qtype,sep='/'),'.',qformat)
-  AvailableTimes <- as.data.frame(readSDMX(queryUrl))
-  return(AvailableTimes)
-}
-
-
-# EXAMPLE:
-# measures_NM_1_1 <- get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
-get_measures <- function(ap,qformat,dataset,regioncode,OAtype){
-  qtype<-'measures'
-  queryUrl<-paste0(paste(ap,dataset,qtype,regioncode,sep='/'),OAtype,'.',qformat)
-  print(queryUrl)
-  measures <- as.data.frame(readSDMX(queryUrl))
-  return(measures)
-}
-
-```
-
-# Define Function for pulling data using the Nomis API
+Get a table of the nomis variables which are in the JSA category.
 
 ```{r}
+jsaDatasets <- get_datasets_by_contenttype('jsa')
 
-# EXAMPLE:
-# data_NM_1_1 <- get_data(dataset = 'NM_1_1', 
-#                         geography='2092957697TYPE464', 
-#                         sex=3,
-#                         item='1', 
-#                         measures='20100,20201,20202,20203',
-#                         dformat,
-#                         time=1)
-
-get_data <- function(dataset, geography, sex, item, measures, dformat , time){
-  
-  # Pre enter the valid Time options
-  timeopts=c(
-    "latest", # the latest available data for this dataset
-    "previous", # the date prior to "latest"
-    "prevyear", # the date one year prior to "latest"
-    "first") # the oldest available data for this dataset
-  
-  # Pre enter the valid Time options
-  sexopts=c("5",  #Male Only
-            "6",  #Female Only
-            "7",  #Total
-            "5,6" #Both
-            )
-  
-  query<-paste0('?geography=',geography,'&sex=',sexopts[sex],'&item=',item,'&measures=',measures,'&time=', timeopts[time])
-  
-  queryUrl<-paste0(paste(ap,dataset,sep='/'),'.',dformat,query)
-  print(queryUrl)
-  
-  df <- as.data.frame(readSDMX(queryUrl))
-  
-  return(df)
-}
+jsaDatasets$id
+jsaDatasets$Description.en
 ```
 
-Now, lets get started with the nomisweb API!
+Looking at `jsaDatasets$Name.en` we can pick a few of these which we think are relevant or interesting:
 
-Get information on all the datasets
+* NM_1_1 - Jobseeker's Allowance with rates and proportions
+* NM_7_1 - claimant count - occupation, age and duration
+* NM_10_1 - Jobseeker's Allowance flows
+
+We now want to check that these are available for our desired output type - Local Authority Areas
+
 ```{r}
-NomisDatasets <- get_all_dataset(ap,qformat) %>% select(id, Name.en, Description.en)
+OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697') %>% filter(id =='2092957697TYPE464')
+OAs_NM_7_1 <- available_OAs(ap,qformat,'NM_7_1','2092957697') %>% filter(id =='2092957697TYPE464')
+OAs_NM_10_1 <- available_OAs(ap,qformat,'NM_10_1','2092957697') %>% filter(id =='2092957697TYPE464')
+
+OAs_NM_1_1
+OAs_NM_7_1
+OAs_NM_10_1
 ```
 
+We can see that all three variables are available at local authority level. Good!
 
-Lets iterate over the datasets and see when the last time each one was updated is
-
-Lets write the datasets out to an excel file and decide which ones we think are interesting.
+Now we can get the list of output areas available for each dataset.
 ```{r}
-# Write the weights and total weight to one worksheet
-write.xlsx2(NomisDatasets, 'NomisDatasets.xlsx', sheetName="Datasets", 
-  col.names=TRUE, row.names=FALSE, append=FALSE, showNA=TRUE)
+OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
+OAlist_NM_7_1 <- list_OAs(ap,qformat,'NM_7_1','2092957697','TYPE464')
+OAlist_NM_10_1 <- list_OAs(ap,qformat,'NM_10_1','2092957697','TYPE464')
 ```
 
-
-We can join our Geography names from the output of list_OAs to our data obtained with get_data
+We can check that the output areas are identical for the three datasets, and then remove the duplicate variables.
 ```{r}
-left_join(data_NM_1_1, OAlist_NM_1_1, by = "GEOGRAPHY")
+identical(OAlist_NM_1_1,OAlist_NM_7_1)
+identical(OAlist_NM_1_1,OAlist_NM_10_1)
+OAlist <-OAlist_NM_1_1
+rm(OAlist_NM_1_1,OAlist_NM_7_1,OAlist_NM_10_1)
 ```
+
+Next we can check which measures we want for each dataset.
+```{r}
+
+get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
+get_measures(ap,qformat,'NM_7_1','2092957697','TYPE464')
+get_measures(ap,qformat,'NM_10_1','2092957697','TYPE464')
+
+```
+```{r}
+get_items(ap,'NM_1_1',qformat)
+get_items(ap,'NM_7_1',qformat)
+get_items(ap,'NM_10_1',qformat)
+```
+Get NM_1_1 Data
+```{r}
+
+data_NM_1_1 <- get_data('NM_1_1',
+                        '2092957697TYPE464',       # Local Authority Areas
+                        3,                         # Genders: Total for both Genders
+                        '1',                       # Item: Total Claimints
+                        '20100,20201,20202,20203', # Measures: claimants, workforce, active, residence
+                        dformat,                   # sdmx data format
+                        1)                         # Latest Time
+```
+
+Get NM_7_1 Data
+```{r}
+data_NM_7_1 <- get_data('NM_6_1',
+                        '2092957697TYPE464',       # Local Authority Areas
+                        3,                         # Genders: Total for both Genders
+                        '1',                     # Item: Sought & Usual Occupation
+                        '20100',                   # Measures: value only
+                        dformat,                   # sdmx data format
+                        1)                         # Latest Time
+```
+
+Get NM_10_1 Data
+```{r}
+data_NM_10_1 <- get_data('NM_10_1',
+                        '2092957697TYPE464',       # Local Authority Areas
+                        3,                         # Genders: Total for both Genders
+                        '1',                       # Item: Total Claimints
+                        '20100',                   # Measures: value only
+                        dformat,                   # sdmx data format
+                        1)                         # Latest Time
+```
+
+We notice that we get 1624 rows for NM_1_1, 112 for 
 
