@@ -22,6 +22,8 @@ jsaDatasets <- get_datasets_by_contenttype('jsa')
 
 jsaDatasets$id
 jsaDatasets$Description.en
+
+get_datasets_by_contenttype('jsa')
 ```
 
 Looking at `jsaDatasets$Name.en` we can pick a few of these which we think are relevant or interesting:
@@ -86,7 +88,8 @@ data_NM_1_1 <- get_data('NM_1_1',
 
 Get NM_7_1 Data
 ```{r}
-data_NM_7_1 <- get_data('NM_6_1',
+
+data_NM_7_1 <- get_data('NM_7_1',
                         '2092957697TYPE464',       # Local Authority Areas
                         3,                         # Genders: Total for both Genders
                         '1',                     # Item: Sought & Usual Occupation

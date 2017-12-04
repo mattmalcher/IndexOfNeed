@@ -37,6 +37,7 @@ There are some common bits of info used in all requests:
 ```{r}
 # Define API access point
 ap<-'https://www.nomisweb.co.uk/api/v01/dataset' 
+cl<-'https://www.nomisweb.co.uk/api/v01/codelist' 
 
 # Define the format of the data returned for data discovery and interrogation queries. 
 # The rsdmx package allows SMDX in XML format to be read into data frames.
@@ -78,6 +79,24 @@ info_on_dataset <- function(ap,qformat,dataset){
 # info_NM_1_1 <- info_on_dataset(ap,qformat,'NM_1_1')
 
 ```
+
+
+
+## Get codelist for a particular dataset
+```{r}
+# https://www.nomisweb.co.uk/api/v01/codelist/CL_1_1_ITEM.def.sdmx.xml
+
+get_codelist <- function(cl,qformat,dataset,aspect){
+  clist <- gsub('NM','CL',dataset)
+  queryUrl<-paste0(paste(cl,clist,sep='/'),aspect,'.',qformat)
+  queryUrl
+  SingleDataset <- as.data.frame(readSDMX(queryUrl))
+  return(SingleDataset)
+}
+
+codelist<-get_codelist(cl,qformat,'NM_1_1','_MEASURE')
+```
+
 
 
 ## List Content Types 
