@@ -10,20 +10,20 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 # Prerequisites.
-This file requires that `SDMX Access.Rmd` be run first to define all the functions and load all the relevant libraries for accessing data via the Nomis API.
+This file requires that all chunks in `SDMX Access.Rmd` be run first to define all the functions and load all the relevant libraries for accessing data via the Nomis API.
+
+we also want to load the following additional libraries:
+```{r}
+library(tidyr)
+```
 
 # Get JSA Data
-## Find JSA variables
 
+## Find JSA variables
 Get a table of the nomis variables which are in the JSA category.
 
 ```{r}
 jsaDatasets <- get_datasets_by_contenttype('jsa')
-
-jsaDatasets$id
-jsaDatasets$Description.en
-
-get_datasets_by_contenttype('jsa')
 ```
 
 Looking at `jsaDatasets$Name.en` we can pick a few of these which we think are relevant or interesting:
@@ -32,51 +32,40 @@ Looking at `jsaDatasets$Name.en` we can pick a few of these which we think are r
 * NM_7_1 - claimant count - occupation, age and duration
 * NM_10_1 - Jobseeker's Allowance flows
 
-We now want to check that these are available for our desired output type - Local Authority Areas
+We now want to check that these are available for our desired output type - Local Authority Areas. Ideally we would cross reference it against a list of datasets which are available at our desired geography level, however despite this functionality being present at: https://www.nomisweb.co.uk/query/select/getdatasetbygeog.asp?cat=8&geogtype=464
+
+Fortunately we can still do it individually for our datasets of interest: 
 
 ```{r}
-OAs_NM_1_1 <- available_OAs(ap,qformat,'NM_1_1','2092957697') %>% filter(id =='2092957697TYPE464')
-OAs_NM_7_1 <- available_OAs(ap,qformat,'NM_7_1','2092957697') %>% filter(id =='2092957697TYPE464')
-OAs_NM_10_1 <- available_OAs(ap,qformat,'NM_10_1','2092957697') %>% filter(id =='2092957697TYPE464')
+available_OAs(ap,qformat,'NM_1_1','2092957697')%>% filter(id =='2092957697TYPE464')
 
-OAs_NM_1_1
-OAs_NM_7_1
-OAs_NM_10_1
+ available_OAs(ap,qformat,'NM_7_1','2092957697')%>% filter(id =='2092957697TYPE464')
+
+ available_OAs(ap,qformat,'NM_10_1','2092957697') %>% filter(id =='2092957697TYPE464')
 ```
 
 We can see that all three variables are available at local authority level. Good!
-
+## 
 Now we can get the list of output areas available for each dataset.
 ```{r}
-OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
-OAlist_NM_7_1 <- list_OAs(ap,qformat,'NM_7_1','2092957697','TYPE464')
-OAlist_NM_10_1 <- list_OAs(ap,qformat,'NM_10_1','2092957697','TYPE464')
+OAlist<- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
 ```
 
-We can check that the output areas are identical for the three datasets, and then remove the duplicate variables.
-```{r}
-identical(OAlist_NM_1_1,OAlist_NM_7_1)
-identical(OAlist_NM_1_1,OAlist_NM_10_1)
-OAlist <-OAlist_NM_1_1
-rm(OAlist_NM_1_1,OAlist_NM_7_1,OAlist_NM_10_1)
-```
+  
 
-Next we can check which measures we want for each dataset.
-```{r}
+# NM_1_1 - JSA Claimants
 
-get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
-get_measures(ap,qformat,'NM_7_1','2092957697','TYPE464')
-get_measures(ap,qformat,'NM_10_1','2092957697','TYPE464')
-
-```
+##  Get Items
 ```{r}
 get_items(ap,'NM_1_1',qformat)
-get_items(ap,'NM_7_1',qformat)
-get_items(ap,'NM_10_1',qformat)
 ```
-Get NM_1_1 Data
+##  Get Measures
 ```{r}
+get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
+```
 
+##  Get Data
+```{r}
 data_NM_1_1 <- get_data('NM_1_1',
                         '2092957697TYPE464',       # Local Authority Areas
                         3,                         # Genders: Total for both Genders
@@ -86,6 +75,41 @@ data_NM_1_1 <- get_data('NM_1_1',
                         1)                         # Latest Time
 ```
 
+## Tidy Data
+We notice that we get 1624 rows for NM_1_1:
+
+  * 20100 People Claming,
+  * 20201 workplace estimate, 
+  * 20202 Economically Active 
+  * 20203 People Claiming as a proportion of resident population
+
+4 measures x 406 regions = 1624 rows
+
+Our target is a wide dataset we can join in QGIS or similar with 1 row per geography. Therefore we want to use something like spread from tidyr to tidy this up. We can do this using the measures column in this case.
+```{r}
+
+data_NM_1_1 <- data_NM_1_1 %>%
+  select(GEOGRAPHY, MEASURES, OBS_VALUE) %>%
+  spread(key='MEASURES',  value='OBS_VALUE' ) %>%
+  rename( claimants= '20100' ,
+          workplace='20201' ,
+          active =  '20202', 
+          proportion= '20203' )
+```
+
+# NM_7_1 - claimant count
+## Get Items
+```{r}
+get_items(ap,'NM_7_1',qformat)
+```
+
+## Get Measures
+```{r}
+get_measures(ap,qformat,'NM_7_1','2092957697','TYPE464')
+```
+
+
+## Get Data
 Get NM_7_1 Data
 ```{r}
 
@@ -97,7 +121,28 @@ data_NM_7_1 <- get_data('NM_7_1',
                         dformat,                   # sdmx data format
                         1)                         # Latest Time
 ```
+112 observations for NM_7_1
+  all values for strabane? - looks pretty wrong
+  
+```{r}
+info_on_dataset(ap,qformat,'NM_7_1')
+get_codelist(cl,qformat,'NM_7_1','_ITEM')
+```
+## Tidy Data 
 
+
+# NM_10_1 - Jobseeker's Allowance flows
+## Get Items
+```{r}
+get_items(ap,'NM_10_1',qformat)
+```
+
+## Get Measures
+```{r}
+get_measures(ap,qformat,'NM_10_1','2092957697','TYPE464')
+```
+
+## Get Data
 Get NM_10_1 Data
 ```{r}
 data_NM_10_1 <- get_data('NM_10_1',
@@ -107,7 +152,11 @@ data_NM_10_1 <- get_data('NM_10_1',
                         '20100',                   # Measures: value only
                         dformat,                   # sdmx data format
                         1)                         # Latest Time
+# 
 ```
+1218 for NM_10_1 - 
+  Stock, 
+  Off Flow 
+  On Flow ?
 
-We notice that we get 1624 rows for NM_1_1, 112 for 
-
+## Tidy Data 
