@@ -80,21 +80,48 @@ info_on_dataset <- function(ap,qformat,dataset){
 
 ```
 
+## Get Structure and Codelist Names
+```{r}
+# https://www.nomisweb.co.uk/api/v01/dataset/NM_7_1/def.htm
+
+get_struct <- function(ap,qformat,dataset){
+  
+  queryUrl<-paste0(paste(ap,dataset,qformat,sep='/'))
+  print(queryUrl)
+  SingleDataset <- readSDMX(queryUrl,dsd=TRUE)
+  
+  # index into the SDMX and retrieve the dimensions object
+  Dims <- SingleDataset@datastructures[1][[1]]@Components@Dimensions
+  
+  # iterate over it to extract the dimesions and the codelist names
+  ref=list()
+  code=list()
+  for(i in 1:length(Dims)){
+    ref<- append(ref,Dims[[i]]@conceptRef)
+    code<- append(code,Dims[[i]]@codelist)
+  }
+  
+  # create data frame of these
+  return(do.call(rbind, Map(data.frame, Ref=ref, CodeList=code)))
+}
+
+# struct_NM_1_1 <- get_struct (ap,qformat,'NM_7_1')
+```
 
 
-## Get codelist for a particular dataset
+## Get codelist for a particular part of a dataset structure
 ```{r}
 # https://www.nomisweb.co.uk/api/v01/codelist/CL_1_1_ITEM.def.sdmx.xml
 
-get_codelist <- function(cl,qformat,dataset,aspect){
-  clist <- gsub('NM','CL',dataset)
-  queryUrl<-paste0(paste(cl,clist,sep='/'),aspect,'.',qformat)
-  queryUrl
+get_codelist <- function(cl,qformat,codelist){
+  
+  queryUrl<-paste0(paste(cl,codelist,sep='/'),'.',qformat)
+  print(queryUrl)
   SingleDataset <- as.data.frame(readSDMX(queryUrl))
   return(SingleDataset)
 }
 
-# codelist<-get_codelist(cl,qformat,'NM_1_1','_MEASURE')
+# codelist<-get_codelist(cl,qformat,'CL_1_1_ITEM')
 ```
 
 
@@ -236,42 +263,56 @@ get_times <- function(ap,dataset,qformat){
 # Getting Data
 Once you have all the information and have decided on your geography, gender, measure, item and time then you can retrieve the data.
 Get available 'items' for a specified dataset (i.e. the variables)
-```{r}
-get_data <- function(dataset, geography, sex, item, measures, dformat , time){
-  
-  timeopts=c(
-    "latest", # the latest available data for this dataset
-    "previous", # the date prior to "latest"
-    "prevyear", # the date one year prior to "latest"
-    "first") # the oldest available data for this dataset
 
-  sexopts=c("5",  #Male Only
-            "6",  #Female Only
-            "7",  #Total
-            "5,6" #Both
-            )
+For time you can have:
+
+* "latest" the latest available data for this dataset
+* "previous" the date prior to "latest"
+* "prevyear" the date one year prior to "latest"
+* "first" the oldest available data for this dataset
+
+For gender you can pick from:
+
+* "5" Male Only
+* "6" Female Only
+* "7"  Total
+* "5,6"  Both
+
+
+Define a function which takes a list of input arguments and builds them to make a url.
+```{r}
+get_data <- function(qlist, dataset, dformat){
+ 
+  qurl=parse_url('https://www.nomisweb.co.uk/')
+  qurl$path<-paste0('api/v01/',dataset,'.',dformat)
+  qurl$query<-qlist
   
-  query<-paste0('?geography=',geography,'&sex=',sexopts[sex],'&item=',item,'&measures=',measures,'&time=', timeopts[time])
+  queryUrl<-build_url(url=qurl)
+  print(queryUrl)
   
-  # #Dont need to have all items  
-   # query<-paste0('?geography=',geography,'&item=',item,'&measures=',measures,'&time=latest')
-  
-  file<-paste0(paste(ap,dataset,sep='/'),'.',dformat,query)
-  print(file)
-  df <- as.data.frame(readSDMX(file))
-  
+  df <- as.data.frame(readSDMX(queryUrl))
   return(df)
 }
+# qlist<-list(geography='2038432081',sex=5,item=1,measures=20100,time='latest')
+# exampledata<-get_data(qlist, 'NM_1_1', dformat)
+```
 
-
-# data_NM_1_1 <- get_data('NM_1_1',
-#                         '2092957697TYPE464', 
-#                         3, 
-#                         '1', 
-#                         '20100,20201,20202,20203', 
-#                         dformat, 
-#                         1)
-
+Get the sdmx - troubleshooting.
+```{r}
+get_sdmx <- function(qlist, dataset, dformat){
+ 
+  qurl=parse_url('https://www.nomisweb.co.uk/')
+  qurl$path<-paste0('api/v01/',dataset,'.',dformat)
+  qurl$query<-qlist
+  
+  queryUrl<-build_url(url=qurl)
+  print(queryUrl)
+  
+  df <- readSDMX(queryUrl)
+  return(df)
+}
+# qlist<-list(geography='2038432081',sex=5,item=1,measures=20100,time='latest')
+# exampledata<-get_data(qlist, 'NM_1_1', dformat)
 ```
 
 We can join our Geography names from the output of list_OAs to our data obtained with get_data
