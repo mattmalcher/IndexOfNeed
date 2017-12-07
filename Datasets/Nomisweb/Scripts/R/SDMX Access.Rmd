@@ -12,9 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load data handling libraries
 At this point I will also load a few other useful libraries:
 ```{r}
-library(dplyr)
+library(dplyr) #for manipulating data frames
 library(jsonlite)
-library(xlsx)
+library(httr) #for parsing URL
 ```
 
 #  Load rsdmx
@@ -42,11 +42,6 @@ cl<-'https://www.nomisweb.co.uk/api/v01/codelist'
 # Define the format of the data returned for data discovery and interrogation queries. 
 # The rsdmx package allows SMDX in XML format to be read into data frames.
 qformat <-'def.sdmx.xml'
-
-# Define the format of the data returned for data requests 
-dformat<- 'compact.sdmx.xml' # For some reason if I use generic.sdmx.xml I get back partial XML files?
-# using compact sdmx gives a URI error but seems to return the correct data
-
 ```
 Now, lets get started with the nomisweb API!
 
@@ -264,25 +259,10 @@ get_times <- function(ap,dataset,qformat){
 Once you have all the information and have decided on your geography, gender, measure, item and time then you can retrieve the data.
 Get available 'items' for a specified dataset (i.e. the variables)
 
-For time you can have:
-
-* "latest" the latest available data for this dataset
-* "previous" the date prior to "latest"
-* "prevyear" the date one year prior to "latest"
-* "first" the oldest available data for this dataset
-
-For gender you can pick from:
-
-* "5" Male Only
-* "6" Female Only
-* "7"  Total
-* "5,6"  Both
-
-
 Define a function which takes a list of input arguments and builds them to make a url.
 ```{r}
-get_data <- function(qlist, dataset, dformat){
- 
+get_data_sdmx <- function(qlist, dataset){
+  dformat<- 'compact.sdmx.xml' # For some reason if I use generic.sdmx.xml I get back partial XML   files? Using compact sdmx gives a URI error but seems to return the correct data
   qurl=parse_url('https://www.nomisweb.co.uk/')
   qurl$path<-paste0('api/v01/',dataset,'.',dformat)
   qurl$query<-qlist
@@ -294,35 +274,36 @@ get_data <- function(qlist, dataset, dformat){
   return(df)
 }
 # qlist<-list(geography='2038432081',sex=5,item=1,measures=20100,time='latest')
-# exampledata<-get_data(qlist, 'NM_1_1', dformat)
+# exampledata<-get_data(qlist, 'NM_1_1')
 ```
 
-Get the sdmx - troubleshooting.
+# Tidy Data
+This function lets you use the contents of a codelist to rename the ambiguous column names of a data frame which has been manipulated using spread to a wide format.
 ```{r}
-get_sdmx <- function(qlist, dataset, dformat){
- 
-  qurl=parse_url('https://www.nomisweb.co.uk/')
-  qurl$path<-paste0('api/v01/',dataset,'.',dformat)
-  qurl$query<-qlist
+reaname_via_codelist<- function(df,codeliststring){
   
-  queryUrl<-build_url(url=qurl)
-  print(queryUrl)
+  # Get the Names of the Data Frame
+  names<- names(df)
   
-  df <- readSDMX(queryUrl)
+  # Get the code list using the codelist string
+  codelist <- get_codelist(cl,qformat,codeliststring) 
+  
+  # Filter the codelist to the names in your data frame
+  codelist<- codelist %>% filter(id %in% names)
+  
+  # Append Geography since it wont be there but we want it to have a name 
+  codelist<- rbind(codelist,data.frame(id = "GEOGRAPHY", label.en = "GEOGRAPHY"))
+  
+  # Generate a list of names we want to use
+  rename_map <- as.character(codelist$label)
+  names(rename_map) <- codelist$id    
+    
+  # Set the names of the cols in the data frame to the values in the rename map
+  names(df) <- rename_map[names(df)]
+  
   return(df)
 }
-# qlist<-list(geography='2038432081',sex=5,item=1,measures=20100,time='latest')
-# exampledata<-get_data(qlist, 'NM_1_1', dformat)
 ```
 
-We can join our Geography names from the output of list_OAs to our data obtained with get_data
-```{r}
-# left_join(filter(df, SEX=='7'), OAlist_NM_1_1, by = "GEOGRAPHY")
-```
 
-Write out to Excel
-```{r}
-# Write the weights and total weight to one worksheet
-# write.xlsx2(NomisDatasets, 'NomisDatasets.xlsx', sheetName="Datasets", 
-#   col.names=TRUE, row.names=FALSE, append=FALSE, showNA=TRUE)
-```
+
