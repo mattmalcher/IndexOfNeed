@@ -5,21 +5,20 @@
   <evaluateDefaultValues active="0"/>
   <layer-tree-group expanded="1" checked="Qt::Checked" name="">
     <customproperties/>
-    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="infuse_dist_lyr_2011_clipped20171114153431179" source="/Users/mpm2017/Google Drive/BRC IMD/Boundaries/Local Authorities/Shapefile/infuse_dist_lyr_2011_clipped/infuse_dist_lyr_2011_clipped.shp" name="infuse_dist_lyr_2011_clipped">
-      <customproperties/>
-    </layer-tree-layer>
-    <layer-tree-layer expanded="1" providerKey="delimitedtext" checked="Qt::Checked" id="local_authority_area_list201120171113163240965" source="file:///Users/mpm2017/Google%20Drive/BRC%20IMD/Boundaries/Local%20Authorities/Other/local-authority-area-list2011.csv?type=csv&amp;geomType=none&amp;subsetIndex=no&amp;watchFile=no" name="local-authority-area-list2011">
-      <customproperties/>
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="LocalAuth20171207160805428" source="/vsizip//Users/mpm2017/Google Drive/IndexOfNeed/Boundaries/Local Authorities/Shapefile/LocalAuth.zip" name="LocalAuth">
+      <customproperties>
+        <property key="showFeatureCount" value="1"/>
+      </customproperties>
     </layer-tree-layer>
   </layer-tree-group>
   <relations/>
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>-16460.97103095130296424</xmin>
-      <ymin>-25036.19000000006053597</ymin>
-      <xmax>671996.54563490115106106</xmax>
-      <ymax>1250675.59000000031664968</ymax>
+      <xmin>-513530.19830392522271723</xmin>
+      <ymin>-539295.00413597212173045</ymin>
+      <xmax>863384.83502777910325676</xmax>
+      <ymax>2012128.55586402653716505</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -39,56 +38,49 @@
     <layer_coordinate_transform_info>
       <layer_coordinate_transform destAuthId="USER:100000" srcAuthId="USER:100000" srcDatumTransform="-1" destDatumTransform="-1" layerid="infuse_dist_lyr_2011_clipped20171114153431179"/>
       <layer_coordinate_transform destAuthId="" srcAuthId="" srcDatumTransform="-1" destDatumTransform="-1" layerid="infuse_dist_lyr_2011_clipped20171113162643708"/>
+      <layer_coordinate_transform destAuthId="USER:100000" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="LocalAuth20171207160805428"/>
     </layer_coordinate_transform_info>
   </mapcanvas>
   <layer-tree-canvas>
     <custom-order enabled="0">
-      <item>local_authority_area_list201120171113163240965</item>
-      <item>infuse_dist_lyr_2011_clipped20171114153431179</item>
+      <item>LocalAuth20171207160805428</item>
     </custom-order>
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="infuse_dist_lyr_2011_clipped" showFeatureCount="0">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="LocalAuth" showFeatureCount="1">
       <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="infuse_dist_lyr_2011_clipped20171114153431179" visible="1"/>
-      </filegroup>
-    </legendlayer>
-    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="local-authority-area-list2011" showFeatureCount="0">
-      <filegroup open="true" hidden="false">
-        <legendlayerfile isInOverview="0" layerid="local_authority_area_list201120171113163240965" visible="1"/>
+        <legendlayerfile isInOverview="0" layerid="LocalAuth20171207160805428" visible="1"/>
       </filegroup>
     </legendlayer>
   </legend>
   <projectlayers>
     <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
-        <xmin>-69.12539605004712939</xmin>
-        <ymin>5337.8999999999996362</ymin>
-        <xmax>655604.69999999995343387</xmax>
-        <ymax>1220301.5</ymax>
+        <xmin>-962914.39318784594070166</xmin>
+        <ymin>6422874.48233562894165516</ymin>
+        <xmax>196246.9104134209046606</xmax>
+        <ymax>8593922.94882192276418209</ymax>
       </extent>
-      <id>infuse_dist_lyr_2011_clipped20171114153431179</id>
-      <datasource>../Shapefile/infuse_dist_lyr_2011_clipped/infuse_dist_lyr_2011_clipped.shp</datasource>
+      <id>LocalAuth20171207160805428</id>
+      <datasource>/vsizip/../Shapefile/LocalAuth.zip</datasource>
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>infuse_dist_lyr_2011_clipped</layername>
+      <layername>LocalAuth</layername>
       <srs>
         <spatialrefsys>
-          <proj4>+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs</proj4>
-          <srsid>100000</srsid>
-          <srid>0</srid>
-          <authid>USER:100000</authid>
-          <description> * Generated CRS (+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs)</description>
-          <projectionacronym>tmerc</projectionacronym>
-          <ellipsoidacronym>airy</ellipsoidacronym>
+          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs</proj4>
+          <srsid>3857</srsid>
+          <srid>3857</srid>
+          <authid>EPSG:3857</authid>
+          <description>WGS 84 / Pseudo Mercator</description>
+          <projectionacronym>merc</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
           <geographicflag>false</geographicflag>
         </spatialrefsys>
       </srs>
       <provider encoding="UTF-8">ogr</provider>
-      <vectorjoins>
-        <join joinFieldName="AREA_ID" targetFieldName="geo_code" memoryCache="1" joinLayerId="local_authority_area_list201120171113163240965"/>
-      </vectorjoins>
+      <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
       <map-layer-style-manager current="">
@@ -104,34 +96,28 @@
         <edittype widgetv2type="TextEdit" name="geo_code">
           <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="local-authority-area-list2011_AREA_LABEL">
-          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        <edittype widgetv2type="TextEdit" name="local-auth">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
-        <edittype widgetv2type="TextEdit" name="local-authority-area-list2011_AREA_LABEL_W">
-          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="local-authority-area-list2011_AREA_TYPE">
-          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="local-authority-area-list2011_COUNTRY">
-          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        <edittype widgetv2type="TextEdit" name="local-au_1">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
         </edittype>
       </edittypes>
-      <renderer-v2 attr="local-authority-area-list2011_AREA_TYPE" forceraster="0" symbollevels="0" type="categorizedSymbol" enableorderby="0">
+      <renderer-v2 attr="local-auth" forceraster="0" symbollevels="0" type="categorizedSymbol" enableorderby="0">
         <categories>
-          <category render="true" symbol="0" value="Council Area" label="Council Area"/>
-          <category render="true" symbol="1" value="Local Government District" label="Local Government District"/>
-          <category render="true" symbol="2" value="London Borough" label="London Borough"/>
-          <category render="true" symbol="3" value="Metropolitan District" label="Metropolitan District"/>
-          <category render="true" symbol="4" value="Non-metropolitan District" label="Non-metropolitan District"/>
-          <category render="true" symbol="5" value="Unitary Authority" label="Unitary Authority"/>
-          <category render="true" symbol="6" value="City Corporation" label="City Corporation"/>
+          <category render="true" symbol="0" value="City Corporation" label="City Corporation"/>
+          <category render="true" symbol="1" value="Council Area" label="Council Area"/>
+          <category render="true" symbol="2" value="Local Government District" label="Local Government District"/>
+          <category render="true" symbol="3" value="London Borough" label="London Borough"/>
+          <category render="true" symbol="4" value="Metropolitan District" label="Metropolitan District"/>
+          <category render="true" symbol="5" value="Non-metropolitan District" label="Non-metropolitan District"/>
+          <category render="true" symbol="6" value="Unitary Authority" label="Unitary Authority"/>
         </categories>
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="44,211,86,255"/>
+              <prop k="color" v="145,82,200,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -146,7 +132,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="1">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="200,21,81,255"/>
+              <prop k="color" v="240,198,43,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -161,7 +147,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="2">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="158,238,37,255"/>
+              <prop k="color" v="113,133,206,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -176,7 +162,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="3">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="181,56,209,255"/>
+              <prop k="color" v="18,208,75,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -191,7 +177,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="85,201,216,255"/>
+              <prop k="color" v="72,222,227,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -206,7 +192,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="5">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="223,140,39,255"/>
+              <prop k="color" v="224,138,135,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -221,7 +207,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="6">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="14,159,99,255"/>
+              <prop k="color" v="140,206,86,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -238,7 +224,7 @@
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="14,159,99,255"/>
+              <prop k="color" v="10,187,113,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -251,6 +237,8 @@
             </layer>
           </symbol>
         </source-symbol>
+        <colorramp type="randomcolors" name="[source]"/>
+        <invertedcolorramp value="0"/>
         <rotation/>
         <sizescale scalemethod="diameter"/>
       </renderer-v2>
@@ -426,7 +414,6 @@
       <SingleCategoryDiagramRenderer diagramType="Histogram" sizeLegend="0" attributeLegend="1">
         <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" sizeScale="0,0,0,0,0,0" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" lineSizeScale="0,0,0,0,0,0" sizeType="MM" lineSizeType="MM" minScaleDenominator="inf">
           <fontProperties description=".SF NS Text,13,-1,5,50,0,0,0,0,0" style=""/>
-          <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
         <symbol alpha="1" clip_to_extent="1" type="marker" name="sizeSymbol">
           <layer pass="0" class="SimpleMarker" locked="0">
@@ -452,15 +439,13 @@
         </symbol>
       </SingleCategoryDiagramRenderer>
       <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
-      <annotationform>.</annotationform>
+      <annotationform></annotationform>
       <aliases>
         <alias field="geo_labelw" index="0" name=""/>
         <alias field="geo_label" index="1" name=""/>
         <alias field="geo_code" index="2" name=""/>
-        <alias field="local-authority-area-list2011_AREA_LABEL" index="3" name=""/>
-        <alias field="local-authority-area-list2011_AREA_LABEL_W" index="4" name=""/>
-        <alias field="local-authority-area-list2011_AREA_TYPE" index="5" name=""/>
-        <alias field="local-authority-area-list2011_COUNTRY" index="6" name=""/>
+        <alias field="local-auth" index="3" name=""/>
+        <alias field="local-au_1" index="4" name=""/>
       </aliases>
       <excludeAttributesWMS/>
       <excludeAttributesWFS/>
@@ -470,17 +455,15 @@
           <column width="-1" hidden="0" type="field" name="geo_labelw"/>
           <column width="-1" hidden="0" type="field" name="geo_label"/>
           <column width="-1" hidden="0" type="field" name="geo_code"/>
-          <column width="-1" hidden="0" type="field" name="local-authority-area-list2011_AREA_LABEL"/>
-          <column width="-1" hidden="0" type="field" name="local-authority-area-list2011_AREA_LABEL_W"/>
-          <column width="-1" hidden="0" type="field" name="local-authority-area-list2011_AREA_TYPE"/>
-          <column width="-1" hidden="0" type="field" name="local-authority-area-list2011_COUNTRY"/>
+          <column width="-1" hidden="0" type="field" name="local-auth"/>
+          <column width="-1" hidden="0" type="field" name="local-au_1"/>
           <column width="-1" hidden="1" type="actions"/>
         </columns>
       </attributetableconfig>
-      <editform>.</editform>
+      <editform></editform>
       <editforminit/>
       <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath>.</editforminitfilepath>
+      <editforminitfilepath></editforminitfilepath>
       <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
 """
 QGIS forms can have a Python function that is called when the form is
@@ -509,91 +492,10 @@ def my_form_open(dialog, layer, feature):
         <default field="geo_labelw" expression=""/>
         <default field="geo_label" expression=""/>
         <default field="geo_code" expression=""/>
-        <default field="local-authority-area-list2011_AREA_LABEL" expression=""/>
-        <default field="local-authority-area-list2011_AREA_LABEL_W" expression=""/>
-        <default field="local-authority-area-list2011_AREA_TYPE" expression=""/>
-        <default field="local-authority-area-list2011_COUNTRY" expression=""/>
+        <default field="local-auth" expression=""/>
+        <default field="local-au_1" expression=""/>
       </defaults>
-      <previewExpression></previewExpression>
-    </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" readOnly="0" geometry="No geometry" type="vector" hasScaleBasedVisibilityFlag="0">
-      <id>local_authority_area_list201120171113163240965</id>
-      <datasource>file:../Other/local-authority-area-list2011.csv?type=csv&amp;geomType=none&amp;subsetIndex=no&amp;watchFile=no</datasource>
-      <keywordList>
-        <value></value>
-      </keywordList>
-      <layername>local-authority-area-list2011</layername>
-      <srs>
-        <spatialrefsys>
-          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
-          <srsid>3452</srsid>
-          <srid>4326</srid>
-          <authid>EPSG:4326</authid>
-          <description>WGS 84</description>
-          <projectionacronym>longlat</projectionacronym>
-          <ellipsoidacronym>WGS84</ellipsoidacronym>
-          <geographicflag>true</geographicflag>
-        </spatialrefsys>
-      </srs>
-      <customproperties/>
-      <provider encoding="UTF-8">delimitedtext</provider>
-      <vectorjoins/>
-      <layerDependencies/>
-      <expressionfields/>
-      <map-layer-style-manager current="">
-        <map-layer-style name=""/>
-      </map-layer-style-manager>
-      <edittypes>
-        <edittype widgetv2type="TextEdit" name="AREA_ID">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="AREA_LABEL">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="AREA_LABEL_W">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="AREA_TYPE">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-        <edittype widgetv2type="TextEdit" name="COUNTRY">
-          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
-        </edittype>
-      </edittypes>
-      <annotationform>.</annotationform>
-      <aliases>
-        <alias field="AREA_ID" index="0" name=""/>
-        <alias field="AREA_LABEL" index="1" name=""/>
-        <alias field="AREA_LABEL_W" index="2" name=""/>
-        <alias field="AREA_TYPE" index="3" name=""/>
-        <alias field="COUNTRY" index="4" name=""/>
-      </aliases>
-      <excludeAttributesWMS/>
-      <excludeAttributesWFS/>
-      <attributeactions default="-1"/>
-      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
-        <columns/>
-      </attributetableconfig>
-      <editform>.</editform>
-      <editforminit/>
-      <editforminitcodesource>0</editforminitcodesource>
-      <editforminitfilepath>.</editforminitfilepath>
-      <editforminitcode><![CDATA[]]></editforminitcode>
-      <featformsuppress>0</featformsuppress>
-      <editorlayout>generatedlayout</editorlayout>
-      <widgets/>
-      <conditionalstyles>
-        <rowstyles/>
-        <fieldstyles/>
-      </conditionalstyles>
-      <defaults>
-        <default field="AREA_ID" expression=""/>
-        <default field="AREA_LABEL" expression=""/>
-        <default field="AREA_LABEL_W" expression=""/>
-        <default field="AREA_TYPE" expression=""/>
-        <default field="COUNTRY" expression=""/>
-      </defaults>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "geo_label", '&lt;NULL>' )</previewExpression>
     </maplayer>
   </projectlayers>
   <properties>
@@ -622,7 +524,7 @@ def my_form_open(dialog, layer, feature):
     <Digitizing>
       <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
       <LayerSnappingList type="QStringList">
-        <value>infuse_dist_lyr_2011_clipped20171113162643708</value>
+        <value>LocalAuth20171207160805428</value>
       </LayerSnappingList>
       <LayerSnappingEnabledList type="QStringList">
         <value>disabled</value>
