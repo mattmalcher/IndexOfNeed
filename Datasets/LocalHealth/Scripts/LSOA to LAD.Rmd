@@ -1,0 +1,68 @@
+---
+title: "LSOA to LAD"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load up required libraries.
+```{r}
+library(dplyr)
+library(tidyr)
+```
+
+In a previous script we downloaded the Theme summary csv's and reorganised them from a tall to a wide format. The resulting csv, as with the source local health data is provided at the LLSOA level.
+
+This script will take that LLSOA data and group it by Local Authority Region
+
+https://ons.maps.arcgis.com/home/item.html?id=ef72efd6adf64b11a2228f7b3e95deea
+
+
+The first step is to read LSOA Local Health data into R:
+```{r Read in CSV's}
+LocalHealthLSOAdata=read.csv('../Processed Data/WideLocalHealthData.csv', header=TRUE)
+```
+
+Next we need a way to translate from LSOA's to LAD's. Fortunatley, at their Open Geography Portal (http://geoportal.statistics.gov.uk) the ONS has provided some lookup tables.
+
+Here we will use the Postcode <> LSOA <> MSOA <> LAD (2011) lookup table. This can be found at: https://ons.maps.arcgis.com/home/item.html?id=ef72efd6adf64b11a2228f7b3e95deea
+
+To provide some resilience, a zip file containing this table (PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.zip) is kept in this repo.
+
+Lets read it in.
+```{r}
+# Use unz to read in the file from inside the zip - otherwise quite large
+LookupTable <- read.csv(unz(description = '../Source Data/PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.zip',filename="PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.csv"))
+
+```
+
+Ok, thats a big list - 1.3m postcodes. We only care about LAD's and LSOA's so we can cut out a few columns, and remove the duplicate rows:
+```{r}
+LookupTable<-LookupTable %>% select(MSOA11CD,MSOA11NM,LAD11CD,LAD11NM)
+
+LookupTable<-unique(LookupTable)  
+```
+
+now we have our reduced lookup table we can join it to the local health data to allow us to group
+```{r}
+LocalHealthLSOAdata2 <-LocalHealthLSOAdata %>% rename(MSOA11CD=AreaCode)
+
+joined<-left_join(LocalHealthLSOAdata2,LookupTable, by='MSOA11CD')
+```
+
+```{r}
+# joined2<- joined %>% group_by(LAD11CD) %>% summarise()
+
+joined2<- aggregate(joined, by=as.list(joined$LAD11CD), FUN=sum)
+
+```
+
+
+Now that we have our wide data we want to write it back out to a CSV for use in Q
+```{r}
+# filename='WideLocalHealthDataLAD.csv'
+# write.csv(Wide_T_data,filename, append=FALSE)
+```
+
