@@ -19,7 +19,6 @@ This script will take that LLSOA data and group it by Local Authority Region
 
 https://ons.maps.arcgis.com/home/item.html?id=ef72efd6adf64b11a2228f7b3e95deea
 
-
 The first step is to read LSOA Local Health data into R:
 ```{r Read in CSV's}
 LocalHealthLSOAdata=read.csv('../Processed Data/WideLocalHealthData.csv', header=TRUE)
@@ -48,11 +47,10 @@ filename='../Processed Data/MSOA2LAD.csv'
 write.csv(LookupTable,filename, append=FALSE)
 ```
 
-At this point it would be good to check that the lookup table is right. We can do this is to get MSOA shapefile, join it to the lookup table using the MSOA codes, then colour the MSOA areas by LA and overlay against the LAD layer to visually check.
+At this point it would be good to check that the lookup table is right. We can do this is to get MSOA shapefile, join it to the lookup table using the MSOA codes, then colour the MSOA areas by LA and overlay against the LAD layer to visually check. We can see that everything looks [good!](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/LocalHealth/Maps/MSOAs_in_LADs.png)
 
-[see](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/LocalHealth/Maps/MSOAs_in_LADs.png)
 
-now we have our reduced lookup table we can join it to the local health data to allow us to group
+Now we have our reduced lookup table we can join it to the local health data to allow us to group. Note that this includes LSOA and LAD data for Wales where there is no Local Health data.
 ```{r}
 LocalHealthLSOAdata2 <-LocalHealthLSOAdata %>% rename(MSOA11CD=AreaCode)
 
