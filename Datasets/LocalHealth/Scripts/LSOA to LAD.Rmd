@@ -43,7 +43,14 @@ Ok, thats a big list - 1.3m postcodes. We only care about LAD's and LSOA's so we
 LookupTable<-LookupTable %>% select(MSOA11CD,MSOA11NM,LAD11CD,LAD11NM)
 
 LookupTable<-unique(LookupTable)  
+
+filename='../Processed Data/MSOA2LAD.csv'
+write.csv(LookupTable,filename, append=FALSE)
 ```
+
+At this point it would be good to check that the lookup table is right. We can do this is to get MSOA shapefile, join it to the lookup table using the MSOA codes, then colour the MSOA areas by LA and overlay against the LAD layer to visually check.
+
+[see](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/LocalHealth/Maps/MSOAs_in_LADs.png)
 
 now we have our reduced lookup table we can join it to the local health data to allow us to group
 ```{r}
