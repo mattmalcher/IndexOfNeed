@@ -39,35 +39,15 @@ LookupTable <- read.csv(unz(description = '../Source Data/PCD11_OA11_LSOA11_MSOA
 
 Ok, thats a big list - 1.3m postcodes. We only care about LAD's and MSOA's so we can cut out a few columns, and remove the duplicate rows:
 ```{r}
+# reduce table to only relevant columns
 LookupTable<-LookupTable %>% select(MSOA11CD,MSOA11NM,LAD11CD,LAD11NM)
 
+# Get rid of duplicate rows
 LookupTable<-unique(LookupTable)  
 
 filename='../Processed Data/MSOA2LAD.csv'
 write.csv(LookupTable,filename, append=FALSE)
 ```
 
-At this point it would be good to check that the lookup table is right. We can do this is to get MSOA shapefile, join it to the lookup table using the MSOA codes, then colour the MSOA areas by LA and overlay against the LAD layer to visually check. We can see that everything looks [good!](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/LocalHealth/Maps/MSOAs_in_LADs.png)
-
-Now we have our reduced lookup table we can join it to the local health data to allow us to group it. Note that this includes MSOA and LAD data for Wales where there is no Local Health data.
-```{r}
-LocalHealthMSOAdata2 <-LocalHealthMSOAdata %>% rename(MSOA11CD=AreaCode)
-
-joined<-left_join(LocalHealthMSOAdata2,LookupTable, by='MSOA11CD')
-```
-
-
-```{r}
-# joined2<- joined %>% group_by(LAD11CD) %>% summarise()
-
-joined2<- aggregate(joined, by=as.list(joined$LAD11CD), FUN=sum)
-
-```
-
-
-Now that we have our wide data we want to write it back out to a CSV for use in Q
-```{r}
-# filename='WideLocalHealthDataLAD.csv'
-# write.csv(Wide_T_data,filename, append=FALSE)
-```
+At this point it would be good to check that the lookup table is right. We can do this is to get MSOA shapefile, join it to the lookup table using the MSOA codes, then colour the MSOA areas by LAD and overlay against the LAD layer to visually check. We can see that everything looks [good!](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/LocalHealth/Maps/MSOAs_in_LADs.png)
 
