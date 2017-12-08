@@ -1,5 +1,5 @@
 ---
-title: "LSOA to LAD"
+title: "MSOA to LAD"
 output: html_document
 ---
 
@@ -13,18 +13,18 @@ library(dplyr)
 library(tidyr)
 ```
 
-In a previous script we downloaded the Theme summary csv's and reorganised them from a tall to a wide format. The resulting csv, as with the source local health data is provided at the LLSOA level.
+In a previous script we downloaded the Theme summary csv's and reorganised them from a tall to a wide format. The resulting csv, as with the source local health data is provided at the MSOA level.
 
-This script will take that LLSOA data and group it by Local Authority Region
+This script will take that MSOA data and group it by Local Authority Region
 
 https://ons.maps.arcgis.com/home/item.html?id=ef72efd6adf64b11a2228f7b3e95deea
 
-The first step is to read LSOA Local Health data into R:
+The first step is to read MSOA Local Health data into R:
 ```{r Read in CSV's}
-LocalHealthLSOAdata=read.csv('../Processed Data/WideLocalHealthData.csv', header=TRUE)
+LocalHealthMSOAdata=read.csv('../Processed Data/WideLocalHealthData.csv', header=TRUE)
 ```
 
-Next we need a way to translate from LSOA's to LAD's. Fortunatley, at their Open Geography Portal (http://geoportal.statistics.gov.uk) the ONS has provided some lookup tables.
+Next we need a way to translate from MSOA's to LAD's. Fortunatley, at their Open Geography Portal (http://geoportal.statistics.gov.uk) the ONS has provided some lookup tables.
 
 Here we will use the Postcode <> LSOA <> MSOA <> LAD (2011) lookup table. This can be found at: https://ons.maps.arcgis.com/home/item.html?id=ef72efd6adf64b11a2228f7b3e95deea
 
@@ -37,7 +37,7 @@ LookupTable <- read.csv(unz(description = '../Source Data/PCD11_OA11_LSOA11_MSOA
 
 ```
 
-Ok, thats a big list - 1.3m postcodes. We only care about LAD's and LSOA's so we can cut out a few columns, and remove the duplicate rows:
+Ok, thats a big list - 1.3m postcodes. We only care about LAD's and MSOA's so we can cut out a few columns, and remove the duplicate rows:
 ```{r}
 LookupTable<-LookupTable %>% select(MSOA11CD,MSOA11NM,LAD11CD,LAD11NM)
 
@@ -49,13 +49,13 @@ write.csv(LookupTable,filename, append=FALSE)
 
 At this point it would be good to check that the lookup table is right. We can do this is to get MSOA shapefile, join it to the lookup table using the MSOA codes, then colour the MSOA areas by LA and overlay against the LAD layer to visually check. We can see that everything looks [good!](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/LocalHealth/Maps/MSOAs_in_LADs.png)
 
-
-Now we have our reduced lookup table we can join it to the local health data to allow us to group. Note that this includes LSOA and LAD data for Wales where there is no Local Health data.
+Now we have our reduced lookup table we can join it to the local health data to allow us to group it. Note that this includes MSOA and LAD data for Wales where there is no Local Health data.
 ```{r}
-LocalHealthLSOAdata2 <-LocalHealthLSOAdata %>% rename(MSOA11CD=AreaCode)
+LocalHealthMSOAdata2 <-LocalHealthMSOAdata %>% rename(MSOA11CD=AreaCode)
 
-joined<-left_join(LocalHealthLSOAdata2,LookupTable, by='MSOA11CD')
+joined<-left_join(LocalHealthMSOAdata2,LookupTable, by='MSOA11CD')
 ```
+
 
 ```{r}
 # joined2<- joined %>% group_by(LAD11CD) %>% summarise()
