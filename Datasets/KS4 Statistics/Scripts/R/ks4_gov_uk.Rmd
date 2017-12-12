@@ -1,0 +1,27 @@
+---
+title: "KS4 Statistics"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load up required libraries.
+```{r}
+library(dplyr)
+library(tidyr)
+```
+
+
+```{r Read in CSV's}
+LocalHealthMSOAdata=read.csv('../Processed Data/WideLocalHealthData.csv', header=TRUE)
+```
+
+
+```{r}
+# Use unz to read in the file from inside the zip - otherwise quite large
+LookupTable <- read.csv(unz(description = '../Source Data/PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.zip',filename="PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.csv"))
+
+```
+
