@@ -1,0 +1,1438 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis projectname="" version="2.18.11">
+  <title></title>
+  <autotransaction active="0"/>
+  <evaluateDefaultValues active="0"/>
+  <layer-tree-group expanded="1" checked="Qt::Checked" name="">
+    <customproperties/>
+    <layer-tree-layer expanded="1" providerKey="delimitedtext" checked="Qt::Checked" id="WideLocalHealthData20171212133413777" source="file:///Users/mpm2017/Google%20Drive/IndexOfNeed/Datasets/LocalHealth/Processed%20Data/WideLocalHealthData.csv?type=csv&amp;geomType=none&amp;subsetIndex=no&amp;watchFile=no" name="WideLocalHealthData">
+      <customproperties/>
+    </layer-tree-layer>
+    <layer-tree-layer expanded="1" providerKey="ogr" checked="Qt::Checked" id="LocalAuth20171212133253461" source="/vsizip//Users/mpm2017/Google Drive/IndexOfNeed/Boundaries/Local Authorities/Shapefile/LocalAuth.zip" name="LocalAuth">
+      <customproperties/>
+    </layer-tree-layer>
+  </layer-tree-group>
+  <relations/>
+  <mapcanvas>
+    <units>meters</units>
+    <extent>
+      <xmin>-991893.42577787768095732</xmin>
+      <ymin>6368598.2706734724342823</ymin>
+      <xmax>225225.94300345261581242</xmax>
+      <ymax>8648199.16048407927155495</ymax>
+    </extent>
+    <rotation>0</rotation>
+    <projections>1</projections>
+    <destinationsrs>
+      <spatialrefsys>
+        <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs</proj4>
+        <srsid>3857</srsid>
+        <srid>3857</srid>
+        <authid>EPSG:3857</authid>
+        <description>WGS 84 / Pseudo Mercator</description>
+        <projectionacronym>merc</projectionacronym>
+        <ellipsoidacronym>WGS84</ellipsoidacronym>
+        <geographicflag>false</geographicflag>
+      </spatialrefsys>
+    </destinationsrs>
+    <rendermaptile>0</rendermaptile>
+    <layer_coordinate_transform_info>
+      <layer_coordinate_transform destAuthId="EPSG:3857" srcAuthId="EPSG:3857" srcDatumTransform="-1" destDatumTransform="-1" layerid="LocalAuth20171212133253461"/>
+    </layer_coordinate_transform_info>
+  </mapcanvas>
+  <layer-tree-canvas>
+    <custom-order enabled="0">
+      <item>LocalAuth20171212133253461</item>
+      <item>WideLocalHealthData20171212133413777</item>
+    </custom-order>
+  </layer-tree-canvas>
+  <legend updateDrawingOrder="true">
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="WideLocalHealthData" showFeatureCount="0">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" layerid="WideLocalHealthData20171212133413777" visible="1"/>
+      </filegroup>
+    </legendlayer>
+    <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="LocalAuth" showFeatureCount="0">
+      <filegroup open="true" hidden="false">
+        <legendlayerfile isInOverview="0" layerid="LocalAuth20171212133253461" visible="1"/>
+      </filegroup>
+    </legendlayer>
+  </legend>
+  <projectlayers>
+    <maplayer simplifyAlgorithm="0" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="1" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" readOnly="0" geometry="Polygon" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+      <extent>
+        <xmin>-962914.39318784594070166</xmin>
+        <ymin>6422874.48233562894165516</ymin>
+        <xmax>196246.9104134209046606</xmax>
+        <ymax>8593922.94882192276418209</ymax>
+      </extent>
+      <id>LocalAuth20171212133253461</id>
+      <datasource>/vsizip/../../../Boundaries/Local Authorities/Shapefile/LocalAuth.zip</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>LocalAuth</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs</proj4>
+          <srsid>3857</srsid>
+          <srid>3857</srid>
+          <authid>EPSG:3857</authid>
+          <description>WGS 84 / Pseudo Mercator</description>
+          <projectionacronym>merc</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>false</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <provider encoding="UTF-8">ogr</provider>
+      <vectorjoins>
+        <join joinFieldName="AreaCode" targetFieldName="geo_code" memoryCache="1" joinLayerId="WideLocalHealthData20171212133413777"/>
+      </vectorjoins>
+      <layerDependencies/>
+      <expressionfields/>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <edittypes>
+        <edittype widgetv2type="TextEdit" name="geo_labelw">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="geo_label">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="geo_code">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="local-auth">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="local-au_1">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_field_1">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Black and Minority Ethnic (BME) Population">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Child Poverty %">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Fertility Rate">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 General Health - bad or very bad">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 General Health - very bad">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 IMD Score">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Income Deprivation %">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Limiting long term illness or disability">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Long Term Unemployment">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Low Birth Weight Births">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Older People in Deprivation (%)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Overcrowding (% households)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Pensioners living alone">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Population aged 0-15 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Population aged 16-24 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Population aged 25-64 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Population aged 65+ years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Population aged 85+ years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Population whose ethnicity is not &lt;91>White UK&lt;92>">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Proficiency in English of people whose main language is not English">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Provision of 1 hour or more unpaid care per week">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Provision of 50 hours or more unpaid care per week">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 The percentage of households that experience fuel poverty">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Total population">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_1 Unemployment">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 A&amp;E attendances in under 5s">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Admissions for injuries in children aged 15 to 24">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Admissions for injuries in children aged under 15">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Admissions for injuries in children aged under 5">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Binge drinking adults">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Children with excess weight (Reception Year)(%)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Children with excess weight (Year 6)(%)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Emergency admissions in under 5s">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Healthy eating adults">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are occasional smokers">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are regular smokers">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Modelled prevalence of people aged 15 who have never smoked">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Obese adults">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Obese Children (Reception Year)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Obese Children (Year 6)(%)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_2 Percentage of deliveries where the mother is aged under 18 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Elective hospital admissions for all causes">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Elective hospital admissions for CHD">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Elective hospital admissions for hip replacement">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Elective hospital admissions for knee replacement">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Emergency hospital admissions for all causes">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Emergency hospital admissions for CHD">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Emergency hospital admissions for hip fracture in 65+">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Emergency hospital admissions for Myocardial Infarction (heart attack)">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Emergency hospital admissions for stroke">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Hospital stays for alcohol related harm">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Hospital stays for self harm">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Incidence of all cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Incidence of breast cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Incidence of colorectal cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Incidence of lung cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_3 Incidence of prostate cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from all cancer, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from all cancer, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from all causes, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from all causes, under 65 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from all causes, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from circulatory disease, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from circulatory disease, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from coronary heart disease, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from coronary heart disease, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from respiratory diseases, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Deaths from stroke, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Disability free life expectancy at birth for females">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Disability free life expectancy at birth for males">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Healthy life expectancy at birth for females">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Healthy life expectancy at birth for males">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Life expectancy at birth for females">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Life expectancy at birth for females, 2009-2013">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Life expectancy at birth for males">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="WideLocalHealthData_4 Life expectancy at birth for males, 2009-2013">
+          <widgetv2config IsMultiline="0" fieldEditable="0" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+      </edittypes>
+      <renderer-v2 attr="WideLocalHealthData_1 Pensioners living alone" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
+        <ranges>
+          <range render="true" symbol="0" lower="0.000000000000000" upper="10.160000000000000" label=" 0.0000 - 10.1600 "/>
+          <range render="true" symbol="1" lower="10.160000000000000" upper="20.320000000000000" label=" 10.1600 - 20.3200 "/>
+          <range render="true" symbol="2" lower="20.320000000000000" upper="30.480000000000000" label=" 20.3200 - 30.4800 "/>
+          <range render="true" symbol="3" lower="30.480000000000000" upper="40.640000000000001" label=" 30.4800 - 40.6400 "/>
+          <range render="true" symbol="4" lower="40.640000000000001" upper="50.799999999999997" label=" 40.6400 - 50.8000 "/>
+        </ranges>
+        <symbols>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="247,251,255,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="1">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="200,221,240,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="2">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="115,179,216,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="3">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="40,121,185,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="8,48,107,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+        </symbols>
+        <source-symbol>
+          <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
+            <layer pass="0" class="SimpleFill" locked="0">
+              <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="color" v="120,164,224,255"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="offset" v="0,0"/>
+              <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MM"/>
+              <prop k="outline_color" v="0,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0.26"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="style" v="solid"/>
+            </layer>
+          </symbol>
+        </source-symbol>
+        <colorramp type="gradient" name="[source]">
+          <prop k="color1" v="247,251,255,255"/>
+          <prop k="color2" v="8,48,107,255"/>
+          <prop k="discrete" v="0"/>
+          <prop k="stops" v="0.13;222,235,247,255:0.26;198,219,239,255:0.39;158,202,225,255:0.52;107,174,214,255:0.65;66,146,198,255:0.78;33,113,181,255:0.9;8,81,156,255"/>
+        </colorramp>
+        <invertedcolorramp value="0"/>
+        <mode name="equal"/>
+        <rotation/>
+        <sizescale scalemethod="diameter"/>
+        <labelformat format=" %1 - %2 " trimtrailingzeroes="false" decimalplaces="0"/>
+      </renderer-v2>
+      <labeling type="simple"/>
+      <customproperties>
+        <property key="embeddedWidgets/count" value="0"/>
+        <property key="labeling" value="pal"/>
+        <property key="labeling/addDirectionSymbol" value="false"/>
+        <property key="labeling/angleOffset" value="0"/>
+        <property key="labeling/blendMode" value="0"/>
+        <property key="labeling/bufferBlendMode" value="0"/>
+        <property key="labeling/bufferColorA" value="255"/>
+        <property key="labeling/bufferColorB" value="255"/>
+        <property key="labeling/bufferColorG" value="255"/>
+        <property key="labeling/bufferColorR" value="255"/>
+        <property key="labeling/bufferDraw" value="false"/>
+        <property key="labeling/bufferJoinStyle" value="128"/>
+        <property key="labeling/bufferNoFill" value="false"/>
+        <property key="labeling/bufferSize" value="1"/>
+        <property key="labeling/bufferSizeInMapUnits" value="false"/>
+        <property key="labeling/bufferSizeMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/bufferTransp" value="0"/>
+        <property key="labeling/centroidInside" value="false"/>
+        <property key="labeling/centroidWhole" value="false"/>
+        <property key="labeling/decimals" value="3"/>
+        <property key="labeling/displayAll" value="false"/>
+        <property key="labeling/dist" value="0"/>
+        <property key="labeling/distInMapUnits" value="false"/>
+        <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/drawLabels" value="false"/>
+        <property key="labeling/enabled" value="false"/>
+        <property key="labeling/fieldName" value=""/>
+        <property key="labeling/fitInPolygonOnly" value="false"/>
+        <property key="labeling/fontCapitals" value="0"/>
+        <property key="labeling/fontFamily" value=".SF NS Text"/>
+        <property key="labeling/fontItalic" value="false"/>
+        <property key="labeling/fontLetterSpacing" value="0"/>
+        <property key="labeling/fontLimitPixelSize" value="false"/>
+        <property key="labeling/fontMaxPixelSize" value="10000"/>
+        <property key="labeling/fontMinPixelSize" value="3"/>
+        <property key="labeling/fontSize" value="13"/>
+        <property key="labeling/fontSizeInMapUnits" value="false"/>
+        <property key="labeling/fontSizeMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/fontStrikeout" value="false"/>
+        <property key="labeling/fontUnderline" value="false"/>
+        <property key="labeling/fontWeight" value="50"/>
+        <property key="labeling/fontWordSpacing" value="0"/>
+        <property key="labeling/formatNumbers" value="false"/>
+        <property key="labeling/isExpression" value="true"/>
+        <property key="labeling/labelOffsetInMapUnits" value="true"/>
+        <property key="labeling/labelOffsetMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/labelPerPart" value="false"/>
+        <property key="labeling/leftDirectionSymbol" value="&lt;"/>
+        <property key="labeling/limitNumLabels" value="false"/>
+        <property key="labeling/maxCurvedCharAngleIn" value="25"/>
+        <property key="labeling/maxCurvedCharAngleOut" value="-25"/>
+        <property key="labeling/maxNumLabels" value="2000"/>
+        <property key="labeling/mergeLines" value="false"/>
+        <property key="labeling/minFeatureSize" value="0"/>
+        <property key="labeling/multilineAlign" value="4294967295"/>
+        <property key="labeling/multilineHeight" value="1"/>
+        <property key="labeling/namedStyle" value=""/>
+        <property key="labeling/obstacle" value="true"/>
+        <property key="labeling/obstacleFactor" value="1"/>
+        <property key="labeling/obstacleType" value="0"/>
+        <property key="labeling/offsetType" value="0"/>
+        <property key="labeling/placeDirectionSymbol" value="0"/>
+        <property key="labeling/placement" value="1"/>
+        <property key="labeling/placementFlags" value="10"/>
+        <property key="labeling/plussign" value="false"/>
+        <property key="labeling/predefinedPositionOrder" value="TR,TL,BR,BL,R,L,TSR,BSR"/>
+        <property key="labeling/preserveRotation" value="true"/>
+        <property key="labeling/previewBkgrdColor" value="#ffffff"/>
+        <property key="labeling/priority" value="5"/>
+        <property key="labeling/quadOffset" value="4"/>
+        <property key="labeling/repeatDistance" value="0"/>
+        <property key="labeling/repeatDistanceMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/repeatDistanceUnit" value="1"/>
+        <property key="labeling/reverseDirectionSymbol" value="false"/>
+        <property key="labeling/rightDirectionSymbol" value=">"/>
+        <property key="labeling/scaleMax" value="10000000"/>
+        <property key="labeling/scaleMin" value="1"/>
+        <property key="labeling/scaleVisibility" value="false"/>
+        <property key="labeling/shadowBlendMode" value="6"/>
+        <property key="labeling/shadowColorB" value="0"/>
+        <property key="labeling/shadowColorG" value="0"/>
+        <property key="labeling/shadowColorR" value="0"/>
+        <property key="labeling/shadowDraw" value="false"/>
+        <property key="labeling/shadowOffsetAngle" value="135"/>
+        <property key="labeling/shadowOffsetDist" value="1"/>
+        <property key="labeling/shadowOffsetGlobal" value="true"/>
+        <property key="labeling/shadowOffsetMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/shadowOffsetUnits" value="1"/>
+        <property key="labeling/shadowRadius" value="1.5"/>
+        <property key="labeling/shadowRadiusAlphaOnly" value="false"/>
+        <property key="labeling/shadowRadiusMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/shadowRadiusUnits" value="1"/>
+        <property key="labeling/shadowScale" value="100"/>
+        <property key="labeling/shadowTransparency" value="30"/>
+        <property key="labeling/shadowUnder" value="0"/>
+        <property key="labeling/shapeBlendMode" value="0"/>
+        <property key="labeling/shapeBorderColorA" value="255"/>
+        <property key="labeling/shapeBorderColorB" value="128"/>
+        <property key="labeling/shapeBorderColorG" value="128"/>
+        <property key="labeling/shapeBorderColorR" value="128"/>
+        <property key="labeling/shapeBorderWidth" value="0"/>
+        <property key="labeling/shapeBorderWidthMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/shapeBorderWidthUnits" value="1"/>
+        <property key="labeling/shapeDraw" value="false"/>
+        <property key="labeling/shapeFillColorA" value="255"/>
+        <property key="labeling/shapeFillColorB" value="255"/>
+        <property key="labeling/shapeFillColorG" value="255"/>
+        <property key="labeling/shapeFillColorR" value="255"/>
+        <property key="labeling/shapeJoinStyle" value="64"/>
+        <property key="labeling/shapeOffsetMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/shapeOffsetUnits" value="1"/>
+        <property key="labeling/shapeOffsetX" value="0"/>
+        <property key="labeling/shapeOffsetY" value="0"/>
+        <property key="labeling/shapeRadiiMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/shapeRadiiUnits" value="1"/>
+        <property key="labeling/shapeRadiiX" value="0"/>
+        <property key="labeling/shapeRadiiY" value="0"/>
+        <property key="labeling/shapeRotation" value="0"/>
+        <property key="labeling/shapeRotationType" value="0"/>
+        <property key="labeling/shapeSVGFile" value=""/>
+        <property key="labeling/shapeSizeMapUnitScale" value="0,0,0,0,0,0"/>
+        <property key="labeling/shapeSizeType" value="0"/>
+        <property key="labeling/shapeSizeUnits" value="1"/>
+        <property key="labeling/shapeSizeX" value="0"/>
+        <property key="labeling/shapeSizeY" value="0"/>
+        <property key="labeling/shapeTransparency" value="0"/>
+        <property key="labeling/shapeType" value="0"/>
+        <property key="labeling/substitutions" value="&lt;substitutions/>"/>
+        <property key="labeling/textColorA" value="255"/>
+        <property key="labeling/textColorB" value="0"/>
+        <property key="labeling/textColorG" value="0"/>
+        <property key="labeling/textColorR" value="0"/>
+        <property key="labeling/textTransp" value="0"/>
+        <property key="labeling/upsidedownLabels" value="0"/>
+        <property key="labeling/useSubstitutions" value="false"/>
+        <property key="labeling/wrapChar" value=""/>
+        <property key="labeling/xOffset" value="0"/>
+        <property key="labeling/yOffset" value="0"/>
+        <property key="labeling/zIndex" value="0"/>
+        <property key="variableNames"/>
+        <property key="variableValues"/>
+      </customproperties>
+      <blendMode>0</blendMode>
+      <featureBlendMode>0</featureBlendMode>
+      <layerTransparency>0</layerTransparency>
+      <displayfield>WideLocalHealthData_field_1</displayfield>
+      <label>0</label>
+      <labelattributes>
+        <label fieldname="" text="Label"/>
+        <family fieldname="" name=".SF NS Text"/>
+        <size fieldname="" units="pt" value="12"/>
+        <bold fieldname="" on="0"/>
+        <italic fieldname="" on="0"/>
+        <underline fieldname="" on="0"/>
+        <strikeout fieldname="" on="0"/>
+        <color fieldname="" red="0" blue="0" green="0"/>
+        <x fieldname=""/>
+        <y fieldname=""/>
+        <offset x="0" y="0" units="pt" yfieldname="" xfieldname=""/>
+        <angle fieldname="" value="0" auto="0"/>
+        <alignment fieldname="" value="center"/>
+        <buffercolor fieldname="" red="255" blue="255" green="255"/>
+        <buffersize fieldname="" units="pt" value="1"/>
+        <bufferenabled fieldname="" on=""/>
+        <multilineenabled fieldname="" on=""/>
+        <selectedonly on=""/>
+      </labelattributes>
+      <SingleCategoryDiagramRenderer diagramType="Histogram" sizeLegend="0" attributeLegend="1">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" sizeScale="0,0,0,0,0,0" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" lineSizeScale="0,0,0,0,0,0" sizeType="MM" lineSizeType="MM" minScaleDenominator="inf">
+          <fontProperties description=".SF NS Text,13,-1,5,50,0,0,0,0,0" style=""/>
+        </DiagramCategory>
+        <symbol alpha="1" clip_to_extent="1" type="marker" name="sizeSymbol">
+          <layer pass="0" class="SimpleMarker" locked="0">
+            <prop k="angle" v="0"/>
+            <prop k="color" v="255,0,0,255"/>
+            <prop k="horizontal_anchor_point" v="1"/>
+            <prop k="joinstyle" v="bevel"/>
+            <prop k="name" v="circle"/>
+            <prop k="offset" v="0,0"/>
+            <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+            <prop k="offset_unit" v="MM"/>
+            <prop k="outline_color" v="0,0,0,255"/>
+            <prop k="outline_style" v="solid"/>
+            <prop k="outline_width" v="0"/>
+            <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+            <prop k="outline_width_unit" v="MM"/>
+            <prop k="scale_method" v="diameter"/>
+            <prop k="size" v="2"/>
+            <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+            <prop k="size_unit" v="MM"/>
+            <prop k="vertical_anchor_point" v="1"/>
+          </layer>
+        </symbol>
+      </SingleCategoryDiagramRenderer>
+      <DiagramLayerSettings yPosColumn="-1" showColumn="-1" linePlacementFlags="10" placement="0" dist="0" xPosColumn="-1" priority="0" obstacle="0" zIndex="0" showAll="1"/>
+      <annotationform></annotationform>
+      <aliases>
+        <alias field="geo_labelw" index="0" name=""/>
+        <alias field="geo_label" index="1" name=""/>
+        <alias field="geo_code" index="2" name=""/>
+        <alias field="local-auth" index="3" name=""/>
+        <alias field="local-au_1" index="4" name=""/>
+        <alias field="WideLocalHealthData_field_1" index="5" name=""/>
+        <alias field="WideLocalHealthData_1 Black and Minority Ethnic (BME) Population" index="6" name=""/>
+        <alias field="WideLocalHealthData_1 Child Poverty %" index="7" name=""/>
+        <alias field="WideLocalHealthData_1 Fertility Rate" index="8" name=""/>
+        <alias field="WideLocalHealthData_1 General Health - bad or very bad" index="9" name=""/>
+        <alias field="WideLocalHealthData_1 General Health - very bad" index="10" name=""/>
+        <alias field="WideLocalHealthData_1 IMD Score" index="11" name=""/>
+        <alias field="WideLocalHealthData_1 Income Deprivation %" index="12" name=""/>
+        <alias field="WideLocalHealthData_1 Limiting long term illness or disability" index="13" name=""/>
+        <alias field="WideLocalHealthData_1 Long Term Unemployment" index="14" name=""/>
+        <alias field="WideLocalHealthData_1 Low Birth Weight Births" index="15" name=""/>
+        <alias field="WideLocalHealthData_1 Older People in Deprivation (%)" index="16" name=""/>
+        <alias field="WideLocalHealthData_1 Overcrowding (% households)" index="17" name=""/>
+        <alias field="WideLocalHealthData_1 Pensioners living alone" index="18" name=""/>
+        <alias field="WideLocalHealthData_1 Population aged 0-15 years" index="19" name=""/>
+        <alias field="WideLocalHealthData_1 Population aged 16-24 years" index="20" name=""/>
+        <alias field="WideLocalHealthData_1 Population aged 25-64 years" index="21" name=""/>
+        <alias field="WideLocalHealthData_1 Population aged 65+ years" index="22" name=""/>
+        <alias field="WideLocalHealthData_1 Population aged 85+ years" index="23" name=""/>
+        <alias field="WideLocalHealthData_1 Population whose ethnicity is not &lt;91>White UK&lt;92>" index="24" name=""/>
+        <alias field="WideLocalHealthData_1 Proficiency in English of people whose main language is not English" index="25" name=""/>
+        <alias field="WideLocalHealthData_1 Provision of 1 hour or more unpaid care per week" index="26" name=""/>
+        <alias field="WideLocalHealthData_1 Provision of 50 hours or more unpaid care per week" index="27" name=""/>
+        <alias field="WideLocalHealthData_1 The percentage of households that experience fuel poverty" index="28" name=""/>
+        <alias field="WideLocalHealthData_1 Total population" index="29" name=""/>
+        <alias field="WideLocalHealthData_1 Unemployment" index="30" name=""/>
+        <alias field="WideLocalHealthData_2 A&amp;E attendances in under 5s" index="31" name=""/>
+        <alias field="WideLocalHealthData_2 Admissions for injuries in children aged 15 to 24" index="32" name=""/>
+        <alias field="WideLocalHealthData_2 Admissions for injuries in children aged under 15" index="33" name=""/>
+        <alias field="WideLocalHealthData_2 Admissions for injuries in children aged under 5" index="34" name=""/>
+        <alias field="WideLocalHealthData_2 Binge drinking adults" index="35" name=""/>
+        <alias field="WideLocalHealthData_2 Children with excess weight (Reception Year)(%)" index="36" name=""/>
+        <alias field="WideLocalHealthData_2 Children with excess weight (Year 6)(%)" index="37" name=""/>
+        <alias field="WideLocalHealthData_2 Emergency admissions in under 5s" index="38" name=""/>
+        <alias field="WideLocalHealthData_2 Healthy eating adults" index="39" name=""/>
+        <alias field="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are occasional smokers" index="40" name=""/>
+        <alias field="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are regular smokers" index="41" name=""/>
+        <alias field="WideLocalHealthData_2 Modelled prevalence of people aged 15 who have never smoked" index="42" name=""/>
+        <alias field="WideLocalHealthData_2 Obese adults" index="43" name=""/>
+        <alias field="WideLocalHealthData_2 Obese Children (Reception Year)" index="44" name=""/>
+        <alias field="WideLocalHealthData_2 Obese Children (Year 6)(%)" index="45" name=""/>
+        <alias field="WideLocalHealthData_2 Percentage of deliveries where the mother is aged under 18 years" index="46" name=""/>
+        <alias field="WideLocalHealthData_3 Elective hospital admissions for all causes" index="47" name=""/>
+        <alias field="WideLocalHealthData_3 Elective hospital admissions for CHD" index="48" name=""/>
+        <alias field="WideLocalHealthData_3 Elective hospital admissions for hip replacement" index="49" name=""/>
+        <alias field="WideLocalHealthData_3 Elective hospital admissions for knee replacement" index="50" name=""/>
+        <alias field="WideLocalHealthData_3 Emergency hospital admissions for all causes" index="51" name=""/>
+        <alias field="WideLocalHealthData_3 Emergency hospital admissions for CHD" index="52" name=""/>
+        <alias field="WideLocalHealthData_3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)" index="53" name=""/>
+        <alias field="WideLocalHealthData_3 Emergency hospital admissions for hip fracture in 65+" index="54" name=""/>
+        <alias field="WideLocalHealthData_3 Emergency hospital admissions for Myocardial Infarction (heart attack)" index="55" name=""/>
+        <alias field="WideLocalHealthData_3 Emergency hospital admissions for stroke" index="56" name=""/>
+        <alias field="WideLocalHealthData_3 Hospital stays for alcohol related harm" index="57" name=""/>
+        <alias field="WideLocalHealthData_3 Hospital stays for self harm" index="58" name=""/>
+        <alias field="WideLocalHealthData_3 Incidence of all cancer" index="59" name=""/>
+        <alias field="WideLocalHealthData_3 Incidence of breast cancer" index="60" name=""/>
+        <alias field="WideLocalHealthData_3 Incidence of colorectal cancer" index="61" name=""/>
+        <alias field="WideLocalHealthData_3 Incidence of lung cancer" index="62" name=""/>
+        <alias field="WideLocalHealthData_3 Incidence of prostate cancer" index="63" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from all cancer, all ages" index="64" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from all cancer, under 75 years" index="65" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from all causes, all ages" index="66" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from all causes, under 65 years" index="67" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from all causes, under 75 years" index="68" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from circulatory disease, all ages" index="69" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from circulatory disease, under 75 years" index="70" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from coronary heart disease, all ages" index="71" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from coronary heart disease, under 75 years" index="72" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from respiratory diseases, all ages" index="73" name=""/>
+        <alias field="WideLocalHealthData_4 Deaths from stroke, all ages" index="74" name=""/>
+        <alias field="WideLocalHealthData_4 Disability free life expectancy at birth for females" index="75" name=""/>
+        <alias field="WideLocalHealthData_4 Disability free life expectancy at birth for males" index="76" name=""/>
+        <alias field="WideLocalHealthData_4 Healthy life expectancy at birth for females" index="77" name=""/>
+        <alias field="WideLocalHealthData_4 Healthy life expectancy at birth for males" index="78" name=""/>
+        <alias field="WideLocalHealthData_4 Life expectancy at birth for females" index="79" name=""/>
+        <alias field="WideLocalHealthData_4 Life expectancy at birth for females, 2009-2013" index="80" name=""/>
+        <alias field="WideLocalHealthData_4 Life expectancy at birth for males" index="81" name=""/>
+        <alias field="WideLocalHealthData_4 Life expectancy at birth for males, 2009-2013" index="82" name=""/>
+      </aliases>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <attributeactions default="-1"/>
+      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
+        <columns>
+          <column width="-1" hidden="0" type="field" name="geo_labelw"/>
+          <column width="-1" hidden="0" type="field" name="geo_label"/>
+          <column width="-1" hidden="0" type="field" name="geo_code"/>
+          <column width="-1" hidden="0" type="field" name="local-auth"/>
+          <column width="-1" hidden="0" type="field" name="local-au_1"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_field_1"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Black and Minority Ethnic (BME) Population"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Child Poverty %"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Fertility Rate"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 General Health - bad or very bad"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 General Health - very bad"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 IMD Score"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Income Deprivation %"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Limiting long term illness or disability"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Long Term Unemployment"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Low Birth Weight Births"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Older People in Deprivation (%)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Overcrowding (% households)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Pensioners living alone"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Population aged 0-15 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Population aged 16-24 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Population aged 25-64 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Population aged 65+ years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Population aged 85+ years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Population whose ethnicity is not &lt;91>White UK&lt;92>"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Proficiency in English of people whose main language is not English"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Provision of 1 hour or more unpaid care per week"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Provision of 50 hours or more unpaid care per week"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 The percentage of households that experience fuel poverty"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Total population"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_1 Unemployment"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 A&amp;E attendances in under 5s"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Admissions for injuries in children aged 15 to 24"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Admissions for injuries in children aged under 15"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Admissions for injuries in children aged under 5"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Binge drinking adults"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Children with excess weight (Reception Year)(%)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Children with excess weight (Year 6)(%)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Emergency admissions in under 5s"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Healthy eating adults"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are occasional smokers"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are regular smokers"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Modelled prevalence of people aged 15 who have never smoked"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Obese adults"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Obese Children (Reception Year)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Obese Children (Year 6)(%)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_2 Percentage of deliveries where the mother is aged under 18 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Elective hospital admissions for all causes"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Elective hospital admissions for CHD"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Elective hospital admissions for hip replacement"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Elective hospital admissions for knee replacement"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Emergency hospital admissions for all causes"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Emergency hospital admissions for CHD"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Emergency hospital admissions for hip fracture in 65+"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Emergency hospital admissions for Myocardial Infarction (heart attack)"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Emergency hospital admissions for stroke"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Hospital stays for alcohol related harm"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Hospital stays for self harm"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Incidence of all cancer"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Incidence of breast cancer"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Incidence of colorectal cancer"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Incidence of lung cancer"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_3 Incidence of prostate cancer"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from all cancer, all ages"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from all cancer, under 75 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from all causes, all ages"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from all causes, under 65 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from all causes, under 75 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from circulatory disease, all ages"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from circulatory disease, under 75 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from coronary heart disease, all ages"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from coronary heart disease, under 75 years"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from respiratory diseases, all ages"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Deaths from stroke, all ages"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Disability free life expectancy at birth for females"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Disability free life expectancy at birth for males"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Healthy life expectancy at birth for females"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Healthy life expectancy at birth for males"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Life expectancy at birth for females"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Life expectancy at birth for females, 2009-2013"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Life expectancy at birth for males"/>
+          <column width="-1" hidden="0" type="field" name="WideLocalHealthData_4 Life expectancy at birth for males, 2009-2013"/>
+          <column width="-1" hidden="1" type="actions"/>
+        </columns>
+      </attributetableconfig>
+      <editform></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[# -*- coding: utf-8 -*-
+"""
+QGIS forms can have a Python function that is called when the form is
+opened.
+
+Use this function to add extra logic to your forms.
+
+Enter the name of the function in the "Python Init function"
+field.
+An example follows:
+"""
+from qgis.PyQt.QtWidgets import QWidget
+
+def my_form_open(dialog, layer, feature):
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
+]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <widgets/>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <defaults>
+        <default field="geo_labelw" expression=""/>
+        <default field="geo_label" expression=""/>
+        <default field="geo_code" expression=""/>
+        <default field="local-auth" expression=""/>
+        <default field="local-au_1" expression=""/>
+        <default field="WideLocalHealthData_field_1" expression=""/>
+        <default field="WideLocalHealthData_1 Black and Minority Ethnic (BME) Population" expression=""/>
+        <default field="WideLocalHealthData_1 Child Poverty %" expression=""/>
+        <default field="WideLocalHealthData_1 Fertility Rate" expression=""/>
+        <default field="WideLocalHealthData_1 General Health - bad or very bad" expression=""/>
+        <default field="WideLocalHealthData_1 General Health - very bad" expression=""/>
+        <default field="WideLocalHealthData_1 IMD Score" expression=""/>
+        <default field="WideLocalHealthData_1 Income Deprivation %" expression=""/>
+        <default field="WideLocalHealthData_1 Limiting long term illness or disability" expression=""/>
+        <default field="WideLocalHealthData_1 Long Term Unemployment" expression=""/>
+        <default field="WideLocalHealthData_1 Low Birth Weight Births" expression=""/>
+        <default field="WideLocalHealthData_1 Older People in Deprivation (%)" expression=""/>
+        <default field="WideLocalHealthData_1 Overcrowding (% households)" expression=""/>
+        <default field="WideLocalHealthData_1 Pensioners living alone" expression=""/>
+        <default field="WideLocalHealthData_1 Population aged 0-15 years" expression=""/>
+        <default field="WideLocalHealthData_1 Population aged 16-24 years" expression=""/>
+        <default field="WideLocalHealthData_1 Population aged 25-64 years" expression=""/>
+        <default field="WideLocalHealthData_1 Population aged 65+ years" expression=""/>
+        <default field="WideLocalHealthData_1 Population aged 85+ years" expression=""/>
+        <default field="WideLocalHealthData_1 Population whose ethnicity is not &lt;91>White UK&lt;92>" expression=""/>
+        <default field="WideLocalHealthData_1 Proficiency in English of people whose main language is not English" expression=""/>
+        <default field="WideLocalHealthData_1 Provision of 1 hour or more unpaid care per week" expression=""/>
+        <default field="WideLocalHealthData_1 Provision of 50 hours or more unpaid care per week" expression=""/>
+        <default field="WideLocalHealthData_1 The percentage of households that experience fuel poverty" expression=""/>
+        <default field="WideLocalHealthData_1 Total population" expression=""/>
+        <default field="WideLocalHealthData_1 Unemployment" expression=""/>
+        <default field="WideLocalHealthData_2 A&amp;E attendances in under 5s" expression=""/>
+        <default field="WideLocalHealthData_2 Admissions for injuries in children aged 15 to 24" expression=""/>
+        <default field="WideLocalHealthData_2 Admissions for injuries in children aged under 15" expression=""/>
+        <default field="WideLocalHealthData_2 Admissions for injuries in children aged under 5" expression=""/>
+        <default field="WideLocalHealthData_2 Binge drinking adults" expression=""/>
+        <default field="WideLocalHealthData_2 Children with excess weight (Reception Year)(%)" expression=""/>
+        <default field="WideLocalHealthData_2 Children with excess weight (Year 6)(%)" expression=""/>
+        <default field="WideLocalHealthData_2 Emergency admissions in under 5s" expression=""/>
+        <default field="WideLocalHealthData_2 Healthy eating adults" expression=""/>
+        <default field="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are occasional smokers" expression=""/>
+        <default field="WideLocalHealthData_2 Modelled prevalence of people aged 15 who are regular smokers" expression=""/>
+        <default field="WideLocalHealthData_2 Modelled prevalence of people aged 15 who have never smoked" expression=""/>
+        <default field="WideLocalHealthData_2 Obese adults" expression=""/>
+        <default field="WideLocalHealthData_2 Obese Children (Reception Year)" expression=""/>
+        <default field="WideLocalHealthData_2 Obese Children (Year 6)(%)" expression=""/>
+        <default field="WideLocalHealthData_2 Percentage of deliveries where the mother is aged under 18 years" expression=""/>
+        <default field="WideLocalHealthData_3 Elective hospital admissions for all causes" expression=""/>
+        <default field="WideLocalHealthData_3 Elective hospital admissions for CHD" expression=""/>
+        <default field="WideLocalHealthData_3 Elective hospital admissions for hip replacement" expression=""/>
+        <default field="WideLocalHealthData_3 Elective hospital admissions for knee replacement" expression=""/>
+        <default field="WideLocalHealthData_3 Emergency hospital admissions for all causes" expression=""/>
+        <default field="WideLocalHealthData_3 Emergency hospital admissions for CHD" expression=""/>
+        <default field="WideLocalHealthData_3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)" expression=""/>
+        <default field="WideLocalHealthData_3 Emergency hospital admissions for hip fracture in 65+" expression=""/>
+        <default field="WideLocalHealthData_3 Emergency hospital admissions for Myocardial Infarction (heart attack)" expression=""/>
+        <default field="WideLocalHealthData_3 Emergency hospital admissions for stroke" expression=""/>
+        <default field="WideLocalHealthData_3 Hospital stays for alcohol related harm" expression=""/>
+        <default field="WideLocalHealthData_3 Hospital stays for self harm" expression=""/>
+        <default field="WideLocalHealthData_3 Incidence of all cancer" expression=""/>
+        <default field="WideLocalHealthData_3 Incidence of breast cancer" expression=""/>
+        <default field="WideLocalHealthData_3 Incidence of colorectal cancer" expression=""/>
+        <default field="WideLocalHealthData_3 Incidence of lung cancer" expression=""/>
+        <default field="WideLocalHealthData_3 Incidence of prostate cancer" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from all cancer, all ages" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from all cancer, under 75 years" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from all causes, all ages" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from all causes, under 65 years" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from all causes, under 75 years" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from circulatory disease, all ages" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from circulatory disease, under 75 years" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from coronary heart disease, all ages" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from coronary heart disease, under 75 years" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from respiratory diseases, all ages" expression=""/>
+        <default field="WideLocalHealthData_4 Deaths from stroke, all ages" expression=""/>
+        <default field="WideLocalHealthData_4 Disability free life expectancy at birth for females" expression=""/>
+        <default field="WideLocalHealthData_4 Disability free life expectancy at birth for males" expression=""/>
+        <default field="WideLocalHealthData_4 Healthy life expectancy at birth for females" expression=""/>
+        <default field="WideLocalHealthData_4 Healthy life expectancy at birth for males" expression=""/>
+        <default field="WideLocalHealthData_4 Life expectancy at birth for females" expression=""/>
+        <default field="WideLocalHealthData_4 Life expectancy at birth for females, 2009-2013" expression=""/>
+        <default field="WideLocalHealthData_4 Life expectancy at birth for males" expression=""/>
+        <default field="WideLocalHealthData_4 Life expectancy at birth for males, 2009-2013" expression=""/>
+      </defaults>
+      <previewExpression>COALESCE( "geo_label", '&lt;NULL>' )</previewExpression>
+    </maplayer>
+    <maplayer minimumScale="0" maximumScale="1e+08" readOnly="0" geometry="No geometry" type="vector" hasScaleBasedVisibilityFlag="0">
+      <id>WideLocalHealthData20171212133413777</id>
+      <datasource>file:../Processed%20Data/WideLocalHealthData.csv?type=csv&amp;geomType=none&amp;subsetIndex=no&amp;watchFile=no</datasource>
+      <keywordList>
+        <value></value>
+      </keywordList>
+      <layername>WideLocalHealthData</layername>
+      <srs>
+        <spatialrefsys>
+          <proj4>+proj=longlat +datum=WGS84 +no_defs</proj4>
+          <srsid>3452</srsid>
+          <srid>4326</srid>
+          <authid>EPSG:4326</authid>
+          <description>WGS 84</description>
+          <projectionacronym>longlat</projectionacronym>
+          <ellipsoidacronym>WGS84</ellipsoidacronym>
+          <geographicflag>true</geographicflag>
+        </spatialrefsys>
+      </srs>
+      <customproperties/>
+      <provider encoding="UTF-8">delimitedtext</provider>
+      <vectorjoins/>
+      <layerDependencies/>
+      <expressionfields/>
+      <map-layer-style-manager current="">
+        <map-layer-style name=""/>
+      </map-layer-style-manager>
+      <edittypes>
+        <edittype widgetv2type="TextEdit" name="field_1">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="AreaCode">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Black and Minority Ethnic (BME) Population">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Child Poverty %">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Fertility Rate">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 General Health - bad or very bad">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 General Health - very bad">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 IMD Score">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Income Deprivation %">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Limiting long term illness or disability">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Long Term Unemployment">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Low Birth Weight Births">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Older People in Deprivation (%)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Overcrowding (% households)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Pensioners living alone">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Population aged 0-15 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Population aged 16-24 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Population aged 25-64 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Population aged 65+ years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Population aged 85+ years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Population whose ethnicity is not &lt;91>White UK&lt;92>">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Proficiency in English of people whose main language is not English">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Provision of 1 hour or more unpaid care per week">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Provision of 50 hours or more unpaid care per week">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 The percentage of households that experience fuel poverty">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Total population">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="1 Unemployment">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 A&amp;E attendances in under 5s">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Admissions for injuries in children aged 15 to 24">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Admissions for injuries in children aged under 15">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Admissions for injuries in children aged under 5">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Binge drinking adults">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Children with excess weight (Reception Year)(%)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Children with excess weight (Year 6)(%)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Emergency admissions in under 5s">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Healthy eating adults">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Modelled prevalence of people aged 15 who are occasional smokers">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Modelled prevalence of people aged 15 who are regular smokers">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Modelled prevalence of people aged 15 who have never smoked">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Obese adults">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Obese Children (Reception Year)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Obese Children (Year 6)(%)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="2 Percentage of deliveries where the mother is aged under 18 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Elective hospital admissions for all causes">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Elective hospital admissions for CHD">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Elective hospital admissions for hip replacement">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Elective hospital admissions for knee replacement">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Emergency hospital admissions for all causes">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Emergency hospital admissions for CHD">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Emergency hospital admissions for hip fracture in 65+">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Emergency hospital admissions for Myocardial Infarction (heart attack)">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Emergency hospital admissions for stroke">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Hospital stays for alcohol related harm">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Hospital stays for self harm">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Incidence of all cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Incidence of breast cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Incidence of colorectal cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Incidence of lung cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="3 Incidence of prostate cancer">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from all cancer, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from all cancer, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from all causes, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from all causes, under 65 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from all causes, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from circulatory disease, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from circulatory disease, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from coronary heart disease, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from coronary heart disease, under 75 years">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from respiratory diseases, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Deaths from stroke, all ages">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Disability free life expectancy at birth for females">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Disability free life expectancy at birth for males">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Healthy life expectancy at birth for females">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Healthy life expectancy at birth for males">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Life expectancy at birth for females">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Life expectancy at birth for females, 2009-2013">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Life expectancy at birth for males">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+        <edittype widgetv2type="TextEdit" name="4 Life expectancy at birth for males, 2009-2013">
+          <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+        </edittype>
+      </edittypes>
+      <annotationform></annotationform>
+      <aliases>
+        <alias field="field_1" index="0" name=""/>
+        <alias field="AreaCode" index="1" name=""/>
+        <alias field="1 Black and Minority Ethnic (BME) Population" index="2" name=""/>
+        <alias field="1 Child Poverty %" index="3" name=""/>
+        <alias field="1 Fertility Rate" index="4" name=""/>
+        <alias field="1 General Health - bad or very bad" index="5" name=""/>
+        <alias field="1 General Health - very bad" index="6" name=""/>
+        <alias field="1 IMD Score" index="7" name=""/>
+        <alias field="1 Income Deprivation %" index="8" name=""/>
+        <alias field="1 Limiting long term illness or disability" index="9" name=""/>
+        <alias field="1 Long Term Unemployment" index="10" name=""/>
+        <alias field="1 Low Birth Weight Births" index="11" name=""/>
+        <alias field="1 Older People in Deprivation (%)" index="12" name=""/>
+        <alias field="1 Overcrowding (% households)" index="13" name=""/>
+        <alias field="1 Pensioners living alone" index="14" name=""/>
+        <alias field="1 Population aged 0-15 years" index="15" name=""/>
+        <alias field="1 Population aged 16-24 years" index="16" name=""/>
+        <alias field="1 Population aged 25-64 years" index="17" name=""/>
+        <alias field="1 Population aged 65+ years" index="18" name=""/>
+        <alias field="1 Population aged 85+ years" index="19" name=""/>
+        <alias field="1 Population whose ethnicity is not &lt;91>White UK&lt;92>" index="20" name=""/>
+        <alias field="1 Proficiency in English of people whose main language is not English" index="21" name=""/>
+        <alias field="1 Provision of 1 hour or more unpaid care per week" index="22" name=""/>
+        <alias field="1 Provision of 50 hours or more unpaid care per week" index="23" name=""/>
+        <alias field="1 The percentage of households that experience fuel poverty" index="24" name=""/>
+        <alias field="1 Total population" index="25" name=""/>
+        <alias field="1 Unemployment" index="26" name=""/>
+        <alias field="2 A&amp;E attendances in under 5s" index="27" name=""/>
+        <alias field="2 Admissions for injuries in children aged 15 to 24" index="28" name=""/>
+        <alias field="2 Admissions for injuries in children aged under 15" index="29" name=""/>
+        <alias field="2 Admissions for injuries in children aged under 5" index="30" name=""/>
+        <alias field="2 Binge drinking adults" index="31" name=""/>
+        <alias field="2 Children with excess weight (Reception Year)(%)" index="32" name=""/>
+        <alias field="2 Children with excess weight (Year 6)(%)" index="33" name=""/>
+        <alias field="2 Emergency admissions in under 5s" index="34" name=""/>
+        <alias field="2 Healthy eating adults" index="35" name=""/>
+        <alias field="2 Modelled prevalence of people aged 15 who are occasional smokers" index="36" name=""/>
+        <alias field="2 Modelled prevalence of people aged 15 who are regular smokers" index="37" name=""/>
+        <alias field="2 Modelled prevalence of people aged 15 who have never smoked" index="38" name=""/>
+        <alias field="2 Obese adults" index="39" name=""/>
+        <alias field="2 Obese Children (Reception Year)" index="40" name=""/>
+        <alias field="2 Obese Children (Year 6)(%)" index="41" name=""/>
+        <alias field="2 Percentage of deliveries where the mother is aged under 18 years" index="42" name=""/>
+        <alias field="3 Elective hospital admissions for all causes" index="43" name=""/>
+        <alias field="3 Elective hospital admissions for CHD" index="44" name=""/>
+        <alias field="3 Elective hospital admissions for hip replacement" index="45" name=""/>
+        <alias field="3 Elective hospital admissions for knee replacement" index="46" name=""/>
+        <alias field="3 Emergency hospital admissions for all causes" index="47" name=""/>
+        <alias field="3 Emergency hospital admissions for CHD" index="48" name=""/>
+        <alias field="3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)" index="49" name=""/>
+        <alias field="3 Emergency hospital admissions for hip fracture in 65+" index="50" name=""/>
+        <alias field="3 Emergency hospital admissions for Myocardial Infarction (heart attack)" index="51" name=""/>
+        <alias field="3 Emergency hospital admissions for stroke" index="52" name=""/>
+        <alias field="3 Hospital stays for alcohol related harm" index="53" name=""/>
+        <alias field="3 Hospital stays for self harm" index="54" name=""/>
+        <alias field="3 Incidence of all cancer" index="55" name=""/>
+        <alias field="3 Incidence of breast cancer" index="56" name=""/>
+        <alias field="3 Incidence of colorectal cancer" index="57" name=""/>
+        <alias field="3 Incidence of lung cancer" index="58" name=""/>
+        <alias field="3 Incidence of prostate cancer" index="59" name=""/>
+        <alias field="4 Deaths from all cancer, all ages" index="60" name=""/>
+        <alias field="4 Deaths from all cancer, under 75 years" index="61" name=""/>
+        <alias field="4 Deaths from all causes, all ages" index="62" name=""/>
+        <alias field="4 Deaths from all causes, under 65 years" index="63" name=""/>
+        <alias field="4 Deaths from all causes, under 75 years" index="64" name=""/>
+        <alias field="4 Deaths from circulatory disease, all ages" index="65" name=""/>
+        <alias field="4 Deaths from circulatory disease, under 75 years" index="66" name=""/>
+        <alias field="4 Deaths from coronary heart disease, all ages" index="67" name=""/>
+        <alias field="4 Deaths from coronary heart disease, under 75 years" index="68" name=""/>
+        <alias field="4 Deaths from respiratory diseases, all ages" index="69" name=""/>
+        <alias field="4 Deaths from stroke, all ages" index="70" name=""/>
+        <alias field="4 Disability free life expectancy at birth for females" index="71" name=""/>
+        <alias field="4 Disability free life expectancy at birth for males" index="72" name=""/>
+        <alias field="4 Healthy life expectancy at birth for females" index="73" name=""/>
+        <alias field="4 Healthy life expectancy at birth for males" index="74" name=""/>
+        <alias field="4 Life expectancy at birth for females" index="75" name=""/>
+        <alias field="4 Life expectancy at birth for females, 2009-2013" index="76" name=""/>
+        <alias field="4 Life expectancy at birth for males" index="77" name=""/>
+        <alias field="4 Life expectancy at birth for males, 2009-2013" index="78" name=""/>
+      </aliases>
+      <excludeAttributesWMS/>
+      <excludeAttributesWFS/>
+      <attributeactions default="-1"/>
+      <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
+        <columns/>
+      </attributetableconfig>
+      <editform></editform>
+      <editforminit/>
+      <editforminitcodesource>0</editforminitcodesource>
+      <editforminitfilepath></editforminitfilepath>
+      <editforminitcode><![CDATA[]]></editforminitcode>
+      <featformsuppress>0</featformsuppress>
+      <editorlayout>generatedlayout</editorlayout>
+      <widgets/>
+      <conditionalstyles>
+        <rowstyles/>
+        <fieldstyles/>
+      </conditionalstyles>
+      <defaults>
+        <default field="field_1" expression=""/>
+        <default field="AreaCode" expression=""/>
+        <default field="1 Black and Minority Ethnic (BME) Population" expression=""/>
+        <default field="1 Child Poverty %" expression=""/>
+        <default field="1 Fertility Rate" expression=""/>
+        <default field="1 General Health - bad or very bad" expression=""/>
+        <default field="1 General Health - very bad" expression=""/>
+        <default field="1 IMD Score" expression=""/>
+        <default field="1 Income Deprivation %" expression=""/>
+        <default field="1 Limiting long term illness or disability" expression=""/>
+        <default field="1 Long Term Unemployment" expression=""/>
+        <default field="1 Low Birth Weight Births" expression=""/>
+        <default field="1 Older People in Deprivation (%)" expression=""/>
+        <default field="1 Overcrowding (% households)" expression=""/>
+        <default field="1 Pensioners living alone" expression=""/>
+        <default field="1 Population aged 0-15 years" expression=""/>
+        <default field="1 Population aged 16-24 years" expression=""/>
+        <default field="1 Population aged 25-64 years" expression=""/>
+        <default field="1 Population aged 65+ years" expression=""/>
+        <default field="1 Population aged 85+ years" expression=""/>
+        <default field="1 Population whose ethnicity is not &lt;91>White UK&lt;92>" expression=""/>
+        <default field="1 Proficiency in English of people whose main language is not English" expression=""/>
+        <default field="1 Provision of 1 hour or more unpaid care per week" expression=""/>
+        <default field="1 Provision of 50 hours or more unpaid care per week" expression=""/>
+        <default field="1 The percentage of households that experience fuel poverty" expression=""/>
+        <default field="1 Total population" expression=""/>
+        <default field="1 Unemployment" expression=""/>
+        <default field="2 A&amp;E attendances in under 5s" expression=""/>
+        <default field="2 Admissions for injuries in children aged 15 to 24" expression=""/>
+        <default field="2 Admissions for injuries in children aged under 15" expression=""/>
+        <default field="2 Admissions for injuries in children aged under 5" expression=""/>
+        <default field="2 Binge drinking adults" expression=""/>
+        <default field="2 Children with excess weight (Reception Year)(%)" expression=""/>
+        <default field="2 Children with excess weight (Year 6)(%)" expression=""/>
+        <default field="2 Emergency admissions in under 5s" expression=""/>
+        <default field="2 Healthy eating adults" expression=""/>
+        <default field="2 Modelled prevalence of people aged 15 who are occasional smokers" expression=""/>
+        <default field="2 Modelled prevalence of people aged 15 who are regular smokers" expression=""/>
+        <default field="2 Modelled prevalence of people aged 15 who have never smoked" expression=""/>
+        <default field="2 Obese adults" expression=""/>
+        <default field="2 Obese Children (Reception Year)" expression=""/>
+        <default field="2 Obese Children (Year 6)(%)" expression=""/>
+        <default field="2 Percentage of deliveries where the mother is aged under 18 years" expression=""/>
+        <default field="3 Elective hospital admissions for all causes" expression=""/>
+        <default field="3 Elective hospital admissions for CHD" expression=""/>
+        <default field="3 Elective hospital admissions for hip replacement" expression=""/>
+        <default field="3 Elective hospital admissions for knee replacement" expression=""/>
+        <default field="3 Emergency hospital admissions for all causes" expression=""/>
+        <default field="3 Emergency hospital admissions for CHD" expression=""/>
+        <default field="3 Emergency hospital admissions for Chronic Obstructive Pulmonary Disease (COPD)" expression=""/>
+        <default field="3 Emergency hospital admissions for hip fracture in 65+" expression=""/>
+        <default field="3 Emergency hospital admissions for Myocardial Infarction (heart attack)" expression=""/>
+        <default field="3 Emergency hospital admissions for stroke" expression=""/>
+        <default field="3 Hospital stays for alcohol related harm" expression=""/>
+        <default field="3 Hospital stays for self harm" expression=""/>
+        <default field="3 Incidence of all cancer" expression=""/>
+        <default field="3 Incidence of breast cancer" expression=""/>
+        <default field="3 Incidence of colorectal cancer" expression=""/>
+        <default field="3 Incidence of lung cancer" expression=""/>
+        <default field="3 Incidence of prostate cancer" expression=""/>
+        <default field="4 Deaths from all cancer, all ages" expression=""/>
+        <default field="4 Deaths from all cancer, under 75 years" expression=""/>
+        <default field="4 Deaths from all causes, all ages" expression=""/>
+        <default field="4 Deaths from all causes, under 65 years" expression=""/>
+        <default field="4 Deaths from all causes, under 75 years" expression=""/>
+        <default field="4 Deaths from circulatory disease, all ages" expression=""/>
+        <default field="4 Deaths from circulatory disease, under 75 years" expression=""/>
+        <default field="4 Deaths from coronary heart disease, all ages" expression=""/>
+        <default field="4 Deaths from coronary heart disease, under 75 years" expression=""/>
+        <default field="4 Deaths from respiratory diseases, all ages" expression=""/>
+        <default field="4 Deaths from stroke, all ages" expression=""/>
+        <default field="4 Disability free life expectancy at birth for females" expression=""/>
+        <default field="4 Disability free life expectancy at birth for males" expression=""/>
+        <default field="4 Healthy life expectancy at birth for females" expression=""/>
+        <default field="4 Healthy life expectancy at birth for males" expression=""/>
+        <default field="4 Life expectancy at birth for females" expression=""/>
+        <default field="4 Life expectancy at birth for females, 2009-2013" expression=""/>
+        <default field="4 Life expectancy at birth for males" expression=""/>
+        <default field="4 Life expectancy at birth for males, 2009-2013" expression=""/>
+      </defaults>
+      <previewExpression></previewExpression>
+    </maplayer>
+  </projectlayers>
+  <properties>
+    <Measurement>
+      <DistanceUnits type="QString"></DistanceUnits>
+      <AreaUnits type="QString"></AreaUnits>
+    </Measurement>
+    <SpatialRefSys>
+      <ProjectCRSProj4String type="QString">+proj=longlat +datum=WGS84 +no_defs</ProjectCRSProj4String>
+      <ProjectCrs type="QString">EPSG:4326</ProjectCrs>
+      <ProjectCRSID type="int">3452</ProjectCRSID>
+      <ProjectionsEnabled type="int">1</ProjectionsEnabled>
+    </SpatialRefSys>
+    <Paths>
+      <Absolute type="bool">false</Absolute>
+    </Paths>
+    <Gui>
+      <SelectionColorBluePart type="int">0</SelectionColorBluePart>
+      <CanvasColorGreenPart type="int">255</CanvasColorGreenPart>
+      <CanvasColorRedPart type="int">255</CanvasColorRedPart>
+      <SelectionColorRedPart type="int">255</SelectionColorRedPart>
+      <SelectionColorAlphaPart type="int">255</SelectionColorAlphaPart>
+      <SelectionColorGreenPart type="int">255</SelectionColorGreenPart>
+      <CanvasColorBluePart type="int">255</CanvasColorBluePart>
+    </Gui>
+    <Digitizing>
+      <DefaultSnapToleranceUnit type="int">2</DefaultSnapToleranceUnit>
+      <SnappingMode type="QString">current_layer</SnappingMode>
+      <DefaultSnapType type="QString">off</DefaultSnapType>
+      <DefaultSnapTolerance type="double">0</DefaultSnapTolerance>
+    </Digitizing>
+    <PositionPrecision>
+      <DecimalPlaces type="int">2</DecimalPlaces>
+      <Automatic type="bool">true</Automatic>
+    </PositionPrecision>
+    <Legend>
+      <filterByMap type="bool">false</filterByMap>
+    </Legend>
+  </properties>
+  <visibility-presets/>
+</qgis>
