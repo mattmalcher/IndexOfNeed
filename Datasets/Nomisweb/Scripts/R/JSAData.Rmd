@@ -1,7 +1,7 @@
 ---
-title: "NomisScrape"
+title: "Support at Home Data"
 author: "Matthew Malcher"
-date: "06/12/2017"
+date: "13/12/2017"
 output: html_document
 ---
 
@@ -18,24 +18,11 @@ library(tidyr)#for spreading datasets from tall to wide
 library(xlsx) #for writing out to spreadsheet
 ```
 
-# Get JSA Data
+# Support at Home
+The aim of this project is to curate a selection of geographical UK datasets relevant to NGO's. To help focus on how to do this, and what might actually be useful it is probably sensible to do a few case studies.
 
 ## Find JSA variables
-Get a table of the nomis variables which are in the JSA category.
 
-```{r}
-jsaDatasets <- get_datasets_by_contenttype('jsa')
-```
-
-Looking at `jsaDatasets$Name.en` we can pick a few of these which we think are relevant or interesting:
-
-* NM_1_1 - Jobseeker's Allowance with rates and proportions
-* NM_7_1 - claimant count - occupation, age and duration
-* NM_10_1 - Jobseeker's Allowance flows
-
-We now want to check that these are available for our desired output type - Local Authority Areas. Ideally we would cross reference it against a list of datasets which are available at our desired geography level, however despite this functionality being present at: https://www.nomisweb.co.uk/query/select/getdatasetbygeog.asp?cat=8&geogtype=464
-
-Fortunately we can still do it individually for our datasets of interest: 
 
 ```{r}
 available_OAs(ap,qformat,'NM_1_1','2092957697')%>% filter(id =='2092957697TYPE464')
@@ -105,7 +92,6 @@ data_NM_1_1 <- data_NM_1_1 %>%
 # Rename Spread Columns
 data_NM_1_1 <- reaname_via_codelist(data_NM_1_1,'CL_1_1_MEASURES' )
 ```
-
 
 
 # NM_7_1 - claimant count - occupation age and duration
