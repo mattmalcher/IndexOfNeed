@@ -11,17 +11,31 @@ Load up required libraries.
 ```{r}
 library(dplyr)
 library(tidyr)
+library(xlsx)
 ```
 
-
-```{r Read in CSV's}
-LocalHealthMSOAdata=read.csv('../Processed Data/WideLocalHealthData.csv', header=TRUE)
-```
-
+https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/628638/Underlying_data.zip
 
 ```{r}
-# Use unz to read in the file from inside the zip - otherwise quite large
-LookupTable <- read.csv(unz(description = '../Source Data/PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.zip',filename="PCD11_OA11_LSOA11_MSOA11_LAD11_EW_LU_aligned_v2.csv"))
+
+remote = "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/628638/Underlying_data.zip"
+loc = "../../Source Data/" # Relative location of the Source Data folder
+file = "Underlying_data.zip"
+
+# Download and extract Data
+download.file(remote,paste0(loc,file))
+unzip(paste0(loc,file),exdir=paste0(loc,"Extracted"))
+
+# Extract Data
+dat_UD_LA_1 <- read.xlsx(paste0(loc,"Extracted/","SFR03_2017_UD_LA.xlsx"), 1)
+# dat_UD_LA_2 <- read.xlsx(paste0(loc,"Extracted/","SFR03_2017_UD_NATIONAL_CHARACTERISTICS_1.xlsx"),1)
+# dat_UD_LA_3 <- read.xlsx(paste0(loc,"Extracted/","SFR03_2017_UD_NATIONAL_CHARACTERISTICS_2.xlsx"), 1)
+            
+# Remove the extracted version of the zip
+unlink(paste0(loc,"Extracted"), recursive=TRUE)
 
 ```
+
+
+
 
