@@ -1,0 +1,41 @@
+---
+title: "KS4 Statistics"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load up required libraries.
+```{r}
+library(dplyr)
+library(tidyr)
+library(xlsx)
+```
+
+https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/628638/Underlying_data.zip
+
+```{r}
+
+remote = "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/628638/Underlying_data.zip"
+loc = "../../Source Data/" # Relative location of the Source Data folder
+file = "Underlying_data.zip"
+
+# Download and extract Data
+download.file(remote,paste0(loc,file))
+unzip(paste0(loc,file),exdir=paste0(loc,"Extracted"))
+
+# Extract Data
+dat_UD_LA_1 <- read.xlsx(paste0(loc,"Extracted/","SFR03_2017_UD_LA.xlsx"), 1)
+# dat_UD_LA_2 <- read.xlsx(paste0(loc,"Extracted/","SFR03_2017_UD_NATIONAL_CHARACTERISTICS_1.xlsx"),1)
+# dat_UD_LA_3 <- read.xlsx(paste0(loc,"Extracted/","SFR03_2017_UD_NATIONAL_CHARACTERISTICS_2.xlsx"), 1)
+            
+# Remove the extracted version of the zip
+unlink(paste0(loc,"Extracted"), recursive=TRUE)
+
+```
+
+
+
+
