@@ -1,0 +1,21 @@
+---
+title: "Indicator by Area Type"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# setup
+```{r}
+library(fingertipsR)
+```
+
+Get the fingertips indicators as well as the 
+
+```{r}
+inds <- indicators()
+at_by_i<-areatypes_by_indicators
+```
+

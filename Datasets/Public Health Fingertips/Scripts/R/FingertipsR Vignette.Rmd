@@ -12,9 +12,29 @@ library(ggplot2)
 ```
 
 
+
+With `indicators()` we can fetch a list of all the datasets and domains which are available from public health.
+
 ```{r}
 ## ----indicators----------------------------------------------------------
 inds <- indicators()
+str(inds)
+
+```
+
+These are 4559 different variables, which fall under different profiles and domains.
+
+```{r}
+pros <- profiles()
+```
+
+
+
+```{r}
+areatypes_by_indicators()
+```
+
+```{r}
 life_expectancy <- inds[grepl("life expectancy", tolower(inds$IndicatorName)),]
 
 # Because the same indicators are used in multiple profiles, there are many repeated indicators in this table (some with varying IndicatorName but same IndicatorID)
