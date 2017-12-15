@@ -1,0 +1,242 @@
+---
+title: "JSA Data From Nomisweb"
+author: "Matthew Malcher"
+date: "06/12/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Prerequisites.
+This file requires that all chunks in `SDMX Access.Rmd` be run first to define all the functions and load all the relevant libraries for accessing data via the Nomis API.
+
+we also want to load the following additional libraries:
+```{r}
+library(tidyr)#for spreading datasets from tall to wide
+library(xlsx) #for writing out to spreadsheet
+```
+
+# Get JSA Data
+
+## Find JSA variables
+Get a table of the nomis variables which are in the JSA category.
+
+```{r}
+jsaDatasets <- get_datasets_by_contenttype('jsa')
+```
+
+Looking at `jsaDatasets$Name.en` we can pick a few of these which we think are relevant or interesting:
+
+* NM_1_1 - Jobseeker's Allowance with rates and proportions
+* NM_7_1 - claimant count - occupation, age and duration
+* NM_10_1 - Jobseeker's Allowance flows
+
+We now want to check that these are available for our desired output type - Local Authority Areas. Ideally we would cross reference it against a list of datasets which are available at our desired geography level, however despite this functionality being present at: https://www.nomisweb.co.uk/query/select/getdatasetbygeog.asp?cat=8&geogtype=464
+
+Fortunately we can still do it individually for our datasets of interest: 
+
+```{r}
+available_OAs(ap,qformat,'NM_1_1','2092957697')%>% filter(id =='2092957697TYPE464')
+
+ available_OAs(ap,qformat,'NM_7_1','2092957697')%>% filter(id =='2092957697TYPE464')
+
+ available_OAs(ap,qformat,'NM_10_1','2092957697') %>% filter(id =='2092957697TYPE464')
+```
+
+We can see that all three variables are available at local authority level. Good!
+
+## Get Output Areas
+Now we can get the list of output areas available for each dataset.
+```{r}
+OAlist<- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
+```
+
+# NM_1_1 - JSA Claimants
+
+##  Get Structure
+```{r}
+get_struct (ap,qformat,'NM_1_1')
+```
+
+
+
+
+
+##  Get Items
+```{r}
+get_items(ap,'NM_1_1',qformat)
+```
+##  Get Measures
+```{r}
+get_measures(ap,qformat,'NM_1_1','2092957697','TYPE464')
+```
+
+##  Get Data
+```{r}
+qlist<-list(geography='2092957697TYPE464',      # Local Authority Areas
+            sex=7,                              # Genders: Total for both Genders
+            item=1,                             # Item: Total Claimints
+            measures='20100,20201,20202,20203', # Measures: claimants, workforce,
+            time='latest')                      # Latest Time
+
+data_NM_1_1<-get_data_sdmx(qlist, 'NM_1_1')
+
+```
+
+## Tidy Data
+We notice that we get 1624 rows for NM_1_1:
+
+  * 20100 People Claming,
+  * 20201 workplace estimate, 
+  * 20202 Economically Active 
+  * 20203 People Claiming as a proportion of resident population
+
+4 measures x 406 regions = 1624 rows
+
+Our target is a wide dataset we can join in QGIS or similar with 1 row per geography. Therefore we want to use something like spread from tidyr to tidy this up. We can do this using the measures column in this case.
+```{r}
+#  Spread Data Frame
+data_NM_1_1 <- data_NM_1_1 %>%
+  select(GEOGRAPHY, MEASURES, OBS_VALUE) %>%
+  spread(key='MEASURES',  value='OBS_VALUE' ) 
+
+# Rename Spread Columns
+data_NM_1_1 <- reaname_via_codelist(data_NM_1_1,'CL_1_1_MEASURES' )
+```
+
+
+# NM_7_1 - claimant count - occupation age and duration
+
+```{r}
+info_on_dataset(ap,qformat,'NM_7_1')
+```
+
+##  Get Structure
+```{r}
+get_struct (ap,qformat,'NM_7_1')
+```
+
+## Code Lists for non standard quantities
+```{r}
+get_codelist(cl,qformat,'CL_7_1_OCCUPATION')
+get_codelist(cl,qformat,'CL_7_1_AGE_DUR')
+```
+Note that there are 112 possible occupations and 238 age_duration bands. As such, if you dont restrict one or both of these, with 406 output areas requested and data returned in a tall format you are gonna get pretty complex and hit the 25,000 cell limit pretty quickly.
+
+As another way of thinking about it, you could have 60 data items for each of the 406 Local Authorities without going over the limit. (Though I am unsure if the additional default columns which come through count towards the limit.)
+
+## Get Items
+```{r}
+get_items(ap,'NM_7_1',qformat)
+```
+
+## Get Measures
+```{r}
+get_measures(ap,qformat,'NM_7_1','2092957697','TYPE464')
+```
+
+
+## Get Data
+Get NM_7_1 Data - This is probably the most basic request you could make, with both age_duration and occupation set to their 'total' options. There is a lot of available complexity and subsetting you can do with this dataset!
+```{r}
+qlist<-list(geography='2092957697TYPE464',              # Local Authority Areas
+            sex=7,                                      # Genders: Total for both Genders
+            item=1,                                     # Item: Sought Occupation
+            measures='20100',                           # Measures: value
+            time='latest',                              # Latest Time
+            AGE_DUR='1,2,3,4,5,6,7,8,9,10,11,12,13',    # Select the different age bands
+            Occupation = 589824)                        # All Occupations                
+
+data_NM_7_1 <-get_data_sdmx(qlist, 'NM_7_1')
+```
+
+## Tidy Data 
+```{r}
+# Spread data frame by age bands
+data_NM_7_1 <- data_NM_7_1 %>%
+  select(GEOGRAPHY, AGE_DUR, OBS_VALUE) %>%
+  spread(key='AGE_DUR',  value='OBS_VALUE' ) 
+
+# Rename using codelist for age bands
+data_NM_7_1<-reaname_via_codelist(data_NM_7_1,'CL_7_1_AGE_DUR' )
+```
+
+# NM_10_1 - Jobseeker's Allowance flows
+
+##  Get Structure
+```{r}
+get_struct (ap,qformat,'NM_10_1')
+```
+## Code Lists for non standard quantities
+```{r}
+get_codelist(cl,qformat,'CL_10_1_FLOW')
+```
+
+
+## Get Items
+```{r}
+get_items(ap,'NM_10_1',qformat)
+```
+
+## Get Measures
+```{r}
+get_measures(ap,qformat,'NM_10_1','2092957697','TYPE464')
+```
+
+## Get Data
+Get NM_10_1 Data
+```{r}
+qlist<-list(geography='2092957697TYPE464',              # Local Authority Areas
+            sex=7,                                      # Genders: Total for both Genders
+            item=1,                                     # Item:  Total Claimints
+            measures='20100',                           # Measures: value
+            time='latest',                              # Latest Time
+            FLOW='1,2,3')                               # Get Stock, In & Out Flows
+
+data_NM_10_1 <-get_data_sdmx(qlist, 'NM_10_1')
+```
+
+
+## Tidy Data 
+
+```{r}
+# Spread data frame by age bands
+data_NM_10_1 <- data_NM_10_1 %>%
+  select(GEOGRAPHY, FLOW, OBS_VALUE) %>%
+  spread(key='FLOW',  value='OBS_VALUE' ) 
+
+# Rename using codelist for age bands
+data_NM_10_1<-reaname_via_codelist(data_NM_10_1,'CL_10_1_FLOW' )
+```
+
+# Export Data
+
+## Combine Data Frames
+```{r}
+jsa_data <- inner_join(data_NM_1_1, data_NM_7_1, by = "Geography")
+jsa_data <- inner_join(jsa_data, data_NM_10_1, by = "Geography")
+```
+
+## Add Geography Names
+We can join our Geography names from the output of list_OAs to our data obtained with get_data
+```{r}
+OAlist_NM_1_1 <- list_OAs(ap,qformat,'NM_1_1','2092957697','TYPE464')
+
+jsa_data <-left_join(OAlist_NM_1_1,jsa_data, by = "GEOGRAPHY")
+```
+
+## Write out to csv / excel
+Write out to csv
+```{r}
+filename='../../Processed Data/WideNomiswebJsaData.csv'
+write.csv(jsa_data,filename, append=FALSE)
+```
+
+Write out to Excel
+```{r}
+# Write the weights and total weight to one worksheet
+# write.xlsx2(NomisDatasets, 'NomisDatasets.xlsx', sheetName="Datasets", 
+#   col.names=TRUE, row.names=FALSE, append=FALSE, showNA=TRUE)
+```
