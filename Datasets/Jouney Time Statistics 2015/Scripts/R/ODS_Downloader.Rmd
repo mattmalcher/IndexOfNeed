@@ -92,6 +92,7 @@ Read these ODS files into R as data frames.
 ```{r}
 library(readODS)
 
+#Initialise list of travel time data
 ttd=list()
 
 for(i in 1:length(datasets$Code)){
@@ -116,20 +117,23 @@ Read the metadata in the same way - provides the codelist
 ```{r}
 library(readODS)
 
-ttd=list()
+ttd_meta=list()
 
 for(i in 1:length(datasets$Code)){
   
+  if(!is.na(datasets$MetaHeaders[i])){ #Skip for files where there is no metadata sheet (as defined in MetaHeaders)
+    
+    print(paste0(srcdat,datasets$Code[i],".ods"))
   #Read 2015 tab of ODS file to a data frame, starting at the row defined by DataHeaders
    df <- read_ods( path = paste0(srcdat,datasets$Code[i],".ods"), 
-                  sheet = "2015", 
+                  sheet = "LA_Metadata", 
                   col_names = TRUE,
-                  skip = datasets$DataHeaders[i]-1)
+                  skip = datasets$MetaHeaders[i]-1)
    
    print(i)
    # Removes rows where the second column is empty and stuffs data frame into named list (Named using code)
-   ttd[[as.character(datasets$Code[i])]] <- subset(df, !is.na(df[,2]))
-                        
+   ttd_meta[[as.character(datasets$Code[i])]] <- subset(df, !is.na(df[,2]))
+  }                   
 }
 
 # Tidy up temporary data frame and iterator
