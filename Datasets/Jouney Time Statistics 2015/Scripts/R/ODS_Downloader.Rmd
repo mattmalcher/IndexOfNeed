@@ -213,8 +213,9 @@ debug <- mutate( debug, allsame = ( V2==V3 & V3==V4 & V4==V5 & V5==V6 & V6==V7 &
 
 # 
 
-# join all of the data frames in the list ttd by their second columns.
-merged_ttd <- Reduce(function(...) merge(..., by=2, all.x=TRUE), ttd)
+# join all of the data frames in the list ttd by their third columns.
+# Note that joining by the ONS code causes some duplicate rows..
+merged_ttd <- Reduce(function(...) merge(..., by=3, all.x=TRUE), ttd)
 
 duplicated(merged_ttd$jts0104_2015)
 
