@@ -45,28 +45,27 @@ Im not sure that libcurl as used by RCurl on windows supports TLS 1.2 the option
 * updating libcurl and building Rcurl to use the updated version or 
 * replacing Rcurl with something
 
-
+## Replacing RCurl in readSDMX
+We can index directly to the bit of readSDMX that we want to change:
 ```{r}
-# as.list(body(readSDMX))[[13]]
 body(readSDMX)[[13]][[4]]
-
-
 ```
 
+We can also edit this bit, putting in a call to httr instead of using RCurl.
 
 ```{r}
-body(readSDMX)[[13]][[4]]<-expression({
-
-  
+body(readSDMX)[[13]][[4]]<-quote({
 
     rsdmxAgent <- paste("rsdmx/", "rsdmx",  sep = "")
 
     req_content <- httr::GET(file, add_headers(`User-Agent` = rsdmxAgent))
-    content<-  httr::content( req_content,"text")
+    content<-  httr::content(req_content, "text")
 
     if (httr::http_error(req_content)) {stop("HTTP request failed with status: ", httr::http_status(req_content))}
 
 })
+
+body(readSDMX)[[13]][[4]]
 ```
 
 ```{r Rcurl with settings for https on windows}
@@ -376,7 +375,7 @@ reaname_via_codelist<- function(df,codeliststring){
 
 
 ```{r}
-ContentType <- get_content_types()
+# ContentType <- get_content_types()
 
 aps_datasets <- get_datasets_by_contenttype('aps')
 ```
