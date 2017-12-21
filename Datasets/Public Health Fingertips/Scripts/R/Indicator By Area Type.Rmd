@@ -35,8 +35,13 @@ desired_areas
 
 #Step 2 - Find out which indicators are available for these area types.
 
+Get the indicators list.
+```{r}
+inds <- indicators()
+```
 
-Get the fingertips indicators and which area types they area available for:
+
+Get the lookup for indicators to area types they area available for:
 ```{r}
 at_by_i<-areatypes_by_indicators
 ```
@@ -52,8 +57,8 @@ str(in_for_at)
 We have now got a list of just the indicators which are available for the area type we are interested in. At this point we might want to re-join this to the `inds` data so we can see what these indicators are.
 
 ```{r}
-
 Area_Indicators<-left_join(in_for_at, inds, by= "IndicatorID")
+
 
 ```
 
