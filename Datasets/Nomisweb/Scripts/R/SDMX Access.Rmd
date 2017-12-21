@@ -51,7 +51,7 @@ We can index directly to the bit of readSDMX that we want to change:
 body(readSDMX)[[13]][[4]]
 ```
 
-We can also edit this bit, putting in a call to httr instead of using RCurl.
+We can also edit this bit, putting in a call to httr instead of using RCurl. This code is analogous to that shown above.
 
 ```{r}
 body(readSDMX)[[13]][[4]]<-quote({
@@ -65,39 +65,20 @@ body(readSDMX)[[13]][[4]]<-quote({
 
 })
 
+#Display the modified code.
 body(readSDMX)[[13]][[4]]
 ```
 
-```{r Rcurl with settings for https on windows}
-# Setting the general Rcurl settings does not help - need to set them in the call withing readSDMX
-# library(RCurl)
-# curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
-# curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
+Setting the general Rcurl settings does not help - need to set them in the call withing readSDMX
 
-# Making your own version of the function with the desired curl options does not work because the function relies on being defined within a certain environment.
+
+Making your own version of the function with the desired curl options does not work because the function relies on being defined within a certain environment.
 # source("readSDMX_win.R")
 
-#Trace is a debugging function which lets you modify functions on the fly.
+Using trace to modify the function on the fly does not work - it is only for inserting debugging code.
 #https://curl.haxx.se/libcurl/c/CURLOPT_SSLVERSION.html
 
-# trace(readSDMX, quote(if (isURL == FALSE) {
-#     isXML <- !isRData
-#     if (isXML) {
-#         if (!file.exists(file)) 
-#             stop("File ", file, "not found\n")
-#         content <- readChar(file, file.info(file)$size)
-#     }
-# } else {
-#   
-#     rsdmxAgent <- paste("rsdmx/", as.character(packageVersion("rsdmx")),  sep = "")
-#     
-#     req_content <- httr::GET(file, add_headers(`User-Agent` = rsdmxAgent))
-#     content<-  httr::content( req_content,"text")
-#     
-#     if (httr::http_error(req_content)) {stop("HTTP request failed with status: ", httr::http_status(req_content))}
-#     
-# }), at=13, print=T)
-```
+
 
 
 There are some common bits of info used in all requests: 
