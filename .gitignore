@@ -9,6 +9,7 @@
 *.pdf
 *.xls
 *.xlsx
+*.zip
 
 # No OS files
 *.DS_Store
