@@ -18,3 +18,5 @@ desktop.ini
 Datasets/Nomisweb/Scripts/R/.RData
 Datasets/Nomisweb/Scripts/R/.Rhistory
 *.qgs~
+/Datasets/StatXplore/Scripts/Python/stat_xplore_lib/__pycache__/stat_xplore_schema.cpython-35.pyc
+/Datasets/StatXplore/Scripts/Python/stat_xplore_lib/__pycache__/stat_xplore_table.cpython-35.pyc
