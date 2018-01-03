@@ -55,4 +55,22 @@ ca = stat_xplore_table.get_stat_xplore_measure_data(table_headers,
 ca['data'].to_csv('carers_allowance_data.csv', index=False)
 with open('carers_allowance_annotations.txt', 'w') as f:
     for annotation in ca['annotations'].values():
-        f.write(annotation+'\n\n')
+        f.write(annotation+'\n\n')
+
+
+# Numbers claiming Personal Inepedence Payments by local authority, month and disability type
+pip = stat_xplore_table.get_stat_xplore_measure_data(table_headers, 
+                                                    schema_headers, 
+                                                    measure_id = 'str:count:PIP_Monthly:V_F_PIP_MONTHLY', 
+                                                    field_ids = ['str:field:PIP_Monthly:V_F_PIP_MONTHLY:DISABILITY_CODE',
+                                                                 'str:field:PIP_Monthly:F_PIP_DATE:DATE2'],
+                                                    fields_include_total = 'str:field:PIP_Monthly:V_F_PIP_MONTHLY:DISABILITY_CODE', 
+                                                    df_schema = df_schema, 
+                                                    geog_folder_label = 'Geography (residence-based)', 
+                                                    geog_field_label= 'Country - Region - Local Authority', 
+                                                    geog_level_label = 'Local Authority')
+# Save the data and annotations
+pip['data'].to_csv('personal_independence_payment_data.csv', index=False)
+with open('pip_annotations.txt', 'w') as f:
+    for annotation in pip['annotations'].values():
+        f.write(annotation+'\n\n')
