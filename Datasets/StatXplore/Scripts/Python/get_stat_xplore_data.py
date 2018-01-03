@@ -24,6 +24,7 @@ table_headers = {'APIKey':APIKey,
                 'Content-Type':'applciation/json'}
 schema_headers = {'APIKey':APIKey}
 
+output_directory = '..\..\Data\\'
 
 # Get the Stat-Xplore schema. This is used to find the codes of fields and values when getting data
 # This takes a while. Need to fix encoding issue so user can read in saved schema instead of querying API for new one
@@ -52,8 +53,8 @@ ca = stat_xplore_table.get_stat_xplore_measure_data(table_headers,
                                                     geog_field_label= 'National - Regional - LA - OAs', 
                                                     geog_level_label = 'Local Authority')
 # Save the data and annotations
-ca['data'].to_csv('carers_allowance_data.csv', index=False)
-with open('carers_allowance_annotations.txt', 'w') as f:
+ca['data'].to_csv(output_directory + 'carers_allowance_data.csv', index=False)
+with open(output_directory + 'carers_allowance_annotations.txt', 'w') as f:
     for annotation in ca['annotations'].values():
         f.write(annotation+'\n\n')
 
@@ -70,7 +71,7 @@ pip = stat_xplore_table.get_stat_xplore_measure_data(table_headers,
                                                     geog_field_label= 'Country - Region - Local Authority', 
                                                     geog_level_label = 'Local Authority')
 # Save the data and annotations
-pip['data'].to_csv('personal_independence_payment_data.csv', index=False)
-with open('pip_annotations.txt', 'w') as f:
+pip['data'].to_csv(output_directory + 'personal_independence_payment_data.csv', index=False)
+with open(output_directory + 'pip_annotations.txt', 'w') as f:
     for annotation in pip['annotations'].values():
         f.write(annotation+'\n\n')
