@@ -1,0 +1,92 @@
+---
+title: "Indicator by Area Type"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# setup
+```{r}
+library(fingertipsR)
+library(dplyr)
+library(xlsx) #for writing out to spreadsheet
+```
+
+This script gets the area types available in the public health fingertips database, then figures out which indicators, and by association, which domains and profiles are available at the level of granularity we want.
+
+
+#Step 1 - Get the list of area types
+
+By listing the area types we can see which ones we want and then use this to get their area type id's (3, 101 and 102)
+```{r}
+area_types<-area_types()
+unique(area_types$AreaTypeName)
+
+desired_areas <- unique(select(area_types,AreaTypeID,AreaTypeName) %>% 
+                        filter( AreaTypeName=="Local authority districts and Unitary Authorities" )) #|
+                               # AreaTypeName=="Middle Super Output Area"  |
+                               # AreaTypeName=="Counties and Unitary Authorities"))
+desired_areas
+
+```
+
+
+#Step 2 - Find out which indicators are available for these area types.
+
+Get the indicators list.
+```{r}
+inds <- indicators()
+```
+
+
+Get the lookup for indicators to area types they area available for:
+```{r}
+at_by_i<-areatypes_by_indicators
+```
+
+
+Now we can subset this to get a list of indicators for only the area types we are interested in.
+```{r}
+in_for_at <- unique(subset(at_by_i,AreaTypeID %in% desired_areas$AreaTypeID)['IndicatorID'])
+
+str(in_for_at)
+```
+
+We have now got a list of just the indicators which are available for the area type we are interested in. At this point we might want to re-join this to the `inds` data so we can see what these indicators are.
+
+```{r}
+Area_Indicators<-left_join(in_for_at, inds, by= "IndicatorID")
+
+
+```
+
+Now we have this information we can use it to start filtering the indicators which are available for our selected area type.
+```{r}
+
+# Area_Indicators_unq<-unique(select(Area_Indicators, ProfileID, ProfileName))
+
+Selected_Area_Indicators<-Area_Indicators %>%
+                            filter(ProfileID %in% c(8, 22,98, 103,91,73,50)) %>%
+                            select(IndicatorID, IndicatorName) %>%
+                            unique()
+
+
+```
+
+
+
+```{r}
+
+data <- fingertips_data(IndicatorID = 91385, AreaTypeID = 101) %>%
+          select(-IndicatorName, -IndicatorID, -Age) %>%
+          filter(Sex =='Persons' & Timeperiod == "2014/15" ) %>%
+          select(-Sex)
+``` 
+
+
+```{r}
+filename='../../Processed Data/TestOutput.csv'
+write.csv(data,filename, append=FALSE)
+```

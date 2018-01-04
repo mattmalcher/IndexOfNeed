@@ -1,5 +1,5 @@
 ---
-title: "NomisScrape"
+title: "JSA Data From Nomisweb"
 author: "Matthew Malcher"
 date: "06/12/2017"
 output: html_document
@@ -105,7 +105,6 @@ data_NM_1_1 <- data_NM_1_1 %>%
 # Rename Spread Columns
 data_NM_1_1 <- reaname_via_codelist(data_NM_1_1,'CL_1_1_MEASURES' )
 ```
-
 
 
 # NM_7_1 - claimant count - occupation age and duration

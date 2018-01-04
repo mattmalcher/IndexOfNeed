@@ -1,0 +1,261 @@
+---
+title: "ODS Downloader"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intro
+
+Short Rmd to take care of downloading and converting the travel time datasets from gov.uk. These are all in ODS format. (Open Document Format for spreadsheets <https://en.wikipedia.org/wiki/OpenDocument>) 
+
+
+Define a dataframe of the names and locations of the travel time datasets on gov.uk:
+```{r}
+# "Journey times to key services by local authority (JTS04)"
+# "https://www.gov.uk/government/statistical-data-sets/journey-times-to-key-services-by-local-authority-jts04"
+
+#Set the year we want data for.
+year <- 2015
+
+Code <- c(
+"jts0104",
+"jts0401",
+"jts0402",
+"jts0403",
+"jts0404",
+"jts0405",
+"jts0406",
+"jts0407",
+"jts0408",
+"jts0409")
+
+Description <- c(
+"Average minimum travel time to reach the nearest key services by mode of travel, local authority: England",
+"Travel time, destination and origin indicators for Employment centers by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for Primary schools by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for Secondary schools by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for Further education by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for GPs by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for Hospitals by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for Food stores by mode of travel and local authority, England",
+"Travel time, destination and origin indicators for Town centres by mode of travel and local authority, England",
+"Travel time, destination and origin indicators to Pharmacy by cycle and car, local authority, England")
+
+url <- c(
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627322/jts0104.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/640763/jts0401.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627353/jts0402.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627354/jts0403.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627355/jts0404.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627356/jts0405.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627347/jts0406.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627349/jts0407.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627350/jts0408.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/659933/jts0409.ods")
+
+size <- c(
+"36.4KB",
+"664KB",
+"214KB",
+"259KB",
+"267KB",
+"236KB",
+"288KB",
+"235KB",
+"279KB",
+"99.8KB")
+
+# Row number of the headers in the metadata and data tabs
+DataHeaders <- c(8,7,7,7,7,7,7,7,7,7)
+MetaHeaders <- c(NA,11,11,11,11,11,11,11,11,25)
+
+#Combine vectors into a data frame. remove the original vectors.
+datasets <- data.frame(Code, Description, url, size, DataHeaders, MetaHeaders)
+rm(Code, Description, url, size, DataHeaders, MetaHeaders)
+```
+
+
+# Download ODS files 
+Use links in datasets data frame. (Note mode=wb to correctly download binary files.)
+```{r}
+
+srcdat="../../Source Data/"
+
+for(i in 1:length(datasets$Code)){
+  
+  download.file(as.character(datasets$url[i]), paste0(srcdat,datasets$Code[i],".ods"), mode="wb")
+}
+
+```
+
+#Read the travel time data
+
+Read the travel time ODS files into R as data frames. These are stored in a list 'ttd'.
+```{r}
+library(readODS)
+library(janitor)
+
+#Initialise list of travel time data
+ttd=list()
+
+
+#loop over the datasets, reading in each one.
+for(i in 1:length(datasets$Code)){
+  
+  #Read 2015 tab of ODS file to a data frame, starting at the row defined by DataHeaders
+   df <- read_ods( path = paste0(srcdat,datasets$Code[i],".ods"), 
+                  sheet = as.character(year), 
+                  col_names = TRUE,
+                  skip = datasets$DataHeaders[i]-1) %>% 
+     clean_names()
+   
+   print(i)
+   # Removes rows where the second column is empty and stuffs data frame into named list (Named using code)
+   ttd[[as.character(datasets$Code[i])]] <- subset(df, !is.na(df[,2]))
+                        
+}
+
+# Tidy up temporary data frame and iterator
+rm(df, i)
+```
+
+# Read the metadata 
+
+Read the travel time metadata in the same way - provides the codelists. These are stored as dataframes within a list 'ttd_meta'
+```{r}
+library(readODS)
+
+# initialise metadata list.
+ttd_meta=list()
+
+#loop over the datasets, reading the metadata for each one.
+for(i in 1:length(datasets$Code)){
+  
+  if(!is.na(datasets$MetaHeaders[i])){ #Skip for files where there is no metadata sheet (as defined in MetaHeaders)
+    
+    print(paste0(srcdat,datasets$Code[i],".ods"))
+  #Read 2015 tab of ODS file to a data frame, starting at the row defined by DataHeaders
+   df <- read_ods( path = paste0(srcdat,datasets$Code[i],".ods"), 
+                  sheet = "LA_Metadata", 
+                  col_names = TRUE,
+                  skip = datasets$MetaHeaders[i]-1)
+   
+   print(i)
+   # Removes rows where the second column is empty and stuffs data frame into named list (Named using code)
+   ttd_meta[[as.character(datasets$Code[i])]] <- subset(df, !is.na(df[,2]))
+  }                   
+}
+
+# Tidy up temporary data frame and iterator
+rm(df, i)
+```
+
+# Sort out column names of `jts0104`
+The ODS file contains merged rows in the column headers which aren't read properly.
+
+```{r}
+names(ttd[[1]]) = c("region", "la_code", "la_name", "pt_walk_2015", "cycle_2015", "car_2015")
+```
+
+
+# Write Dataframes to CSV
+Write out CSV's of the Data for joining in QGIS
+
+```{r}
+
+prodat <- "../../Processed Data/"
+
+for(i in 1:length(ttd)){
+  write.csv(x = ttd[[i]],
+            file = paste0(prodat,names(ttd)[i],'.csv'), row.names=F)
+}
+```
+
+# Write Metadata to CSV
+Write out CSV's of the metadata for reference.
+
+```{r}
+for(i in 1:length(ttd_meta)){
+  write.csv(x = ttd_meta[[i]],
+            file = paste0(prodat,names(ttd_meta)[i],'_metadata.csv'), row.names=F)
+}
+```
+
+# Prefix Names
+prefixing the colnames of each dataset with the code.
+```{r}
+# for(i in 1:length(ttd)){
+#   
+#   #Rename columns in each dataset in the list
+#   colnames(ttd[[i]]) <- paste(as.character(datasets$Code[i]), colnames(ttd[[i]]), sep = "_")
+# }
+
+```
+
+# Join Tables
+All of the datasets should have the LA codes in them. We should be able to join all the datasets using these codes. Note that the first dataset 'jts0104' has the headers in the ods spread over several rows so they are not picked up by the readods function.
+
+```{r}
+# for(i in 1:length(ttd)){
+#   
+#   # print name of second column for each data frame in the list 
+#   print(paste(i,colnames(ttd[[i]])[2], sep=' '))
+#   
+#   
+#   print(dim(ttd[[i]]))
+#   
+# }
+# 
+# #accumulate all of the column 2's in a single data frame for troubleshooting
+# debug <- ttd[[1]][,2]
+# for(i in 2:length(ttd)){
+#   
+#   debug <- cbind(debug, ttd[[i]][,2])
+# }
+#   
+# 
+# #check which rows are all the same
+# library(dplyr)
+# debug<-data.frame(debug)
+# debug <- mutate( debug, allsame = ( V2==V3 & V3==V4 & V4==V5 & V5==V6 & V6==V7 & V7==V8 & V8==V9 & V9==V10))
+# 
+# # 
+# 
+# # join all of the data frames in the list ttd by their third columns.
+# # Note that joining by the ONS code causes some duplicate rows..
+# merged_ttd <- Reduce(function(...) merge(..., by=3, all.x=TRUE), ttd)
+# 
+# duplicated(merged_ttd$jts0104_2015)
+# 
+# merged_ttd[361:415,1:9]
+
+# Can see that these duplicate rows are occuring bevause inner and outer london top level groups have separate stats but the same LAD code. this causes left joins for both rows to match both, multiplying the number of 'E13000002' rows with eachof the 10 joins.
+
+# The options become to join by something else - i.e the name. or, to do something a bit more involved to correct these rows
+
+```
+
+```{r}
+# a <- unique(merged_ttd[,1])
+# 
+# a <- merged_ttd[,1:5]
+```
+
+Merge travel time datasets into a single data.frame:
+
+```{r}
+library(dplyr)
+
+merged_ttd = Reduce(function(d1, d2) left_join(d1, d2, by=c("region", "la_code", "la_name")), ttd)
+```
+
+Save as .csv
+
+```{r}
+write.csv(merged_ttd, 
+          paste0(prodat, "Journey times to key services by local authority.csv"), 
+          row.names = F)
+```

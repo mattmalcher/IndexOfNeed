@@ -25,12 +25,60 @@ providers <- getSDMXServiceProviders();
 as.data.frame(providers) %>% filter(agencyId=='NOMIS')
 ```
 
+# Windows Issues
 The script seems to have some issues when run on Windows 10 - I susepect this is to do with http/https and ssl RC4 being depracated. The following is an attempt to mess around with the RCurl settings to ignore certificate errors. I dont know if it works. 
-```{r Rcurl with settings for https on windows}
-# library(RCurl)
-# curlprefs <- curlOptions(ssl.verifypeer=FALSE, ssl.verifyhost=FALSE)
-# curlSetOpt(.opts=curlprefs, curl = getCurlHandle())
+
+According to serversniff.net nomisweb.co.uk does not support sslv3 or v2 and uses tls v1.2. This is corroborated by 
+testing on UBUNTU:
+
+* DOES NOT WORK:
+ - curl -3 https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.xml?search=contenttype-sources-aps
+
+* FINE:
+ - curl https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.xml?search=contenttype-sources-aps
+ - curl -tlsv1.2 https://www.nomisweb.co.uk/api/v01/dataset/def.sdmx.xml?search=contenttype-sources-aps
+
+https://stackoverflow.com/questions/38130293/tls-v1-1-tls-v1-2-support-in-rcurl
+
+Im not sure that libcurl as used by RCurl on windows supports TLS 1.2 the options then become either:
+
+* updating libcurl and building Rcurl to use the updated version or 
+* replacing Rcurl with something
+
+## Replacing RCurl in readSDMX
+We can index directly to the bit of readSDMX that we want to change:
+```{r}
+body(readSDMX)[[13]][[4]]
 ```
+
+We can also edit this bit, putting in a call to httr instead of using RCurl. This code is analogous to that shown above.
+
+```{r}
+body(readSDMX)[[13]][[4]]<-quote({
+
+    rsdmxAgent <- paste("rsdmx/", "rsdmx",  sep = "")
+
+    req_content <- httr::GET(file, add_headers(`User-Agent` = rsdmxAgent))
+    content<-  httr::content(req_content, "text")
+
+    if (httr::http_error(req_content)) {stop("HTTP request failed with status: ", httr::http_status(req_content))}
+
+})
+
+#Display the modified code.
+body(readSDMX)[[13]][[4]]
+```
+
+Setting the general Rcurl settings does not help - need to set them in the call withing readSDMX
+
+
+Making your own version of the function with the desired curl options does not work because the function relies on being defined within a certain environment.
+# source("readSDMX_win.R")
+
+Using trace to modify the function on the fly does not work - it is only for inserting debugging code.
+#https://curl.haxx.se/libcurl/c/CURLOPT_SSLVERSION.html
+
+
 
 
 There are some common bits of info used in all requests: 
@@ -306,4 +354,10 @@ reaname_via_codelist<- function(df,codeliststring){
 ```
 
 
+
+```{r}
+# ContentType <- get_content_types()
+
+aps_datasets <- get_datasets_by_contenttype('aps')
+```
 
