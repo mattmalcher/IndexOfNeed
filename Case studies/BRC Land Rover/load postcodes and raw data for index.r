@@ -1,9 +1,23 @@
+##
+## Create a 'rurality index/indices'
+## - combine postcode-level rural-urban classifications for England, Wales and Scotland with small area (i.e. output area) classifications for Northern Ireland
+## - create an index for 'journey times to key services' for local authorities in England
+##
+## To do/consider:
+## - include rural-urban classification in the factor analysis/PCA to derive a single index?
+## --- rather than choosing the dimensionality reduction method based on how well it predicts rurality
+##
+## Before running this script, do the following:
+## 1. Download the latest National Statistics Postcode Lookup file from: http://geoportal.statistics.gov.uk/datasets/national-statistics-postcode-lookup-latest-centroids
+##    - put it in a 'Postcodes' sub-folder of `data.dir` (see below)
+## 2. Download and process journey time data by running `ODS_Downloader.Rmd` in "IndexOfNeed/Datasets/Jouney Time Statistics 2015/Scripts/R"
+##
 library(tidyverse)
 library(readxl)
 library(httr)
 library(caret)
 
-data.dir = "P:/Operations/Innovation & Insight/Insight/Data science/Data"
+data.dir = "P:/Operations/Innovation & Insight/Insight/Data science/Data"  # change this as suits
 
 
 ###########################################################################################
@@ -81,16 +95,6 @@ journeys = read_csv("../../Datasets/Jouney Time Statistics 2015/Processed Data/J
 journeys = journeys %>% 
   select(la_code, 
          
-         # percent of households (what they call 'users' or 'service users')
-         # GPPT60pct,     # % users within 60 minutes of GPs by PT/walk
-         # GPCar30pct,    # % users within 30 minutes of GPs by car
-         # HospPT60pct,   # % users within 60 minutes of hospitals by PT/walk
-         # HospCar30pct,  # % users within 30 minutes of hospitals by car
-         # # there's no data about pharmacies within X minutes by PT/walk
-         # PhCar30pct,    # % users within 30 minutes of Pharmacies available by car
-         # FoodPT60pct,   # % users within 60 minutes of food stores by PT/walk
-         # FoodCar30pct,  # % users within 30 minutes of food stores by car
-         
          # travel time in minutes to nearest...
          gpptt,         # GP by PT/walk
          # gpcart,        # GP by car  <-- this doesn't contain a lot of info; every LA is within 10 mins of a GP by car
@@ -102,21 +106,6 @@ journeys = journeys %>%
          townptt        # town centre by PT/walk
          # towncart       # town centre by car
   )
-
-##
-## explore travel times
-##
-# bivariate correlations
-journeys %>% 
-  select(-la_code) %>% 
-  cor() %>% 
-  round(., 1)
-
-# histograms of each journey time variable
-journeys %>% 
-  select(-la_code) %>% 
-  tidyr::gather("var", "value") %>% 
-  ggplot(aes(x=value)) + geom_histogram(binwidth = 1) + facet_wrap("var", scales="free_x")
 
 ##
 ## PCA to create index for journey times
