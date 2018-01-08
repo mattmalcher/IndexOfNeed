@@ -4,6 +4,7 @@
 library(tidyverse)
 library(readxl)
 library(xlsx)
+library(stringr)
 
 source("init.r")
 
@@ -30,6 +31,9 @@ for (i in 1:length(imd_sheets)) {
 imds_merged = Reduce(function(d1, d2) left_join(d1, d2, 
                                                 by=c("LGD2014NAME", "2015 Default Urban/Rural",	"SOA2001", "SOA2001_name")), 
                      imds)
+
+# remove linefeeds from column names
+names(imds_merged) = str_replace_all(names(imds_merged), "\\n", " ")
 
 write_csv(imds_merged, file.path(dir.data.out, "NIMDM - all indicators.csv"))
 
