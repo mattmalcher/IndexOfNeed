@@ -1,0 +1,182 @@
+---
+title: "ODS Downloader for Journey Times to Key Services by Lower Super Output Area (LSOA)"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intro
+
+Short Rmd to take care of downloading and converting the travel time datasets from gov.uk. These are all in ODS format. (Open Document Format for spreadsheets <https://en.wikipedia.org/wiki/OpenDocument>) 
+
+
+Define a dataframe of the names and locations of the travel time datasets on gov.uk:
+```{r}
+# "Journey times to key services by lower super output area (JTS05)"
+# "https://www.gov.uk/government/statistical-data-sets/journey-times-to-key-services-by-lower-super-output-area-jts05"
+
+#Set the year we want data for.
+year <- 2015
+
+Code <- c(
+"jts0501",
+"jts0502",
+"jts0503",
+"jts0504",
+"jts0505",
+"jts0506",
+"jts0507",
+"jts0508",
+"jts0509")
+
+Description <- c(
+"Travel time, destination and origin indicators for Employment centers by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for Primary schools by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for Secondary schools by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for Further education by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for GPs by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for Hospitals by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for Food stores by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators for Town centres by mode of travel, Lower Super Output Area (LSOA), England",
+"Travel time, destination and origin indicators to Pharmacy by cycle and car, Lower Super Output Area (LSOA), England")
+
+url <- c(
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627362/jts0501.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627363/jts0502.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627365/jts0503.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627366/jts0504.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627367/jts0505.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627369/jts0506.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627370/jts0507.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/627371/jts0508.ods",
+"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/659930/jts0509.ods")
+
+# Row number of the headers in the metadata and data tabs
+DataHeaders <- c(7,7,7,7,7,7,7,7,7)
+MetaHeaders <- c(11,11,11,11,11,11,11,11,25)
+
+#Combine vectors into a data frame. remove the original vectors.
+datasets <- data.frame(Code, Description, url, DataHeaders, MetaHeaders)
+rm(Code, Description, url, DataHeaders, MetaHeaders)
+```
+
+
+# Download ODS files 
+Use links in datasets data frame. (Note mode=wb to correctly download binary files.)
+```{r}
+
+srcdat="../../Source Data/"
+
+for(i in 1:length(datasets$Code)){
+  
+  download.file(as.character(datasets$url[i]), paste0(srcdat,datasets$Code[i],".ods"), mode="wb")
+}
+
+```
+
+# Convert .ods files to .xlsx
+The .ods files are large enough that readODS struggles to import them within a reasonable time. You will have to manually convert the .ods files to .xlsx in Excel or similar.
+
+# Read the travel time data
+
+Read the travel time ODS files into R as data frames. These are stored in a list 'ttd'.
+```{r}
+library(readxl)
+library(janitor)
+
+#Initialise list of travel time data
+ttd=list()
+
+#loop over the datasets, reading in each one.
+for(i in 1:length(datasets$Code)){
+  
+  #Read 2015 tab of ODS file to a data frame, starting at the row defined by DataHeaders
+   df <- read_excel( path = paste0(srcdat,datasets$Code[i],".xlsx"), 
+                  sheet = as.character(year), 
+                  col_names = TRUE,
+                  skip = datasets$DataHeaders[i]-1) %>% 
+     clean_names()
+   
+   print(i)
+   # Removes rows where the second column is empty and stuffs data frame into named list (Named using code)
+   ttd[[as.character(datasets$Code[i])]] <- subset(df, !is.na(df[,2]))
+                        
+}
+
+# Tidy up temporary data frame and iterator
+rm(df, i)
+```
+
+# Read the metadata 
+
+Read the travel time metadata in the same way - provides the codelists. These are stored as dataframes within a list 'ttd_meta'
+```{r}
+library(readxl)
+
+# initialise metadata list.
+ttd_meta=list()
+
+#loop over the datasets, reading the metadata for each one.
+for(i in 1:length(datasets$Code)){
+  
+  if(!is.na(datasets$MetaHeaders[i])){ #Skip for files where there is no metadata sheet (as defined in MetaHeaders)
+    
+    print(paste0(srcdat,datasets$Code[i],".xlsx"))
+  #Read 2015 tab of ODS file to a data frame, starting at the row defined by DataHeaders
+   df <- read_excel( path = paste0(srcdat,datasets$Code[i],".xlsx"), 
+                  sheet = "Metadata", 
+                  col_names = TRUE,
+                  skip = datasets$MetaHeaders[i]-1)
+   
+   print(i)
+   # Removes rows where the second column is empty and stuffs data frame into named list (Named using code)
+   ttd_meta[[as.character(datasets$Code[i])]] <- subset(df, !is.na(df[,2]))
+  }                   
+}
+
+# Tidy up temporary data frame and iterator
+rm(df, i)
+```
+
+# Write Dataframes to CSV
+Write out CSV's of the Data for joining in QGIS
+
+```{r}
+
+prodat <- "../../Processed Data/"
+
+for(i in 1:length(ttd)){
+  write.csv(x = ttd[[i]],
+            file = paste0(prodat,names(ttd)[i],'.csv'), row.names=F)
+}
+```
+
+# Write Metadata to CSV
+Write out CSV's of the metadata for reference.
+
+```{r}
+for(i in 1:length(ttd_meta)){
+  write.csv(x = ttd_meta[[i]],
+            file = paste0(prodat,names(ttd_meta)[i],'_metadata.csv'), row.names=F)
+}
+```
+
+
+# Join Tables
+All of the datasets should have the LSOE codes in them. We should be able to join all the datasets using these codes.
+
+```{r}
+library(dplyr)
+
+merged_ttd = Reduce(function(d1, d2) left_join(d1, d2, by=c("lsoa_code", "region", "la_code", "la_name")), ttd)
+```
+
+Save as .csv
+
+```{r}
+write.csv(merged_ttd, 
+          paste0(prodat, "Journey times to key services by LSOA.csv"), 
+          row.names = F)
+```
