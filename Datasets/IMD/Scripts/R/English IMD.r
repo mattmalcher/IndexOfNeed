@@ -42,6 +42,9 @@ imds_merged = Reduce(function(d1, d2) left_join(d1, d2,
                                                 by=c("LSOA code (2011)", "LSOA name (2011)", "Local Authority District code (2013)", "Local Authority District name (2013)")), 
                      imds)
 
+# force Income Domain Numerator to be integer to stop 1000 being saved at 1.00E3 and subsequently causing errors when reading data back in to R
+imds_merged = imds_merged %>% mutate(`Income Domain numerator` = as.integer(`Income Domain numerator`))
+
 write_csv(imds_merged, file.path(dir.data.out, "EIMD - all indicators.csv"))
 
 ##
