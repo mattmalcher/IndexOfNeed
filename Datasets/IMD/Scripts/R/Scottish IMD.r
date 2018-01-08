@@ -16,6 +16,9 @@ download.file(imd_url, imd_path, mode="wb")
 ##
 imd = read_excel(imd_path, sheet="Data", na="*")
 
+# force Total Population to be integer to stop 1000 being saved at 1.00E3 and subsequently causing errors when reading data back in to R
+imd$Total_population = as.integer(imd$Total_population)
+
 write_csv(imd, file.path(dir.data.out, "SIMD - all indicators.csv"))
 
 ##
