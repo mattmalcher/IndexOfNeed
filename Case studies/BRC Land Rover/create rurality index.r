@@ -127,6 +127,12 @@ postcodes = postcodes %>%
 
 
 ###########################################################################################
+## Add underlying indicators from the Indices of Multiple Deprivation for the four countries
+##
+
+
+
+###########################################################################################
 ## keep only postcodes, coordinates and some other local info
 ##
 postcodes = postcodes %>% 
@@ -134,6 +140,7 @@ postcodes = postcodes %>%
          , Country = ctry
          ,`Local Authority Code` = laua
          ,`Output Area` = oa11  # 'Output Area' in England, Scotland and Wales; 'Small Area' in NI 
+         , LSOA = lsoa11  # Lower Layer Super Output Area (Eng, Wal); Super Output Area (NI); Data Zone (Sco)
          ,`Rural or Urban?`
          ,`Rural Urban classification` = ru11ind
          , IMD = imd
