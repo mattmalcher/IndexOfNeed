@@ -6,10 +6,10 @@ library(readxl)
 library(xlsx)
 library(stringr)
 
-source("init.r")
+source("../../../../init.r")
 
 imd_url = "https://www.nisra.gov.uk/sites/nisra.gov.uk/files/publications/NIMDM17_SOAresults.xls"
-imd_path = file.path(dir.data.in, "NI_IMD.xls")
+imd_path = file.path(dir_data_in, "NI_IMD.xls")
 
 download.file(imd_url, imd_path, mode="wb")
 
@@ -35,7 +35,7 @@ imds_merged = Reduce(function(d1, d2) left_join(d1, d2,
 # remove linefeeds from column names
 names(imds_merged) = str_replace_all(names(imds_merged), "\\n", " ")
 
-write_csv(imds_merged, file.path(dir.data.out, "NIMDM - all indicators.csv"))
+write_csv(imds_merged, file.path(dir_data_out, "NIMDM - all indicators.csv"))
 
 ##
 ## process metadata
@@ -45,4 +45,4 @@ wb = loadWorkbook(imd_path)
 
 for (sheet in imd_sheets) removeSheet(wb, sheetName = sheet)
 
-saveWorkbook(wb, file.path(dir.data.out, "NIMDM - all indicators - metadata.xls"))
+saveWorkbook(wb, file.path(dir_data_out, "NIMDM - all indicators - metadata.xls"))

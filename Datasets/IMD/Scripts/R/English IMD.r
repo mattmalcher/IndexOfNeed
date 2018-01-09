@@ -4,10 +4,10 @@
 library(tidyverse)
 library(readxl)
 
-source("init.r")
+source("../../../../init.r")
 
 imd_url = "https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/467775/File_8_ID_2015_Underlying_indicators.xlsx"
-imd_path = file.path(dir.data.in, "English_IMD.xlsx")
+imd_path = file.path(dir_data_in, "English_IMD.xlsx")
 
 download.file(imd_url, imd_path, mode="wb")
 
@@ -23,7 +23,7 @@ imd_sheets = imd_sheets[-1]
 #   fname = paste0("EIMD - ", sheet, ".csv")
 #   
 #   read_excel(imd_path, sheet=sheet) %>% 
-#     write_csv(file.path(dir.data.out, fname))
+#     write_csv(file.path(dir_data_out, fname))
 #   
 #   print(paste0("Saved ", fname))
 # }
@@ -45,7 +45,7 @@ imds_merged = Reduce(function(d1, d2) left_join(d1, d2,
 # force Income Domain Numerator to be integer to stop 1000 being saved at 1.00E3 and subsequently causing errors when reading data back in to R
 imds_merged = imds_merged %>% mutate(`Income Domain numerator` = as.integer(`Income Domain numerator`))
 
-write_csv(imds_merged, file.path(dir.data.out, "EIMD - all indicators.csv"))
+write_csv(imds_merged, file.path(dir_data_out, "EIMD - all indicators.csv"))
 
 ##
 ## process metadata in 'Notes' worksheet
@@ -58,4 +58,4 @@ imd_metadata = imd_metadata %>%
   select(Domain, Indicator, everything()) %>%   # put columns back in correct order
   fill(Domain)  # # fill Domain column downwards to fill in NAs
 
-write_csv(imd_metadata, file.path(dir.data.out, "EIMD - all indicators - metadata.csv"))
+write_csv(imd_metadata, file.path(dir_data_out, "EIMD - all indicators - metadata.csv"))

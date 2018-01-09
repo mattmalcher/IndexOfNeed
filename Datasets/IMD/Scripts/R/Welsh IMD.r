@@ -8,7 +8,7 @@ library(dplyr)
 library(readr)
 library(tidyr)
 
-source("init.r")
+source("../../../../init.r")
 
 # load initial data
 wimd_curr = fromJSON(getURL("http://open.statswales.gov.wales/en-gb/dataset/wimd0004"), flatten=T)
@@ -33,13 +33,13 @@ while(!is.null(next_page)) {
 # re-order the columns so that `Data` isn't first (which causes 'bad restore file magic number' errors); also rename it
 wimd_dat %>% 
   select(-Data, Value=Data) %>%  # source: https://stackoverflow.com/a/43902237
-  write_csv(file.path(dir.data.out, "WIMD - all indicators - long format.csv"))
+  write_csv(file.path(dir_data_out, "WIMD - all indicators - long format.csv"))
 
 # save indicator metadata
 metadata = wimd_dat %>% 
   select(Indicator_Code, Indicator_ItemName_ENG, Indicator_ItemNotes_ENG, Indicator_Hierarchy, Indicator_SortOrder) %>% 
   distinct() %>% 
-  write_csv(file.path(dir.data.out, "WIMD - all indicators - metadata.csv"))
+  write_csv(file.path(dir_data_out, "WIMD - all indicators - metadata.csv"))
 
 # save wide-format version of the data
 wimd_wide = wimd_dat %>% 
@@ -48,4 +48,4 @@ wimd_wide = wimd_dat %>%
   filter(Data > -1000) %>%  # get rid of missing data (coded as -1e09); it will appear as NA in the wide-format data.frame
   spread(Indicator_Code, Data)
 
-write_csv(wimd_wide, file.path(dir.data.out, "WIMD - all indicators - wide format.csv"))
+write_csv(wimd_wide, file.path(dir_data_out, "WIMD - all indicators - wide format.csv"))
