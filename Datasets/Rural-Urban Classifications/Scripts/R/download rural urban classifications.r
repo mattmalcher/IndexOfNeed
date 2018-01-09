@@ -11,6 +11,7 @@
 ##
 library(tidyverse)
 library(readxl)
+library(stringr)
 
 source("../../../../init.r")
 
@@ -98,13 +99,25 @@ file.copy(file.path(dir_data_in, "DZ2011_SGUR2013_2014_Lookup.txt"),
 ##
 download.file(url_ni, file.path(dir_data_in, paste0(file_ni, ".xls")), mode="wb")
 
-# save Small Area classifications
-read_excel(file.path(dir_data_in, paste0(file_ni, ".xls")), 
-           sheet="SA2011", skip=3) %>%
-  mutate(X__1 = NULL) %>%   # remove empty and pointless column
-  write_csv(file.path(dir_data_out, paste0(file_sa_ni, ".csv")))
+##
+## Small Area classifications
+##
+ruc_ni_sa = read_excel(file.path(dir_data_in, paste0(file_ni, ".xls")), 
+                       sheet="SA2011", skip=3) %>%
+  mutate(X__1 = NULL)   # remove empty and pointless column
 
-# save Super Output Area classifications
-read_excel(file.path(dir_data_in, paste0(file_ni, ".xls")), 
-           sheet="SOA2011", skip=3) %>%
-  write_csv(file.path(dir_data_out, paste0(file_soa_ni, ".csv")))
+# remove linefeeds from column names
+names(ruc_ni_sa) = str_replace_all(names(ruc_ni_sa), "\\n", " ")
+
+write_csv(ruc_ni_sa, file.path(dir_data_out, paste0(file_sa_ni, ".csv")))
+
+##
+## Super Output Area classifications
+##
+ruc_ni_soa = read_excel(file.path(dir_data_in, paste0(file_ni, ".xls")), 
+                        sheet="SOA2011", skip=3)
+
+# remove linefeeds from column names
+names(ruc_ni_soa) = str_replace_all(names(ruc_ni_soa), "\\n", " ")
+
+write_csv(ruc_ni_soa, file.path(dir_data_out, paste0(file_soa_ni, ".csv")))
