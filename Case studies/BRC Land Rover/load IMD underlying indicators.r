@@ -35,6 +35,8 @@ imd_eng = read_csv(file.path(dir.data.imd, "EIMD - all indicators.csv")) %>%
 ## - average private travel time to pharmacy (minutes)
 ##
 imd_wal = read_csv(file.path(dir.data.imd, "WIMD - all indicators - wide format.csv")) %>% 
+  filter(Year_Code == 2014) %>%  # most recent complete year
+  filter(Area_Code != "WAL") %>%    # remove summary row
   select(lsoa11 = Area_Code,  # use the same column name as the National Stats Postcode Lookup
          WAL_1 = PRFS,  # average private travel time to food shop (minutes)
          WAL_2 = PRGP,  # average private travel time to GP surgery (minutes)
@@ -65,11 +67,14 @@ imd_scot = read_csv(file.path(dir.data.imd, "SIMD - all indicators.csv")) %>%
 
 
 #############################################################################################
-## NI
+## Northern Ireland
 ## - Combined Mental Health Indicator (rank; lower is more deprived)
 ## - Standardised proportion of people with a long term health problem or disability (excluding mental health)
 ## - Service-weighted fastest travel time by private transport (rank)
 ## - Service-weighted fastest travel time by public transport (rank)
+##
+## Deprivation ranks in NI are the opposite way around compared to other countries
+## - a rank of 1 means most deprived; but in other countries (where we're not using ranks), lower numbers are better
 ##
 imd_ni = read_csv(file.path(dir.data.imd, "NIMDM - all indicators.csv")) %>% 
   select(lsoa11 = SOA2001,  # use the same column name as the National Stats Postcode Lookup
@@ -77,4 +82,9 @@ imd_ni = read_csv(file.path(dir.data.imd, "NIMDM - all indicators.csv")) %>%
          NI_2 = `Standardized ratio of people with a long-term health problem or disability (Excluding Mental Health problems) (rank)`,
          NI_3 = `Service-weighted fastest travel time by private transport (rank)`,
          NI_4 = `Service-weighted fastest travel time by public transport (rank)`
-  )
+  ) %>% 
+  # invert the rankings
+  mutate(NI_1 = abs(NI_1 - max(NI_1)) + 1,
+         NI_2 = abs(NI_2 - max(NI_2)) + 1,
+         NI_3 = abs(NI_3 - max(NI_3)) + 1,
+         NI_4 = abs(NI_4 - max(NI_4)) + 1)
