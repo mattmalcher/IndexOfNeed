@@ -308,6 +308,9 @@ postcodes %>%
   geom_boxplot() + 
   facet_wrap(~ctry, scales = "free_y")
 
+ggsave(filename="rurality index by country and rural-urban classification.png", 
+       width=200, height=200, units="mm")
+
 
 ###########################################################################################
 ## keep only postcodes, coordinates and some other local info
