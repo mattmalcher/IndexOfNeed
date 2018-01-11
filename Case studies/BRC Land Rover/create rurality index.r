@@ -70,7 +70,7 @@ postcodes.raw = read_csv(file.path(data.dir, "Postcodes", "National_Statistics_P
 ruc_ni = read_csv("../../Datasets/Rural-Urban Classifications/Processed Data/RUC Northern Ireland - SA.csv") %>% 
   select(SA2011_Code, `Settlement Classification Band`, `2015 Default Urban/Rural`)
 
-# merge into postcodes data
+# merge into postcodes data (creating our bespoke postcodes dataframe at the same time)
 postcodes = postcodes.raw %>% 
   left_join(ruc_ni, by=c("oa11" = "SA2011_Code"))  # NI data uses output areas (called small areas in NI)
 
@@ -96,6 +96,35 @@ postcodes = postcodes %>%
 ))
 
 # table(postcodes$`Rural or Urban?`) / nrow(postcodes)  # proportions of rural and urban Output/Small Areas
+
+rm(ruc_ni)
+
+
+###########################################################################################
+## Index of Multiple Deprivation for Northern Ireland
+## (missing from `imd` column in National Stats Postcode Lookup)
+##
+# load NI IMD
+imd_ni_all = read_csv("../../Datasets/IMD/Processed Data/NIMDM - all indicators.csv") %>% 
+  select(lsoa11 = SOA2001,  # use the same column name as the National Stats Postcode Lookup
+         imd.ni = `Multiple Deprivation Measure Rank  (where 1 is most deprived)`
+         )  
+
+# recode missing IMD values to NA
+postcodes$imd = na_if(postcodes$imd, 0)
+
+# merge NI's IMD rankings into postcodes
+postcodes = postcodes %>% 
+  left_join(imd_ni_all, by="lsoa11")
+
+# combine NI's IMD rankings into the main `imd` column
+postcodes = postcodes %>% 
+  mutate(imd = coalesce(imd, imd.ni))
+
+# get rid of `imd.ni` column
+postcodes$imd.ni = NULL
+
+rm(imd_ni_all)
 
 
 ###########################################################################################
