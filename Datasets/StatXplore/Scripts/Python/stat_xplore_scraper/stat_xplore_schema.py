@@ -4,7 +4,7 @@ import os
 
 schema_url = 'https://stat-xplore.dwp.gov.uk/webapi/rest/v1/schema'
 
-def get_full_schema(schema_headers, types_to_include = ["FOLDER","DATABASE","MEASURE","FIELD"], check_cache = False, schema_filename = '.\stat_xplore_lib\schema\schema.csv'):
+def get_full_schema(schema_headers, types_to_include = ["FOLDER","DATABASE","MEASURE","FIELD"], check_cache = False, schema_filename = 'schema.csv'):
     '''Get the schema information of all elements of the Stat-Xplore schema but sratting at the root 
     folder and iterating through the schema tree.
 
@@ -15,7 +15,7 @@ def get_full_schema(schema_headers, types_to_include = ["FOLDER","DATABASE","MEA
         types_to_include (list of str): Defaults to ["FOLDER","DATABASE","MEASURE","FIELD"]. 
             The schema element types to include in the schema dataframe
         check_cache (bool): Default False. Set whether to check the cached schema csv for schema information
-        cache_filename (str): Default '.\stat_xplore_lib\schema\schema.csv'. The filename of the chached schema
+        cache_filename (str): Default 'schema.csv'. The filename of the chached schema
     '''
 
     # Get chema info for the root folder
@@ -42,14 +42,14 @@ def get_full_schema(schema_headers, types_to_include = ["FOLDER","DATABASE","MEA
 
         df_full_schema = pd.concat([df_full_schema, new_schema], join = 'outer')
 
-        # Save the schema as we go
-        df_full_schema.to_csv(schema_filename, index=False, encoding = 'utf-8')
+    # Save the schema at the end
+    df_full_schema.to_csv(schema_filename, index=False, encoding = 'utf-8')
 
     return df_full_schema
 
         
 
-def get_lower_tier_schema_from_upper_tier_schema(df_parent_schema, schema_headers, check_cache = False, cache_filename = '.\stat_xplore_lib\schema\schema.csv'):
+def get_lower_tier_schema_from_upper_tier_schema(df_parent_schema, schema_headers, check_cache = False, cache_filename = 'schema.csv'):
     '''Function to loop through each of the parent elements of the upper tier schema and get the schema
     of the children of each one. Children schemas are combined together and returned.
 
@@ -59,7 +59,7 @@ def get_lower_tier_schema_from_upper_tier_schema(df_parent_schema, schema_header
 
     Kwargs:
         check_cache (bool): Default False. Check local directory for schema details.
-        cache_filename (str): Default '.\stat_xplore_lib\schema\schema.csv'. The filename of the cached schema details 
+        cache_filename (str): Default 'schema.csv'. The filename of the cached schema details 
                                 to check for.
     '''
     # Get teh urls of each of the parent items
@@ -80,7 +80,7 @@ def get_lower_tier_schema_from_upper_tier_schema(df_parent_schema, schema_header
 
     return df_lower_tier_schema
 
-def get_children_schema_of_url(url, schema_headers, check_cache = False, cache_filename = '.\stat_xplore_lib\schema\schema.csv'):
+def get_children_schema_of_url(url, schema_headers, check_cache = False, cache_filename = 'schema.csv'):
     '''Given a url of a Stat-xplore schema item, get the schema details of the children (component) items. 
     The schema for each chils contains id, label, location(url) and type fields.The id of the parent element 
     s also included in the output schema.
@@ -91,7 +91,7 @@ def get_children_schema_of_url(url, schema_headers, check_cache = False, cache_f
 
     Kwargs:
         check_cache (bool): Default False. Check local directory for schema details.
-        cache_filename (str): Default '.\stat_xplore_lib\schema\schema.csv'. The filename of the cached schema details 
+        cache_filename (str): Default 'schema.csv'. The filename of the cached schema details 
                                 to check for.
     '''
 
@@ -152,7 +152,7 @@ def request_schema(schema_headers, url = schema_url):
 
 
 # Functions for getting recodes for a database item
-def geography_recodes_for_geog_folder_geog_level(schema_headers, database_id, geog_folder_label = 'Geography (residence-based)', geog_field_label= 'National - Regional - LA - OAs', geog_level_label = 'Local Authority', df_schema = None, check_cache = False, schema_filename = '.\stat_xplore_lib\schema\schema.csv'):
+def geography_recodes_for_geog_folder_geog_level(schema_headers, database_id, geog_folder_label = 'Geography (residence-based)', geog_field_label= 'National - Regional - LA - OAs', geog_level_label = 'Local Authority', df_schema = None, check_cache = False, schema_filename = 'schema.csv'):
     '''Get the geography recodes (geographic codes with additional formatting specifying which databse they refer to)
     for a given database (for example 'CA_In_Payment' ). Recodes can be used to request data for specific geographies, eg 
     all local authorities.
@@ -167,7 +167,7 @@ def geography_recodes_for_geog_folder_geog_level(schema_headers, database_id, ge
         geog_field_label (str): Default 'National - Regional - LA - OAs'. The geography field label, eg 'National - Regional - LA - OAs'
         geog_level_label (str): Defaukt 'Local Authority'. The geographic level label to get recodes for (eg lcoal authority or LSOA)
         df_schema (pandas DataFrame, None): Default None. The stat-xplore schema
-        check_cache (bool): Default '.\stat_xplore_lib\schema\schema.csv'. Default False. Set whether to check the cached schema csv for schema information
+        check_cache (bool): Default 'schema.csv'. Default False. Set whether to check the cached schema csv for schema information
         cache_filename (str): The filename of the chached schema
 
     Returns:
@@ -219,7 +219,7 @@ def get_recodes_from_valueset_location(schema_headers, valueset_loc):
 
     return df_valueset['id'].tolist()
 
-def get_database_fields(schema_headers, database_id, df_schema = None, check_cache = False, cache_filename = '.\stat_xplore_lib\schema\schema.csv'):
+def get_database_fields(schema_headers, database_id, df_schema = None, check_cache = False, cache_filename = 'schema.csv'):
     '''Given a database ID, return the ids of the fields within that database. Note that this function does not
     return fields that are contained within folders withing the database, for example the geography fields.
     
@@ -230,7 +230,7 @@ def get_database_fields(schema_headers, database_id, df_schema = None, check_cac
     Kwargs:
         df_schema (pandas DataFrame, None): Default None. The stat-xplore schema
         check_cache (bool): Default False. Set whether to check the cached schema csv for schema information
-        cache_filename (str): Default '.\stat_xplore_lib\schema\schema.csv'. The filename of the chached schema
+        cache_filename (str): Default 'schema.csv'. The filename of the chached schema
 
     Returns:
         dict: The field labels as keys, the field ids as values

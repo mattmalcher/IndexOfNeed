@@ -7,15 +7,6 @@ import stat_xplore_schema
 
 table_url = 'https://stat-xplore.dwp.gov.uk/webapi/rest/v1/table'
 
-# To do
-# - what time point is returned by default?
-# - Is a function to convert from LA names to LA codes needed
-# - fixing schema so that cached schema can be used
-# - include dimension totals for all dimensions
-# - how to include the annotations
-
-
-
 def json_response_to_dataframe(dict_response):
     '''Take input sting of JSON formatted data returned by the Stat-Xplore API table end point and 
     unpack it into a pandas dataframe. Data Frame is in a 'long' format with a column for each field 
@@ -238,7 +229,7 @@ def get_measures_request_body(measure_ids):
 
     return measure_ids
 
-def get_geography_recodes_request_body(schema_headers, database_id, geog_folder_label = 'Geography (residence-based)', geog_field_label= 'National - Regional - LA - OAs', geog_level_label = 'Local Authority', df_schema = None, check_cache = False, schema_filename = '.\stat_xplore_lib\schema\schema.csv'):
+def get_geography_recodes_request_body(schema_headers, database_id, geog_folder_label = 'Geography (residence-based)', geog_field_label= 'National - Regional - LA - OAs', geog_level_label = 'Local Authority', df_schema = None, check_cache = False, schema_filename = 'schema.csv'):
     '''A wrapped function that gets the requested geography recodes and passes them to a functino that formats tha recodes into the
     dictionary format required for requesting data.
     
