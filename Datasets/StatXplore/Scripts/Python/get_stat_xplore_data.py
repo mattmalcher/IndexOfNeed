@@ -1,6 +1,6 @@
 # Script for getting Stat-Xplore data using the stat_xplore scraper libraries to access the Stat-Xplore API
 import sys
-sys.path.append('.\stat_xplore_lib')
+sys.path.append('.\stat_xplore_scraper')
 import stat_xplore_table
 import stat_xplore_schema
 import pandas as pd
@@ -28,7 +28,7 @@ output_directory = '..\..\Data\\'
 
 # Get the Stat-Xplore schema. This is used to find the codes of fields and values when getting data
 # This takes a while. Need to fix encoding issue so user can read in saved schema instead of querying API for new one
-df_schema = stat_xplore_schema.get_full_schema(schema_headers)
+df_schema = stat_xplore_schema.get_full_schema(schema_headers, check_cache = True, schema_filename = '.\stat_xplore_scraper\schema.csv')
 
 #######################
 #
