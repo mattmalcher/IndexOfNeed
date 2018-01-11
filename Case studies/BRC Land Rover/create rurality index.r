@@ -1,11 +1,18 @@
 ##
-## Create a 'rurality index/indices'
-## - combine postcode-level rural-urban classifications for England, Wales and Scotland with small area (i.e. output area) classifications for Northern Ireland
-## - create an index for 'journey times to key services' for local authorities in England
+## Create a 'rurality index'
+## - from a combination of rural-urban classifications, journey times to key services, mental health issues (Scotland and Northern Ireland), and physical health issues (NI only)
+## - the index is calculated at the these (equivalent) geographical levels: Lower Layer Super Output Area (LSOA; England, Wales), Data Zone (DZ; Scotland), and super Output Area (SOA; Northern Ireland)
+## 
+## NB: indices can only be used within each country, as each country's index is built using different underlying indicators
 ##
-## To do/consider:
-## - include rural-urban classification in the factor analysis/PCA to derive a single index?
-## --- rather than choosing the dimensionality reduction method based on how well it predicts rurality
+## This script does this:
+## 1. Load National Statistics Postcode Lookup (NSPL)
+## 2. Add Rural-Urban Classifications for Northern Ireland (not in NSPL by default)
+## 3. Add Index of Multiple Deprivation (IMD) for Northern Ireland (not in NSPL by default)
+## 4. Load Journey times to key services by Lower Layer Super Output Areas in England (other countries' IMD indictaors alreadu include these)
+## 5. Load relevant IMD underlying indicators for each country's rurality index
+## 6. Create rurality index via factor analysis of IMD indicators, journey times (England) and rural-urban classifications
+## 7. Merge into NSPL and save to new .csv
 ##
 ## Before running this script, do the following:
 ## 1. Download the latest National Statistics Postcode Lookup file from: http://geoportal.statistics.gov.uk/datasets/national-statistics-postcode-lookup-latest-centroids
