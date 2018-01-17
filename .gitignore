@@ -31,6 +31,10 @@ Datasets/Nomisweb/Scripts/R/.Rhistory
 # History files
 .Rhistory
 .Rapp.history
+/Datasets/StatXplore/Scripts/Python/stat_xplore_lib/__pycache__/stat_xplore_schema.cpython-35.pyc
+/Datasets/StatXplore/Scripts/Python/stat_xplore_lib/__pycache__/stat_xplore_table.cpython-35.pyc
+/Datasets/StatXplore/Scripts/Python/stat_xplore_scraper/__pycache__/stat_xplore_table.cpython-35.pyc
+/Datasets/StatXplore/Scripts/Python/stat_xplore_scraper/__pycache__/stat_xplore_schema.cpython-35.pyc
 # Session Data files
 .RData
 # Example code in package build process
