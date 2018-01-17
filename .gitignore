@@ -10,6 +10,9 @@
 *.xlsx
 *.zip
 
+# Ignore .orig files (created when merge conflicts are resolved)
+*.orig
+
 # No OS files
 *.DS_Store
 *Icon*
