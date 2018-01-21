@@ -75,3 +75,41 @@ pip['data'].to_csv(output_directory + 'personal_independence_payment_data.csv', 
 with open(output_directory + 'pip_annotations.txt', 'w') as f:
     for annotation in pip['annotations'].values():
         f.write(annotation+'\n\n')
+
+
+# Numbers claiming Attendance Allowance by primary condidtion, date adn geography
+aa = stat_xplore_table.get_stat_xplore_measure_data(table_headers, 
+                                                    schema_headers, 
+                                                    measure_id = 'str:count:AA_Entitled:V_F_AA_Entitled', 
+                                                    field_ids = [   'str:field:AA_Entitled:F_AA_QTR:DATE_NAME',
+                                                                    'str:field:AA_Entitled:V_F_AA_Entitled:DISABLED',
+                                                                    'str:field:AA_Entitled:V_F_AA_Entitled:COA_CODE'],
+                                                    fields_include_total = 'str:field:AA_Entitled:V_F_AA_Entitled:DISABLED', 
+                                                    df_schema = df_schema, 
+                                                    geog_folder_label = 'Geography (residence-based)',
+                                                    geog_field_label = 'National - Regional - LA - OAs',
+                                                    geog_level_label = 'Local Authority')
+
+aa['data'].to_csv(output_directory + 'attendance_allowance_data.csv', index=False)
+with open(output_directory + 'aa_annotations.txt', 'w') as f:
+    for annotation in aa['annotations'].values():
+        f.write(annotation+'\n\n')
+
+
+# Numbers of national insurance registrations
+nino = stat_xplore_table.get_stat_xplore_measure_data(  table_headers, 
+                                                        schema_headers, 
+                                                        measure_id = 'str:count:NINO:f_NINO', 
+                                                        field_ids = [   'str:field:NINO:f_NINO:QTR',
+                                                                        'str:field:NINO:f_NINO:NEWNAT',
+                                                                        'str:field:NINO:f_NINO:COUNTY_DISTRICT_UA_2011'],
+                                                        fields_include_total = 'str:field:NINO:f_NINO:NEWNAT', 
+                                                        df_schema = df_schema, 
+                                                        geog_folder_label = 'Location at Registration',
+                                                        geog_field_label = 'National - Regional - Admin LA (Northern Ireland Districts included)',
+                                                        geog_level_label = 'Local Authority/Northern Ireland District')
+
+nino['data'].to_csv(output_directory + 'nino_data.csv', index=False)
+with open(output_directory + 'nino_annotations.txt', 'w') as f:
+    for annotation in nino['annotations'].values():
+        f.write(annotation+'\n\n')
