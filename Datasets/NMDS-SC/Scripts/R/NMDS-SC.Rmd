@@ -1,0 +1,56 @@
+---
+title: "Downloader for National Minimum dataset for Social Care Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Intro
+
+Short Rmd to take care of downloading and converting the Skills for Care National Minimum Data Set.
+
+Skills for Care's National Minimum Data Set for Social Care (NMDS-SC) is recognised as the leading source of robust workforce intelligence for adult social care. The NMDS-SC collects information online about providers offering a social care service and their employees. Social care providers can register, maintain and access their business information at www.nmds-sc-online.org.uk. 
+
+https://www.nmds-sc-online.org.uk/Get.aspx?id=/Research/Adult%20social%20care%20workforce%20reports/Open%20data/Open%20Data%20August%202017.csv
+
+Define URL and dates for each of the csv's
+```{r}
+root <- 'https://www.nmds-sc-online.org.uk/Get.aspx?id='
+
+dates <- c(
+  'Aug 17',
+  'Feb 17',
+  'Aug 16',
+  'Feb 16'
+)
+
+files <- c(
+'/Research/Adult social care workforce reports/Open data/Open Data August 2017.csv',
+'/Reports/Accessing data/NMDSSC Open Data February 2017.csv',
+'/Research/Adult social care workforce reports/Open data/NMDS-SC Open Data Analysis File - August 2016.csv',
+'/Research/Adult social care workforce reports/Open data/NMDS-SC Open Data Analysis File - February 2016.csv')
+
+```
+
+# Download  files 
+(Note mode=wb to correctly download binary files.)
+```{r}
+srcdat="../../Source Data/"
+
+for(i in 1:length(files)){
+  
+  download.file(url=paste0(root,files[i]), paste0(srcdat,dates[i],'.csv'), mode="wb")
+}
+```
+
+#Read in Downloaded Files
+```{r}
+Aug17<-read.csv(paste0(srcdat,dates[1],'.csv'))
+```
+
+Ok looks like there is lots of data in here! Need to digest the code book:
+<https://www.nmds-sc-online.org.uk/Get.aspx?id=834314>
+
+... ok unfortunately looks like the only geographic field is 'Region' - No LA level data here (though it must exist because it is in the dashboard on the website). There is a lot of information to be had though, definite potential for less geographically based analyses. Should also investigate if the LA level data is on the UK Data Store website.
