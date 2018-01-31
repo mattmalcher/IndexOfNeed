@@ -1,17 +1,18 @@
 # Functions to interact with the 'table' end point of the Stat-Xplore API
 import json
 import pandas as pd 
+import numpy as np 
 import requests
 import os
 import stat_xplore_schema
 
 table_url = 'https://stat-xplore.dwp.gov.uk/webapi/rest/v1/table'
 
+
 def json_response_to_dataframe(dict_response):
     '''Take input sting of JSON formatted data returned by the Stat-Xplore API table end point and 
-    unpack it into a pandas dataframe. Data Frame is in a 'long' format with a column for each field 
-    and a column for the data value. Currently assumes that the json data contains three fields and therfore
-    a 3d data array.
+    unpack it into a pandas dataframe. The returned dataframe is in a 'long' format with a column for each field (uri and label)
+    and a column for the data value.
 
     Args:
         json_response (dict): Dictionary of data returned by the Stat-Xpore API table end point
@@ -20,48 +21,95 @@ def json_response_to_dataframe(dict_response):
         pandas DataFrame: The Stat-Xplore API data formatted as a DataFrame.
     '''
 
-    # Unpack field labels and the labels of items within each field.
-    field_items = []
-    field_headers = []
+    # Unpack field labels and uris (IDs) plus the labels and uris (IDs) of items within each field.
+    field_items = { 'labels':[],
+                    'uris':[]}
+    field_headers = {   'labels':[],
+                        'uris':[]}
     for field in dict_response['fields']:
-        field_items.append(unpack_field_items(field['items'], item_values_to_return = 'labels'))
-        field_headers.append(field['label'])
+        # Unpack the labels
+        field_items['labels'].append(unpack_field_items(field['items'], item_values_to_return = 'labels'))
+        field_headers['labels'].append(field['label'])
+
+        # Unpack the uris
+        field_items['uris'].append(unpack_field_items(field['items'], item_values_to_return = 'uris'))
+        field_headers['uris'].append(field['uri'])
 
     measure_uri = dict_response['measures'][0]['uri'] 
-    cubes_values = dict_response['cubes'][ measure_uri]['values']
+    cubes_array = np.array(dict_response['cubes'][ measure_uri]['values'])
 
-    if len(field_items) == 3:
-        dictData = unpack_cube_data(*field_items,*field_headers, cubes_values)
-    df = pd.DataFrame(dictData)
+    # unpack the data, using the field item values' IDs to index values
+    dict_data = unpack_cube_data(field_items['uris'],field_headers['uris'], cubes_array)
+    
+    df = pd.DataFrame(dict_data)
 
-    return df
+    # Add in the labels
+    final_headers = []
+    for i in range(len(field_headers['uris'])):
+        # Form lookup dictionary from uri to label
+        dict_field_lookup = dict(zip(field_items['uris'][i], field_items['labels'][i]))
 
-def unpack_cube_data(labelsX, labelsY, labelsZ, headerX, headerY, headerZ, cubes_values):
-    '''For input lists of the field labels and the 3d array of data, unpak the data assigning the coorect labels to each value.
-    Data is unpacked into a dictionary of tuples which can be easily parsed into a pandas Data Frame.
+        # Create a new labels column by replacing the uris with their labels
+        df[field_headers['labels'][i]] = df[field_headers['uris'][i]].replace(dict_field_lookup)
+
+        # Add each header to list so that they are ordered by field type
+        final_headers.append(field_headers['uris'][i])
+        final_headers.append(field_headers['labels'][i])
+    
+    # Add the value header
+    final_headers.append('value')
+
+    return df.reindex(columns = final_headers)
+
+def unpack_cube_data(labels, headers, cubes_array):
+    '''For input lists of the field labels and the array of data, unpak the data assigning the coorect labels to each value.
+    Function can unpack 1d,2d and 3d data arrays. THis covers all possible dimensions returned by the stat-xplore API.
+    Data is unpacked into a dictionary of tuples.
 
     Args:
-        labelsX (str): The labels for the first index of the 3d data array
-        labelsY (str): The labels for the second index of the 3d data array
-        labelsZ (str): The labels for the third index of the 3d data array
-        headerX (str): The field label for the X field labels
-        headerY (str): The field label for the Y field labels
-        headerZ (str): The field label for the Z field labels
-        cubes_values (3d array): The data values to unpack
+        labels (array of str): A 2d array containing lists of the labels to index data values with
+        headers (list of str): A list of the headers for the fields data is indexed by
+        cubes_array (multi-dim numpy array): The data values to unpack
 
     Returns: 
         dict: Dictionary of the labels and the data values.
     '''
-    xyz = gen_xyz(len(labelsX), len(labelsY), len(labelsZ))
-    dictData = {headerX:[], headerY:[], headerZ:[], 'value':[]}
-    for x,y,z in xyz:
-        dictData[headerX].append(labelsX[x])
-        dictData[headerY].append(labelsY[y])
-        dictData[headerZ].append(labelsZ[z])
-        dictData['value'].append(cubes_values[x][y][z])
-    return dictData
+    dict_data = {}
+    for header in headers:
+        dict_data[header] = []
+    dict_data['value'] = []
 
+    cube_shape = cubes_array.shape  
 
+    # Unpacking 1d
+    if len(cube_shape) == 1:
+        assert len(labels[0] == len(cubes_array[:]))
+        dict_data[headers[0]] += (labels[0])
+        dict_data['value'] += (list(cubes_array[:]))
+    # Unpacking 2d data
+    elif len(cube_shape) == 2:
+        assert len(labels[0]) == cube_shape[0]
+        assert len(labels[1]) == cube_shape[1]
+        for x in range(cube_shape[0]):
+            assert len(labels[1][:]) == len(cubes_array[x,:])
+            dict_data[headers[0]] += ([labels[0][x]]*cube_shape[1])
+            dict_data[headers[1]] += (labels[1][:])
+            dict_data['value'] += (list(cubes_array[x,:]))
+    # Unpacking 3d data
+    elif len(cube_shape) == 3:
+        assert len(labels[0]) == cube_shape[0]
+        assert len(labels[1]) == cube_shape[1]
+        assert len(labels[2]) == cube_shape[2]
+        for x in range(cube_shape[0]):
+            for y in range(cube_shape[1]):
+                assert len(labels[2][:]) == len(cubes_array[x,y,:])
+                dict_data[headers[0]] += ([labels[0][x]]*cube_shape[2])
+                dict_data[headers[1]] += ([labels[1][y]]*cube_shape[2])
+                dict_data[headers[2]] += (labels[2][:])
+                dict_data['value'] += list(cubes_array[x,y,:])
+    return dict_data
+
+# Could change this function to unpack both ids and labels, return multidimensional array
 def unpack_field_items(field_items, item_values_to_return = 'labels'):
     '''The Stat-Xplore API returns fie;d values as an array of arrays, ie [ [value1], [value2], ...].
     This function unpacks field values into a 1d array so that they can be parsed into a pandas DataFrame.
@@ -80,8 +128,13 @@ def unpack_field_items(field_items, item_values_to_return = 'labels'):
     if item_values_to_return not in ['labels','uris']:
         print("unpack_field_items: Failed to unpack items. Unrecognised value type to return. Must be either 'labels' or 'uris'")
 
+    # Get the label or uri from each field item value
+    # Where field items are the 'Total' for all field values, a uri isn't given. Use the label in this instance
     for item in field_items:
-        item_values.append(item[item_values_to_return][0])
+        if item['type'] == 'Total':
+            item_values.append(item['labels'][0])
+        else:
+            item_values.append(item[item_values_to_return][0])
     return item_values
 
 
