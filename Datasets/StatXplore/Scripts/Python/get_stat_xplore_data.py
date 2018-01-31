@@ -77,7 +77,7 @@ with open(output_directory + 'pip_annotations.txt', 'w') as f:
         f.write(annotation+'\n\n')
 
 
-# Numbers claiming Attendance Allowance by primary condidtion, date adn geography
+# Numbers claiming Attendance Allowance by primary condidtion, date and geography
 aa = stat_xplore_table.get_stat_xplore_measure_data(table_headers, 
                                                     schema_headers, 
                                                     measure_id = 'str:count:AA_Entitled:V_F_AA_Entitled', 
@@ -96,7 +96,7 @@ with open(output_directory + 'aa_annotations.txt', 'w') as f:
         f.write(annotation+'\n\n')
 
 
-# Numbers of national insurance registrations
+# Numbers of national insurance registrations by quarter local authority of residence and broad nationality
 nino = stat_xplore_table.get_stat_xplore_measure_data(  table_headers, 
                                                         schema_headers, 
                                                         measure_id = 'str:count:NINO:f_NINO', 
