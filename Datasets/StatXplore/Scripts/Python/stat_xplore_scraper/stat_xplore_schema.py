@@ -1,6 +1,7 @@
 import requests
 import pandas as pd 
 import os
+import re
 
 schema_url = 'https://stat-xplore.dwp.gov.uk/webapi/rest/v1/schema'
 
@@ -190,34 +191,97 @@ def geography_recodes_for_geog_folder_geog_level(schema_headers, database_id, ge
 
 
     # Call function to get recodes given a valueset location
-    geog_recodes = get_recodes_from_valueset_location(schema_headers, geog_field_valueset_loc)
+    geog_recodes = get_recodes_from_valueset_location_all_pages(schema_headers, geog_field_valueset_loc)
 
     return {geog_field_id:geog_recodes}
 
 
-def get_recodes_from_valueset_location(schema_headers, valueset_loc):
-    '''Query the API schema to get the set of recodes that are located within the input valueset
+def get_recodes_from_valueset_location_single_page(schema_headers, valueset_url):
+    '''Query the API schema to get the set of recodes that are located within the input valueset url.
 
     Args:
         schema_headers (dict): The headers of the request.
-        valueset_loc (str): Localtion of the valueset to return recodes from
+        valueset_url (str): Localtion of the valueset to return recodes from
 
     Returns:
-        recodes (dict): recodes dictionary with key being the valueset id of the recodes and the item 
-                        being a list of recodes
+        dict: Keys: 'recodes' - list of string recode IDs, 'next_page_url' - the url of the next page. None if there isn't one.
     '''
+    # initialise next page url
+    next_page_url = None
 
+    # request the valueset json
+    dict_valueset_response = request_schema(schema_headers, url = valueset_url)
 
-    valueset_response = request_schema(schema_headers, url = valueset_loc)
-
-    if valueset_response['success'] == False:
+    if dict_valueset_response['success'] == False:
         return None
 
-    valueset_json = valueset_response['response'].json()
+    # unpack the json
+    valueset_json = dict_valueset_response['response'].json()
+    
+    # get the recode IDs from the children items in the json data
+    recodes = [i['id'] for i in valueset_json['children']]
 
-    df_valueset = pd.DataFrame(valueset_json['children'])
+    # check for multiple pages of recodes. if there are multiple pages scrape each of these
+    if 'link' in dict_valueset_response['response'].headers:
+        next_page_url = get_next_page_url(dict_valueset_response['response'].headers)
 
-    return df_valueset['id'].tolist()
+    return {'recodes':recodes, 'next_page_url':next_page_url}
+
+def get_recodes_from_valueset_location_all_pages(schema_headers, valueset_first_page_url):
+    '''Scrape recodes from multiple pages of the API. Scrape the recode IDs from the first page of the valueset.
+    Check for multiple pages and scrape the recode IDs from themas well.
+
+    Args:
+        schema_headers (dict): The headers of the request.
+        valueset_first_page_url (str): Localtion of the valueset first page to return recodes from
+
+    Returns:
+        list of str: List of all recode IDs
+
+    '''
+
+    all_recodes = []
+    next_page_url = valueset_first_page_url
+    while next_page_url is not None:
+        dict_get_recodes = get_recodes_from_valueset_location_single_page(schema_headers, next_page_url)
+        all_recodes += dict_get_recodes['recodes']
+        next_page_url = dict_get_recodes['next_page_url']
+    return all_recodes
+
+
+def get_next_page_url(dict_response_headers, link_key = 'link'):
+    '''From the repsponse object of a schema requests, get the link to the next page of the schema
+    folder contents. Useful when querying the schema for recodes as a maximum of 100 recodes are displayed 
+    per page.
+
+    Args:
+        schema_response (response object): The response object received from the schema.
+
+    Kwargs:
+        link_key (str): The header key that the link to the next page is stored under.
+    '''
+    # Define regexes to check that link goes to next page and to get the link
+    regex_check_next = re.compile(r'(; rel=")(next)(")')
+    regex_get_link = re.compile(r'(^<)(.*)(>)')
+    
+
+    # Get the link
+    try:
+        link_text = dict_response_headers[link_key]
+    except KeyError as err:
+        print("stat_xplore_schema.get_next_page_url(). Failed to get link text using header key: {}".format(str(link_key)))
+        return
+    
+
+    # check that the link goes to the next page, if so return the url string
+    if regex_check_next.search(link_text) is None:
+        return
+    else:
+        return regex_get_link.search(link_text).groups()[1]
+
+
+
+
 
 def get_database_fields(schema_headers, database_id, df_schema = None, check_cache = False, cache_filename = 'schema.csv'):
     '''Given a database ID, return the ids of the fields within that database. Note that this function does not
