@@ -77,6 +77,22 @@ with open(output_directory + 'pip_annotations.txt', 'w') as f:
         f.write(annotation+'\n\n')
 
 
+# Numbers claiming Personal Inepedence Payments by local authority and disability type for the latest timepoint
+pip_latest = stat_xplore_table.get_stat_xplore_measure_data(table_headers, 
+                                                            schema_headers, 
+                                                            measure_id = 'str:count:PIP_Monthly:V_F_PIP_MONTHLY', 
+                                                            field_ids = ['str:field:PIP_Monthly:V_F_PIP_MONTHLY:DISABILITY_CODE'],
+                                                            fields_include_total = 'str:field:PIP_Monthly:V_F_PIP_MONTHLY:DISABILITY_CODE', 
+                                                            df_schema = df_schema, 
+                                                            geog_folder_label = 'Geography (residence-based)', 
+                                                            geog_field_label= 'Country - Region - Local Authority', 
+                                                            geog_level_label = 'Local Authority')
+# Save the data and annotations
+pip_latest['data'].to_csv(output_directory + 'personal_independence_payment_data_latest.csv', index=False)
+with open(output_directory + 'pip_annotations_latest.txt', 'w') as f:
+    for annotation in pip_latest['annotations'].values():
+        f.write(annotation+'\n\n')
+
 # Numbers of national insurance registrations by quarter local authority of residence and broad nationality
 nino = stat_xplore_table.get_stat_xplore_measure_data(  table_headers, 
                                                         schema_headers, 
