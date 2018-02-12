@@ -1,5 +1,5 @@
 # Rural-Urban Classifications
-For details of classification codes, [see here](rural-urban classification codes.md).
+For details of classification codes, [see here](https://github.com/mattmalcher/IndexOfNeed/blob/master/Datasets/Rural-Urban%20Classifications/rural-urban%20classification%20codes.md).
 
 ## Data sources
 ### England and Wales
