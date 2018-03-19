@@ -1,0 +1,96 @@
+
+
+```{r Read DTOC URL's}
+# Open a connection to DTOC files and read the lines into a char vector.
+fileName <- "DTOC Files"
+con <- file(fileName,open="r")
+URLs <- readLines(con)
+close(con)
+rm(fileName,con)
+```
+
+```{r Get URLs from list}
+
+URLs<-URLs[grep('http',URLs)] #get all lines starting with http
+
+```
+
+```{r Make Directory}
+#Make the DTOC_CSVs directory if it does not exist
+path<-"DTOC_CSVs"
+dir.create(file.path(path), showWarnings = FALSE)
+
+```
+
+```{r Download Files}
+#For each URL in our list
+for(u in URLs){
+  
+  #Get filename from end of url and generate path for file
+  fname=file.path(path,tail(strsplit(u,'/')[[1]], n=1))
+  
+  #if the filename (at the path) exists
+  if(!file.exists(fname)){
+    
+      print(fname) # Print the name
+    
+      res <- try(download.file(u, destfile=fname, method="auto")) #try and download it
+  }
+}
+
+rm(fname,u) # tidy up loop variables
+
+```
+
+ 
+Here we read the files we have downloaded in. Note that the URL list is used again rather than just reading in all the files in the directory.
+```{r Read in Downloaded Files}
+
+# Note - Headers are inconsistent across files so here we provide a single set
+# Assumption is that the data columns are the same.
+headers<-c("Year","Period Name","Provider Parent Org Code","Provider Parent Name","Provider Org Code","Provider Org Name","Local Authority Code","Local Authority Name","Acute Or Non Acute Description","Reason For Delay","NHS A SUM","NHS B SUM","Social Care A SUM","Social Care B SUM","Both A SUM","Both B SUM")
+
+#Get filename from end of url and generate path for file
+f_names=sapply(strsplit(URLs,'/'),tail, n=1) #Alternate: # file_names <- dir(path)
+
+#Read all of the files into a data frame
+
+DTOC <- do.call(rbind, #Row bind the output of:
+                  lapply(paste(path,f_names,sep='/'), #lapply, calling read.csv for every item in f_names
+                                  read.csv,
+                                    skip=7,           # Skipping the 7 header rows
+                                    col.names=headers) # And using the headers as defined above
+                )
+
+rm(f_names, headers) # tidy up
+```
+
+Recode Financial Year & Month to a proper date field
+```{r}
+require(lubridate); require(dplyr)
+
+# Create list of months which for financial Year 20AA - BB fall in next year BB
+endmonths<-c("JANUARY", "FEBRUARY", "MARCH")
+
+#Get Year AA
+DTOC$Date<-recode_factor(DTOC$Year,`2017-18`="2017",`2016-17`="2016", `2015-16`="2015")
+
+#Depending on the period, create a date field (go from financial year -> year). Day set to 1st of the month
+DTOC<-mutate(DTOC, 
+             Date = case_when( Period.Name %in% endmonths ~ dmy(paste("01",Period.Name, as.numeric(as.character(Date))+1)),
+                               TRUE                       ~ dmy(paste("01",Period.Name,Date))
+                               )
+             )
+  
+
+rm(endmonths)#tidy up
+
+# Show the year and periods next to the assigned dates as a check
+# DTOC %>% select(Year,Period.Name,Date) %>% distinct %>% arrange(Date)
+```
+
+```{r}
+require(sf) ; require(tidyverse)
+
+
+```
