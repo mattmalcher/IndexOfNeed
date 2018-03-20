@@ -1,5 +1,7 @@
 
 
+
+
 ```{r Read DTOC URL's}
 # Open a connection to DTOC files and read the lines into a char vector.
 fileName <- "DTOC Files"
@@ -67,7 +69,7 @@ rm(f_names, headers) # tidy up
 
 Recode Financial Year & Month to a proper date field
 ```{r}
-require(lubridate); require(dplyr)
+require(dplyr); require(lubridate)
 
 # Create list of months which for financial Year 20AA - BB fall in next year BB
 endmonths<-c("JANUARY", "FEBRUARY", "MARCH")
@@ -88,9 +90,52 @@ rm(endmonths)#tidy up
 # Show the year and periods next to the assigned dates as a check
 # DTOC %>% select(Year,Period.Name,Date) %>% distinct %>% arrange(Date)
 ```
+```{r}
+require(reshape2)
+DTOCTable<- dcast(DTOC, 
+                  Local.Authority.Code ~ Date, 
+                  value.var =  "Social.Care.B.SUM",
+                  fun.aggregate = sum)
+```
+
+DTOC data is mapped via HSCIC Codes, Sometimes called IC Codes, Sometimes called ODS codes or Upper Tier LA Codes
+best lookup I can find is:
+http://www.gov.uk/government/uploads/system/uploads/attachment_data/file/495268/COVER_Q15_1_StatisticalTables_v5.xlsx
 
 ```{r}
-require(sf) ; require(tidyverse)
+require(readxl)
 
+
+lookupfile<-"http://www.gov.uk/government/uploads/system/uploads/attachment_data/file/495268/COVER_Q15_1_StatisticalTables_v5.xlsx"
+
+#lookupfile<-"https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/495268/COVER_Q15_4_Statistical_tables.xlsx"
+
+fname=file.path(tail(strsplit(lookupfile,'/')[[1]], n=1))
+
+if(!file.exists(fname)){
+    
+      print(fname) # Print the name
+    
+      try(download.file(lookupfile, destfile=fname, method="auto", mode='wb')) #try and download it
+}
+
+lookup <- read_xlsx(fname,sheet="12m_UT LA", range="E3:G154", col_names = c("ONS","ODS","Name"))
 
 ```
+
+
+# Get Local Authority Boundaries
+
+The ONS Open Geography Portal is one of the best places for UK shapefiles. You can get URL's for geojson's from the `API` dropdown on each page.
+
+```{r}
+require(sf)
+
+UKLA <- st_read(dsn = "https://opendata.arcgis.com/datasets/ae90afc385c04d869bc8cf8890bd1bcd_3.geojson")
+
+```
+
+
+# Join Data
+
+##Join DTOC to Lookup
