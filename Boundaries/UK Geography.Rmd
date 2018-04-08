@@ -1,0 +1,142 @@
+```{r}
+require(dplyr); require(sf)
+```
+
+
+
+# Local Authority Districts
+
+* England (324)
+   - London Borough	33
+   - Metropolitan District	36
+   - Non-metropolitan District	201
+   - Unitary Authority	56
+
+* Northern Ireland	
+  - Local Government District	11
+
+* Scotland	
+  - Council Area	32
+
+* Wales	
+  - Unitary Authority	22
+
+Total = (33+36+201+56)+11+32+22 = 391
+
+
+
+
+## Geometry
+```{r warning=FALSE, message=FALSE, error=FALSE}
+#GEOM: Lower Tier Local Authority District Boundaries
+LT_LAD <- st_read(dsn = "https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Local_Authority_Districts_December_2017_Boundaries_WGS84/MapServer/4/query?where=1%3D1&outFields=lad17cd,lad17nm,shape&outSR=4326&f=json")
+
+names(LT_LAD) <- toupper(names(LT_LAD)) # tidy up for join
+
+str(LT_LAD)
+
+```
+
+## Country
+```{r}
+#LOOKUP: Country Data
+LAD2CTRY <- st_read(dsn ="https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LAD17_CTRY17_UK_LU/FeatureServer/0/query?where=1%3D1&outFields=LAD17CD,LAD17NM,CTRY17CD,CTRY17NM&returnGeometry=false&outSR=4326&f=json",geom_column = NULL)
+
+
+LAD <- left_join(LT_LAD,LAD2CTRY, by = c("LAD17CD", "LAD17NM"))
+
+```
+
+## Upper Tier Local Authorities
+
+```{r}
+UT2LT <- st_read(dsn = "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LTLA17_UTLA17_EW_LU/FeatureServer/0/query?where=1%3D1&outFields=LTLA17CD,LTLA17NM,UTLA17CD,UTLA17NM&returnGeometry=false&outSR=4326&f=json")
+
+names(UT2LT) <- tolower(names(UT2LT)) # tidy up for join
+
+#LAD <- left_join(LAD,UT2LT, by = c("lad17cf"="ltla17cd"))
+
+```
+
+
+# Counties and Unitary Authorities
+
+Upper Tier Local Authorities
+London Boroughs
+Metropolitan Districts
+
+
+##Geometry
+Counties and Unitary Authorities (December 2017) Ultra Generalised Clipped Boundaries in UK
+```{r}
+CTYUA <- st_read(dsn="https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Counties_and_Unitary_Authorities_December_2017_Boundaries_UK/MapServer/4/query?where=1%3D1&outFields=shape,ctyua17cd,ctyua17nm,ctyua17nmw&outSR=4326&f=json")
+
+```
+##  Combined Authorities
+```{r}
+CAUTH <- st_read(dsn= "https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LAD17_CAUTH17_EN_LU/FeatureServer/0/query?where=1%3D1&outFields=LAD17CD,LAD17NM,CAUTH17CD,CAUTH17NM&returnGeometry=false&outSR=4326&f=json")
+
+
+names(CAUTH) <- tolower(names(CAUTH)) # tidy up for join
+```
+
+## County to LAD
+```{r}
+
+CTY2LAD <- st_read(dsn="https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/WD17_LAD17_CTY17_OTH_UK_LU/FeatureServer/0/query?where=1%3D1&outFields=LAD17CD,LAD17NM,CTY17CD,CTY17NM,GOR10CD,GOR10NM,CTRY17CD,CTRY17NM&returnGeometry=false&outSR=4326&f=json") 
+
+names(CTY2LAD) <- tolower(names(CTY2LAD)) # tidy up for join
+
+CTY2LAD <- unique(CTY2LAD) 
+
+test <- left_join(CTY2LAD, UT2LT, by=c("lad17cd"="ltla17cd"))
+
+test <- left_join(test,CAUTH)
+
+#if its london we want to keep the LA code,
+#if its a combined authority we want to keep the LA code
+test <- test %>% mutate( ctyua17cd = case_when( gor10nm == "London" ~ lad17cd,
+                                                cauth17cd!=""       ~ as.character(lad17cd),
+                                                TRUE                ~ as.character(utla17cd)))
+
+
+
+test <- filter(test, ctry17nm=="England")
+
+length(unique(test$ctyua17cd))
+
+summary(test$utla17nm)
+
+
+test2<- left_join(CTYUA,test, by="ctyua17cd") 
+```
+
+
+
+
+```{r}
+  
+CTY2LAD <- filter(CTY2LAD, ctry17nm=="England")
+
+test<-left_join(CTYUA, CTY2LAD, by=c("ctyua17cd"="lad17cd"))
+
+test <- filter(test, ctry17nm=="England")
+
+```
+
+# List of 152
+
+* England LA's
+   - London Boroughs	33
+   - Metropolitan Districts	36
+   - Counties 27 <-  (from Non-metropolitan Districts	201)
+   - Unitary Authorities	56
+
+Total = (33+36+27+56)= 152
+
+
+
+```{r}
+(33+36+27+56)
+```
+
