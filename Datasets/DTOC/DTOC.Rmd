@@ -163,22 +163,10 @@ popdata <- popdata %>% select(Code,"All ages",`65+`)
 
 The ONS Open Geography Portal is one of the best places for UK shapefiles. You can get URL's for geojson's from the `API` dropdown on each page.
 
-```{r}
+```{r warning=FALSE}
 require(dplyr); require(sf)
 
-#Lower Tier Local Authority Boundaries
-UKLA <- st_read(dsn = "https://opendata.arcgis.com/datasets/ae90afc385c04d869bc8cf8890bd1bcd_3.geojson")
-
-# Country Data
-Countries <- st_read(dsn = "https://opendata.arcgis.com/datasets/ffbb56e049b145a28720f0d817d6c197_0.geojson") 
-st_geometry(Countries) <- NULL ; names(Countries) <-tolower(names(Countries)) # tidy up for join
-
-#Upper Tier to Lower Tier Local Authority Lookup
-UT2LT <- st_read(dsn = "https://opendata.arcgis.com/datasets/41828627a5ae4f65961b0e741258d210_0.geojson")
-st_geometry(UT2LT) <- NULL ; names(UT2LT) <-tolower(names(UT2LT)) # tidy up for join
-
-UKLA<-left_join(UKLA,Countries)
-UKLA<-left_join(UKLA,UT2LT, by=c("lad17cd"="ltla17cd"))
+CTYUA <- st_read(dsn ="https://ons-inspire.esriuk.com/arcgis/rest/services/Administrative_Boundaries/Counties_and_Unitary_Authorities_December_2017_Boundaries_UK/MapServer/4/query?where=1%3D1&outFields=*&outSR=4326&f=json")
 ```
 
 
@@ -188,32 +176,20 @@ UKLA<-left_join(UKLA,UT2LT, by=c("lad17cd"="ltla17cd"))
 ```{r}
 DTOC_Coded<- left_join(DTOCTable, lookup, by=c("Local.Authority.Code"="ODS"))
 
-DTOC_Coded %>% filter(is.na(ONS)) %>% select(Local.Authority.Code) -> err
+#DTOC_Coded %>% filter(is.na(ONS)) %>% select(Local.Authority.Code) -> err
 #rm(DTOCTable,lookup)
-```
-
-Have a look at which LA's arent joining nicely
-```{r Debug Join}
-# DTOC %>% 
-#   filter(Local.Authority.Code %in% err$Local.Authority.Code ) %>% 
-#   select(Local.Authority.Code,Local.Authority.Name) %>%
-#   distinct()
 ```
 
 
 ##Join Population Data to Geometry
 ```{r}
-UKLA<- left_join(UKLA,popdata, by=c("lad17cd"="Code"))
+UKLA<- left_join(CTYUA,popdata, by=c("ctyua17cd"="Code"))
 ```
 
 ##Join DTOC Data to Geometry
 ```{r}
-MapData <- left_join(UKLA,DTOC_Coded,by=c("lad17cd"="ONS"))
+MapData <- left_join(UKLA,DTOC_Coded,by=c("ctyua17cd"="ONS"))
 
-MapData %>% 
-  filter(ctry17nm=="England") %>%
-  filter(is.na(Local.Authority.Code)) %>%
-  select(lad17nm,lad17cd, Local.Authority.Code) -> err2
 ```
 
 # Plot Map
@@ -226,18 +202,18 @@ Note - this requires a newer version of ggplot than that which is present on CRA
 #devtools::install_github("tidyverse/ggplot2")
 ```
 
-```{r}
+```{r, fig.height = 8, fig.width=10}
 require(ggplot2);require(sf)
 
 # equal intervals
 ggplot() +
   geom_sf(data = MapData,
-          aes(fill = cut_number(`All ages`, 5)),
+          aes(fill = cut_number(`2018-01-01`/(`65+`/10^5), 5)),
           alpha = 0.8,
           colour = 'white',
           size = 0.3) +
   scale_fill_brewer(palette = "PuBu",
-                    name = "Delayed Days") +
+                    name = "Delayed Days per 100k 65+") +
   labs(x = NULL, y = NULL,
        title = "DTOC",
        subtitle = "Jan 18",
@@ -247,5 +223,6 @@ ggplot() +
         axis.title = element_blank(),
         panel.background = element_blank()) +
 coord_sf(datum = NA)
-ggsave("test.png", plot=last_plot(), dpi=300)
+#ggsave("test.png", plot=last_plot(), dpi=300)
 ```
+
